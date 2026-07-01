@@ -68,7 +68,14 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 }
 .productImage img{width:100%;height:100%;object-fit:cover;border-radius:18px}
 .productImage:hover{transform:scale(1.04);transition:.15s}
-.placeholderOnly{font-size:38px;background:linear-gradient(135deg,#f7fbf8,#eef8f1)}
+.placeholderOnly{background:linear-gradient(135deg,#f7fbf8,#eef8f1)}
+.productPlaceholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  background:linear-gradient(135deg,#f8fcf9,#eef8f1);border-radius:18px;color:var(--g2);font-weight:950;
+}
+.placeholderIcon{font-size:28px;line-height:1}
+.placeholderText{font-size:10px;margin-top:3px;letter-spacing:.4px}
+
 .koopBadge{
   display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 9px;border-radius:999px;
   background:#e8f7ed;color:var(--g2);font-size:12px;font-weight:950;border:1px solid #cfe8d5;
@@ -135,7 +142,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <div class="hero">
         <div>
           <h1>Özet Dashboard</h1>
-          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Tarım Kredi görsel güvenliği ve ürün görselleri ve market detayları içeren pilot karar destek ekranı.</div>
+          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Güvenli ürün görselleri ve Tarım Kredi odaklı panel ve market detayları içeren pilot karar destek ekranı.</div>
         </div>
         <button class="secondary" onclick="window.print()">📄 PDF Raporu İndir</button>
       </div>
@@ -166,7 +173,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Pilot v19</b><br>
+          <b>ARTS Pilot v20</b><br>
           <span class="small">Tarım Kredi / KOOP Market Karşılaştırma ve Rakip Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -205,25 +212,54 @@ async function run(){
  finally{btn.disabled=false}
 }
 function productCell(x){if(!x)return "-"; return `<div class="price">${tl(x.price)}</div>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span>`}
-function productEmoji(name){
+function productVisual(name){
  const n=String(name||"").toLowerCase();
- if(n.includes("yumurta"))return "🥚"; if(n.includes("süt"))return "🥛"; if(n.includes("peynir"))return "🧀"; if(n.includes("tereyağ"))return "🧈";
- if(n.includes("yağ"))return "🛢️"; if(n.includes("şeker"))return "🍬"; if(n.includes("pirinç"))return "🍚"; if(n.includes("un"))return "🌾"; if(n.includes("zeytin"))return "🫒";
- if(n.includes("sucuk"))return "🥓"; if(n.includes("kıyma"))return "🥩"; if(n.includes("çay"))return "🍵"; if(n.includes("karpuz"))return "🍉"; if(n.includes("soğan"))return "🧅";
- if(n.includes("patates"))return "🥔"; if(n.includes("domates"))return "🍅"; if(n.includes("muz"))return "🍌"; if(n.includes("salatalık"))return "🥒"; if(n.includes("limon"))return "🍋"; if(n.includes("kavun"))return "🍈";
- if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return "🥤";
- return "🛒";
+ // Sıra önemli: kavun içinde "un" geçtiği için kavun/un karışmasın.
+ if(n.includes("kavun"))return ["🍈","KAVUN"];
+ if(n.includes("karpuz"))return ["🍉","KARPUZ"];
+ if(n.includes("domates"))return ["🍅","DOMATES"];
+ if(n.includes("muz"))return ["🍌","MUZ"];
+ if(n.includes("salatalık"))return ["🥒","SALATALIK"];
+ if(n.includes("limon"))return ["🍋","LİMON"];
+ if(n.includes("soğan"))return ["🧅","SOĞAN"];
+ if(n.includes("patates"))return ["🥔","PATATES"];
+ if(n.includes("beyaz peynir")||n.includes("peynir"))return ["▰","BEYAZ PEYNİR"];
+ if(n.includes("pirinç"))return ["🍚","PİRİNÇ"];
+ if(n.includes("yumurta"))return ["🥚","YUMURTA"];
+ if(n.includes("süt"))return ["🥛","SÜT"];
+ if(n.includes("tereyağ"))return ["🧈","TEREYAĞ"];
+ if(n.includes("ayçiçek")||n.includes("yağ"))return ["🛢️","YAĞ"];
+ if(n.includes("şeker"))return ["🍬","ŞEKER"];
+ if(n.includes("un"))return ["🌾","UN"];
+ if(n.includes("zeytin"))return ["🫒","ZEYTİN"];
+ if(n.includes("sucuk"))return ["🥓","SUCUK"];
+ if(n.includes("kıyma"))return ["🥩","KIYMA"];
+ if(n.includes("çay"))return ["🍵","ÇAY"];
+ if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return ["🥤","İÇECEK"];
+ return ["🛒","ÜRÜN"];
+}
+function productEmoji(name){return productVisual(name)[0]}
+function safePlaceholder(item){
+ const v=productVisual(item.target);
+ return `<div class="productImage placeholderOnly"><div class="productPlaceholder"><div class="placeholderIcon">${v[0]}</div><div class="placeholderText">${v[1]}</div></div></div>`;
+}
+function mustUsePlaceholder(item){
+ const n=String(item.target||"").toLowerCase();
+ // Bu ürünlerde API görselleri sık sık rakip/yanlış ürün olarak geliyor; güvenli placeholder kullan.
+ return n.includes("beyaz peynir") || n.includes("pirinç") || n.includes("kavun");
 }
 function productImage(item){
- // v19: Tarım Kredi ürünü varsa, rakip görseline asla düşme.
- // Tarım Kredi görseli yoksa temiz placeholder göster; yanlış rakip görseli gösterme.
+ // v20: Yanlış görsel riski olan ürünlerde API görseli hiç kullanılmaz.
+ if(mustUsePlaceholder(item)) return safePlaceholder(item);
+
+ // Tarım Kredi ürünü varsa, rakip görseline asla düşme.
  const hasTarim = !!item.tarim;
  const img = hasTarim
    ? (item.tarim?.imageUrl || "")
    : (item.imageUrl || item.best?.imageUrl || item.rival?.imageUrl || "");
  const title=esc(item.tarim?.title || item.best?.title || item.target || "");
- if(img) return `<div class="productImage" onclick="openImageModal('${esc(img)}','${title}')"><img src="${esc(img)}" onerror="this.parentElement.textContent='${productEmoji(item.target)}'"></div>`;
- return `<div class="productImage placeholderOnly">${productEmoji(item.target)}</div>`;
+ if(img) return `<div class="productImage" onclick="openImageModal('${esc(img)}','${title}')"><img src="${esc(img)}" onerror="this.outerHTML=safePlaceholder({target:'${esc(item.target)}'})"></div>`;
+ return safePlaceholder(item);
 }
 function koopBadge(item){
  if(item.tarim) return `<div class="koopBadge">+KOOP Tarım Kredi ürünü</div>`;
