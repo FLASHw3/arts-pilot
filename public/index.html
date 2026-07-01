@@ -22,6 +22,7 @@
     .badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
     .green{background:var(--soft);color:var(--g2)}.amber{background:#FFF8E1;color:var(--amber)}.red{background:#FFEBEE;color:var(--red)}
     .small{font-size:12px;color:var(--muted)}.topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+    details{background:white;border-radius:12px;padding:12px;margin:16px 0;box-shadow:0 4px 18px #0001}
     @media(max-width:950px){.cards{grid-template-columns:1fr}main{padding:18px} table{font-size:12px}}
   </style>
 </head>
@@ -33,7 +34,7 @@
 
 <main>
   <h2>Sakarya / Adapazarı Rekabet Karşılaştırması</h2>
-  <p class="muted">Tarım Kredi fiyatı ile en ucuz rakip fiyatı karşılaştırılır. Amaç sadece en ucuzu bulmak değil, Tarım Kredi'nin rekabet konumunu göstermektir.</p>
+  <p class="muted">Tarım Kredi/KOOP fiyatı ile en ucuz rakip fiyatı karşılaştırılır. Geliştirici kısmında API'de görülen gerçek market adları da listelenir.</p>
 
   <div class="topline">
     <button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button>
@@ -42,7 +43,7 @@
 
   <div class="cards">
     <div class="card"><div class="num">17</div><div class="label">Takip edilen ürün</div></div>
-    <div class="card"><div class="num">TK + 8</div><div class="label">Market kapsamı</div></div>
+    <div class="card"><div class="num">KOOP + 8</div><div class="label">Market kapsamı</div></div>
     <div class="card"><div class="num" id="foundCount">0</div><div class="label">Bulunan ürün</div></div>
     <div class="card redline"><div class="num rednum" id="disadvantageCount">0</div><div class="label">Rakipten pahalı olduğumuz ürün</div></div>
     <div class="card"><div class="num" id="depotCount">-</div><div class="label">Yakındaki şube/depo</div></div>
@@ -52,7 +53,7 @@
     <thead>
       <tr>
         <th>Hedef Ürün</th>
-        <th>Tarım Kredi</th>
+        <th>Tarım Kredi / KOOP</th>
         <th>En Ucuz Rakip</th>
         <th>Fark</th>
         <th>Durum</th>
@@ -60,6 +61,11 @@
     </thead>
     <tbody id="tbody"></tbody>
   </table>
+
+  <details>
+    <summary><b>Geliştirici Bilgisi: API'de Görülen Market Adları</b></summary>
+    <div id="markets" class="small" style="margin-top:10px"></div>
+  </details>
 </main>
 
 <script>
@@ -88,6 +94,7 @@ function productCell(x){
 function render(data){
   document.getElementById("depotCount").textContent=data.depotCount||0;
   document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
+  document.getElementById("markets").innerHTML = (data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
 
   const tb=document.getElementById("tbody"); tb.innerHTML="";
   let found=0;
@@ -108,9 +115,9 @@ function render(data){
       diff = `<b>${tl(0)}</b>`;
       status = '<span class="badge green">Fiyat eşit</span>';
     } else if(item.comparison === "only_tarim"){
-      status = '<span class="badge green">Sadece Tarım Kredi bulundu</span>';
+      status = '<span class="badge green">Sadece Tarım Kredi/KOOP bulundu</span>';
     } else if(item.comparison === "no_tarim"){
-      status = '<span class="badge amber">Tarım Kredi bulunamadı</span>';
+      status = '<span class="badge amber">Tarım Kredi/KOOP bulunamadı</span>';
     } else if(item.status === "error"){
       status = '<span class="badge red">Hata</span>';
     }
