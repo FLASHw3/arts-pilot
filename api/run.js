@@ -9,10 +9,7 @@ const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefour
 
 const PRODUCTS = [
   {label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
-
-  // v9: yarım yağlı süt filtresi esnetildi. "yarım" kelimesi gelmezse bile 1L sütleri yakalayıp tam yağlı/laktozsuz vb. olanları eler.
   {label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]},
-
   {label:"1 kg Zeytin", keywords:["1 kg zeytin","zeytin 1 kg","siyah zeytin 1 kg","yeşil zeytin 1 kg"], category:"generic", must:["zeytin"], size:{value:1, unit:"kg"}, ban:["ezmesi","sos","yağı","yagi","sabun","500 gr","400 gr","250 gr"]},
   {label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["zeytin","mısır","fındık","tereyağ","margarin"]},
   {label:"5 kg Toz Şeker", keywords:["5 kg toz şeker","toz şeker 5 kg","5 kg şeker"], category:"generic", must:["şeker"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
@@ -20,13 +17,16 @@ const PRODUCTS = [
   {label:"1 kg Osmancık Pirinç", keywords:["1 kg osmancık pirinç","osmancık pirinç 1 kg"], category:"generic", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
   {label:"2 kg Un", keywords:["2 kg un","un 2 kg","buğday unu 2 kg"], category:"flour2", must:["un"], acceptAny:["2 kg","2000 gr","2.000 gr"], size:{value:2, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
   {label:"5 kg Un", keywords:["5 kg un","un 5 kg","buğday unu 5 kg","5 kg buğday unu"], category:"flour5", must:["un"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
-  {label:"1 kg Beyaz Peynir", keywords:["1 kg beyaz peynir","beyaz peynir 1 kg"], category:"generic", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["krem","labne","kaşar","süzme","lor","çökelek"]},
+
+  // v10: beyaz peynir artık tam yağlı hedefleniyor.
+  {label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+
+  // v10: yeni ürün
+  {label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyağ"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr"]},
+
   {label:"400 g Dana Kasap Sucuk", keywords:["400 gr dana kasap sucuk","dana kasap sucuk 400 gr","400 g dana sucuk"], category:"generic", must:["sucuk"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["75 gr","50 gr","60 gr","250 gr","200 gr"]},
   {label:"400 g Dana Kıyma", keywords:["400 gr dana kıyma","dana kıyma 400 gr"], category:"generic", must:["kıyma"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]},
-
-  // v9: ESK kıyma için özel kategori. Başlıkta 1kg yakalanmasa bile Et ve Süt Kurumu ürünü olarak kabul eder.
   {label:"1 kg Et ve Süt Kurumu Dana Kıyma", keywords:["kıyma","et ve süt kurumu kıyma","et ve süt kurumu dana kıyma","esk dana kıyma","1 kg dana kıyma"], category:"esk_minced", must:["kıyma"], ban:["kuzu","400 gr","500 gr","köfte","hamburger"]},
-
   {label:"1 kg Çay", keywords:["1 kg siyah çay","siyah çay 1 kg","rize çay 1 kg"], category:"tea", must:["çay"], size:{value:1, unit:"kg"}, ban:["buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon"]},
   {label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
   {label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
@@ -36,7 +36,8 @@ const PRODUCTS = [
 function ntr(s){
   return String(s || "").replaceAll("I","ı").replaceAll("İ","i").toLowerCase()
     .replaceAll("â","a").replaceAll("î","i").replaceAll("û","u")
-    .replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c");
+    .replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c")
+    .replaceAll("ı","i");
 }
 function marketType(name){
   const m=ntr(name);
@@ -49,7 +50,7 @@ function hasAny(text, arr){ return !arr || arr.length===0 || arr.some(x=>text.in
 function hasAll(text, arr){ return !arr || arr.length===0 || arr.every(x=>text.includes(ntr(x))); }
 function hasNone(text, arr){ return !arr || arr.length===0 || !arr.some(x=>text.includes(ntr(x))); }
 function sizeMatches(product,spec){
-  if(spec.category === "esk_minced") return true; // ESK ürününde kg bilgisi bazen başlıkta net dönmüyor.
+  if(spec.category === "esk_minced") return true;
   if(!spec.size && !spec.unitOnly) return true;
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
   if(spec.unitOnly) return text.includes("kg") || text.includes("kilogram") || text.includes("1 kg");
@@ -69,7 +70,6 @@ function categoryScore(product,spec){
     score+=20;
   }
   if(spec.category==="milk_half"){
-    // Yarım yağlı varsa yüksek puan, yoksa yine 1L süt olarak düşük puanla kabul.
     if(text.includes("yarim yagli")) score+=60;
     else if(text.includes("sut")) score+=10;
   }
@@ -78,8 +78,11 @@ function categoryScore(product,spec){
     if(isEsk) score += 80;
     if(text.includes("dana")) score += 20;
     if(text.includes("1 kg") || text.includes("1000 gr")) score += 30;
-    // ESK değilse yine de 1kg kıyma rakip tarafında değerlendirilebilir.
     if(!isEsk && !(text.includes("1 kg") || text.includes("1000 gr"))) return -9999;
+  }
+  if(spec.category==="cheese_full"){
+    if(text.includes("tam yagli")) score += 60;
+    else score += 10; // Eğer sistemde tam yağlı ifadesi yoksa yine yakalasın ama düşük puan versin.
   }
   if(spec.category==="tea"){ if(text.includes("siyah")) score+=25; if(text.includes("rize")) score+=10; }
   if(spec.category==="produce") score+=20;
@@ -101,7 +104,7 @@ function scoreProduct(product,spec){
   return score;
 }
 async function apiPost(path,payload){
-  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/9.0"},body:JSON.stringify(payload)});
+  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/10.0"},body:JSON.stringify(payload)});
   if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`);
   return await res.json();
 }
