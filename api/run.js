@@ -2,34 +2,34 @@ const API_BASE = "https://api.marketfiyati.org.tr";
 
 const LATITUDE = 40.7731;
 const LONGITUDE = 30.3948;
-const DISTANCE_KM = 10;
+const DISTANCE_KM = 20;
 
+// V7: KOOP/Tarım Kredi baştan elenmesin diye aramada tüm yakındaki depolar kullanılır.
+// Sonuçlar geldikten sonra market adı üzerinden sınıflandırma yapılır.
 const TARIM_KREDI_KEYS = [
-  "tarım kredi","tarim kredi","koop","ko-op","çiftçi market","ciftci market",
-  "çiftçi marketi","ciftci marketi","kooperatif","tk koop","tk kooperatif"
+  "tarım kredi","tarim kredi","tarım","tarim",
+  "koop","ko-op","kooperatif",
+  "çiftçi market","ciftci market","çiftçi marketi","ciftci marketi",
+  "tk koop","tk kooperatif"
 ];
 
 const RIVAL_MARKETS = [
   "bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"
 ];
 
-const ALL_MARKETS = [...TARIM_KREDI_KEYS, ...RIVAL_MARKETS];
-
 const PRODUCTS = [
   {
     label:"30'lu M Boy Yumurta",
-    keyword:"yumurta m boy 30 adet",
+    keyword:"yumurta m boy 30",
     category:"egg",
     must:["yumurta"],
-    acceptAny:["30 adet","30'lu","30 lu","30lu","30 ad","m boy","53-62"],
-    ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı"]
+    ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]
   },
   {
     label:"1 L Tam Yağlı Süt",
     keyword:"1 lt yağlı süt",
     category:"milk_full",
     must:["süt"],
-    acceptAny:["tam yağlı","tam yagli","yağlı süt","yagli sut"],
     size:{value:1, unit:"l"},
     ban:["yarım","yarim","light","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]
   },
@@ -38,7 +38,6 @@ const PRODUCTS = [
     keyword:"1 lt yarım yağlı süt",
     category:"milk_half",
     must:["süt"],
-    acceptAny:["yarım yağlı","yarim yagli"],
     size:{value:1, unit:"l"},
     ban:["tam yağlı","tam yagli","light","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]
   },
@@ -64,8 +63,6 @@ function ntr(s){
     .replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c");
 }
 
-function originalLower(s){ return String(s || "").replaceAll("I","ı").replaceAll("İ","i").toLowerCase(); }
-
 function marketType(name){
   const m = ntr(name);
   if(TARIM_KREDI_KEYS.some(k => m.includes(ntr(k)))) return "tarim";
@@ -77,10 +74,6 @@ function textOfProduct(p){
   return ntr([p.title,p.brand,p.refinedVolumeOrWeight,p.refinedQuantityUnit,p.quantity,p.unit].join(" "));
 }
 
-function rawTextOfProduct(p){
-  return originalLower([p.title,p.brand,p.refinedVolumeOrWeight,p.refinedQuantityUnit,p.quantity,p.unit].join(" "));
-}
-
 function hasAny(text, arr){ return !arr || arr.length === 0 || arr.some(x => text.includes(ntr(x))); }
 function hasAll(text, arr){ return !arr || arr.length === 0 || arr.every(x => text.includes(ntr(x))); }
 function hasNone(text, arr){ return !arr || arr.length === 0 || !arr.some(x => text.includes(ntr(x))); }
@@ -88,10 +81,9 @@ function hasNone(text, arr){ return !arr || arr.length === 0 || !arr.some(x => t
 function sizeMatches(product, spec){
   if(!spec.size && !spec.unitOnly) return true;
   const text = textOfProduct(product).replaceAll(",", ".").replace(/\s+/g, " ");
-  const raw = rawTextOfProduct(product).replaceAll(",", ".").replace(/\s+/g, " ");
 
   if(spec.unitOnly){
-    return text.includes("kg") || text.includes("kilogram") || raw.includes("kg");
+    return text.includes("kg") || text.includes("kilogram") || text.includes("1 kg");
   }
 
   const v = spec.size.value;
@@ -117,22 +109,22 @@ function categoryScore(product, spec){
   let score = 0;
 
   if(spec.category === "egg"){
-    const has30 = ["30 adet","30 ad","30 lu","30lu","30'lu","30"].some(x => text.includes(ntr(x)));
+    const has30 = text.includes("30") || text.includes("otuz");
     const hasM = text.includes("m boy") || text.includes("53-62") || text.includes("53 62");
     if(!has30) return -9999;
-    if(hasM) score += 40;
+    if(hasM) score += 50;
     score += 20;
   }
 
   if(spec.category === "milk_full"){
-    // "tam" yoksa ama yağlı süt ve 1 L ise kabul; yarım/laktozsuz yasaklı zaten eleniyor.
-    if(text.includes("tam yagli")) score += 40;
-    else if(text.includes("yagli") || text.includes("pastorize") || text.includes("uht")) score += 18;
+    // Tam yağlı yoksa bile "yağlı süt" kabul. Yarım/light/laktozsuz yasaklı.
+    if(text.includes("tam yagli")) score += 45;
+    else if(text.includes("yagli") || text.includes("pastorize") || text.includes("uht")) score += 20;
   }
 
   if(spec.category === "milk_half"){
     if(!text.includes("yarim yagli")) return -9999;
-    score += 40;
+    score += 45;
   }
 
   if(spec.category === "tea"){
@@ -176,7 +168,7 @@ async function apiPost(path, payload){
     headers:{
       "Content-Type":"application/json",
       "Accept":"application/json",
-      "User-Agent":"ARTS-Vercel-Pilot/6.0"
+      "User-Agent":"ARTS-Vercel-Pilot/7.0"
     },
     body:JSON.stringify(payload)
   });
@@ -188,22 +180,19 @@ async function getNearestDepots(){
   const depots = await apiPost("/api/v2/nearest", {
     latitude:LATITUDE, longitude:LONGITUDE, distance:DISTANCE_KM
   });
+
   const list = Array.isArray(depots) ? depots : [];
   const marketNames = [...new Set(list.map(d => d.marketName || d.sellerName || d.name || d.depotName).filter(Boolean))];
 
-  const filtered = list.filter(d => {
-    const m = ntr(d.marketName || d.sellerName || d.name || d.depotName);
-    return ALL_MARKETS.some(x => m.includes(ntr(x)));
-  });
-
-  return {filtered, marketNames};
+  // V7: Aramada bütün depolar kullanılır. Filtreleme sonradan yapılır.
+  return {depots:list, marketNames};
 }
 
 async function searchProduct(spec, depotIds){
   const data = await apiPost("/api/v2/search", {
     keywords:spec.keyword,
     pages:0,
-    size:120,
+    size:150,
     latitude:LATITUDE,
     longitude:LONGITUDE,
     distance:DISTANCE_KM,
@@ -259,7 +248,7 @@ export default async function handler(req, res){
 
   try{
     const depotResult = await getNearestDepots();
-    const depots = depotResult.filtered;
+    const depots = depotResult.depots;
     const depotIds = depots.map(d => d.id).filter(Boolean);
     const results = [];
 
