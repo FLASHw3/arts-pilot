@@ -96,7 +96,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/17.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/18.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
@@ -143,8 +143,9 @@ export default async function handler(req,res){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
         const found=await searchProduct(spec,depotIds); item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
-        const imageCandidate = item.tarim || item.rival || item.best || found.find(x=>x.imageUrl);
+        const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
+        item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
         if(item.tarim||item.rival){item.status="ok"; if(item.tarim&&item.rival){item.difference=Math.round((item.tarim.price-item.rival.price)*100)/100; if(item.difference>0)item.comparison="tarim_expensive"; else if(item.difference<0)item.comparison="tarim_cheaper"; else item.comparison="equal";}else if(item.tarim&&!item.rival)item.comparison="only_tarim"; else if(!item.tarim&&item.rival)item.comparison="no_tarim";}
       }catch(e){item.status="error"; item.error=e.message;}
       results.push(item);
