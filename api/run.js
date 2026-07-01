@@ -7,30 +7,36 @@ const DISTANCE_KM = 20;
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","ko-op","kooperatif","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
+const BEV_BRANDS = ["sarıyer","sariyer","pepsi","yedigün","yedigun","fruko","uludağ","uludag"];
+
 const PRODUCTS = [
-  {label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
-  {label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]},
-  {label:"1 kg Zeytin", keywords:["1 kg zeytin","zeytin 1 kg","siyah zeytin 1 kg","yeşil zeytin 1 kg"], category:"generic", must:["zeytin"], size:{value:1, unit:"kg"}, ban:["ezmesi","sos","yağı","yagi","sabun","500 gr","400 gr","250 gr"]},
-  {label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["zeytin","mısır","fındık","tereyağ","margarin"]},
-  {label:"5 kg Toz Şeker", keywords:["5 kg toz şeker","toz şeker 5 kg","5 kg şeker"], category:"generic", must:["şeker"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
-  {label:"1 kg Baldo Pirinç", keywords:["1 kg baldo pirinç","baldo pirinç 1 kg"], category:"generic", must:["baldo","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
-  {label:"1 kg Osmancık Pirinç", keywords:["1 kg osmancık pirinç","osmancık pirinç 1 kg"], category:"generic", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
-  {label:"2 kg Un", keywords:["2 kg un","un 2 kg","buğday unu 2 kg"], category:"flour2", must:["un"], acceptAny:["2 kg","2000 gr","2.000 gr"], size:{value:2, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
-  {label:"5 kg Un", keywords:["5 kg un","un 5 kg","buğday unu 5 kg","5 kg buğday unu"], category:"flour5", must:["un"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
-
-  // v10: beyaz peynir artık tam yağlı hedefleniyor.
-  {label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
-
-  // v10: yeni ürün
-  {label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyağ"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr"]},
-
-  {label:"400 g Dana Kasap Sucuk", keywords:["400 gr dana kasap sucuk","dana kasap sucuk 400 gr","400 g dana sucuk"], category:"generic", must:["sucuk"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["75 gr","50 gr","60 gr","250 gr","200 gr"]},
-  {label:"400 g Dana Kıyma", keywords:["400 gr dana kıyma","dana kıyma 400 gr"], category:"generic", must:["kıyma"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]},
-  {label:"1 kg Et ve Süt Kurumu Dana Kıyma", keywords:["kıyma","et ve süt kurumu kıyma","et ve süt kurumu dana kıyma","esk dana kıyma","1 kg dana kıyma"], category:"esk_minced", must:["kıyma"], ban:["kuzu","400 gr","500 gr","köfte","hamburger"]},
-  {label:"1 kg Çay", keywords:["1 kg siyah çay","siyah çay 1 kg","rize çay 1 kg"], category:"tea", must:["çay"], size:{value:1, unit:"kg"}, ban:["buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon"]},
-  {label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
-  {label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
-  {label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker"]}
+  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
+  {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr"]},
+  {group:"Temel Gıda", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["zeytin","mısır","fındık","tereyağ","margarin"]},
+  {group:"Temel Gıda", label:"5 kg Toz Şeker", keywords:["5 kg toz şeker","toz şeker 5 kg","5 kg şeker"], category:"generic", must:["şeker"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
+  {group:"Bakliyat", label:"1 kg Baldo Pirinç", keywords:["1 kg baldo pirinç","baldo pirinç 1 kg"], category:"generic", must:["baldo","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
+  {group:"Bakliyat", label:"1 kg Osmancık Pirinç", keywords:["1 kg osmancık pirinç","osmancık pirinç 1 kg"], category:"generic", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
+  {group:"Temel Gıda", label:"2 kg Un", keywords:["2 kg un","un 2 kg","buğday unu 2 kg"], category:"flour2", must:["un"], acceptAny:["2 kg","2000 gr","2.000 gr"], size:{value:2, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
+  {group:"Temel Gıda", label:"5 kg Un", keywords:["5 kg un","un 5 kg","buğday unu 5 kg","5 kg buğday unu"], category:"flour5", must:["un"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
+  {group:"Temel Gıda", label:"1 kg Zeytin", keywords:["1 kg zeytin","zeytin 1 kg","siyah zeytin 1 kg","yeşil zeytin 1 kg"], category:"generic", must:["zeytin"], size:{value:1, unit:"kg"}, ban:["ezmesi","sos","yağı","yagi","sabun","500 gr","400 gr","250 gr"]},
+  {group:"Et Ürünleri", label:"400 g Dana Kasap Sucuk", keywords:["400 gr dana kasap sucuk","dana kasap sucuk 400 gr","400 g dana sucuk"], category:"generic", must:["sucuk"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["75 gr","50 gr","60 gr","250 gr","200 gr"]},
+  {group:"Et Ürünleri", label:"400 g Dana Kıyma", keywords:["400 gr dana kıyma","dana kıyma 400 gr"], category:"generic", must:["kıyma"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]},
+  {group:"Et Ürünleri", label:"1 kg Et ve Süt Kurumu Dana Kıyma", keywords:["kıyma","et ve süt kurumu kıyma","et ve süt kurumu dana kıyma","esk dana kıyma","1 kg dana kıyma"], category:"esk_minced", must:["kıyma"], ban:["kuzu","400 gr","500 gr","köfte","hamburger"]},
+  {group:"İçecek", label:"1 kg Çay", keywords:["1 kg siyah çay","siyah çay 1 kg","rize çay 1 kg"], category:"tea", must:["çay"], size:{value:1, unit:"kg"}, ban:["buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon"]},
+  {group:"Meyve Sebze", label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
+  {group:"Meyve Sebze", label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
+  {group:"Meyve Sebze", label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker"]},
+  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates kg","domates 1 kg"], category:"produce", must:["domates"], unitOnly:true, ban:["salça","sos","kurutulmuş","çorba","konserve"]},
+  {group:"Meyve Sebze", label:"1 kg Muz", keywords:["muz kg","muz 1 kg"], category:"produce", must:["muz"], unitOnly:true, ban:["aroma","puding","bisküvi","çikolata","meyve suyu"]},
+  {group:"Meyve Sebze", label:"1 kg Salatalık", keywords:["salatalık kg","salatalık 1 kg"], category:"produce", must:["salatalık"], unitOnly:true, ban:["turşu","cips","aroma","sos"]},
+  {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["suyu","sos","aroma","kolonya","çay"]},
+  {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
+  {group:"Gazlı İçecek", label:"Gazlı İçecek 330 ml", keywords:["pepsi 330 ml","sarıyer 330 ml","yedigün 330 ml","fruko 330 ml","uludağ 330 ml","gazoz 330 ml"], category:"beverage", brands:BEV_BRANDS, size:{value:330, unit:"ml"}, ban:["enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Gazlı İçecek 1 L", keywords:["pepsi 1 l","sarıyer 1 l","yedigün 1 l","fruko 1 l","uludağ 1 l","gazoz 1 l"], category:"beverage", brands:BEV_BRANDS, size:{value:1, unit:"l"}, ban:["enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Gazlı İçecek 1.5 L", keywords:["pepsi 1.5 l","sarıyer 1.5 l","yedigün 1.5 l","fruko 1.5 l","uludağ 1.5 l","gazoz 1.5 l"], category:"beverage", brands:BEV_BRANDS, size:{value:1.5, unit:"l"}, ban:["enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Gazlı İçecek 2.5 L", keywords:["pepsi 2.5 l","sarıyer 2.5 l","yedigün 2.5 l","fruko 2.5 l","uludağ 2.5 l","gazoz 2.5 l"], category:"beverage", brands:BEV_BRANDS, size:{value:2.5, unit:"l"}, ban:["enerji","maden suyu","soda","ayran","su"]}
 ];
 
 function ntr(s){
@@ -55,7 +61,8 @@ function sizeMatches(product,spec){
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
   if(spec.unitOnly) return text.includes("kg") || text.includes("kilogram") || text.includes("1 kg");
   const v=spec.size.value, unit=spec.size.unit;
-  if(unit==="l") return [`${v} l`,`${v}lt`,`${v} lt`,`${v} litre`,`${v}.0 l`].some(x=>text.includes(x));
+  if(unit==="ml") return [`${v} ml`,`${v}ml`,`${v} cc`].some(x=>text.includes(x));
+  if(unit==="l") { const vv=String(v).replace(".",","); return [`${v} l`,`${v}lt`,`${v} lt`,`${v} litre`,`${v}.0 l`,`${vv} l`,`${vv} lt`].some(x=>text.includes(x)); }
   if(unit==="kg"){ const gram=v*1000; return [`${v} kg`,`${v}kg`,`${v}.0 kg`,`${gram} gr`,`${gram}g`,`${gram} g`,`${gram} gram`].some(x=>text.includes(x)); }
   if(unit==="g") return [`${v} gr`,`${v}g`,`${v} g`,`${v} gram`].some(x=>text.includes(x));
   return true;
@@ -84,6 +91,7 @@ function categoryScore(product,spec){
     if(text.includes("tam yagli")) score += 60;
     else score += 10; // Eğer sistemde tam yağlı ifadesi yoksa yine yakalasın ama düşük puan versin.
   }
+  if(spec.category==="beverage"){ if(!hasAny(text,spec.brands)) return -9999; if(text.includes("kola")||text.includes("gazoz")||text.includes("gazli")||text.includes("pepsi")||text.includes("fruko")||text.includes("yedigun")||text.includes("sariyer")||text.includes("uludag")) score+=40; }
   if(spec.category==="tea"){ if(text.includes("siyah")) score+=25; if(text.includes("rize")) score+=10; }
   if(spec.category==="produce") score+=20;
   return score;
@@ -104,7 +112,7 @@ function scoreProduct(product,spec){
   return score;
 }
 async function apiPost(path,payload){
-  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/10.0"},body:JSON.stringify(payload)});
+  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/11.0"},body:JSON.stringify(payload)});
   if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`);
   return await res.json();
 }
@@ -126,7 +134,7 @@ async function searchProduct(spec,depotIds){
         const marketName=info.marketAdi||info.depotName||"";
         const type=marketType(marketName); if(type==="other") continue;
         const price=Number(info.price); if(!Number.isFinite(price)) continue;
-        all.push({target:spec.label,title:p.title||"",brand:p.brand||"",quantity:p.refinedVolumeOrWeight||p.refinedQuantityUnit||"",market:marketName,depot:info.depotName||"",marketType:type,price,unitPrice:info.unitPrice||"",indexTime:info.indexTime||"",score,keyword});
+        all.push({group:spec.group,target:spec.label,title:p.title||"",brand:p.brand||"",quantity:p.refinedVolumeOrWeight||p.refinedQuantityUnit||"",market:marketName,depot:info.depotName||"",marketType:type,price,unitPrice:info.unitPrice||"",indexTime:info.indexTime||"",score,keyword});
       }
     }
   }
@@ -138,6 +146,22 @@ async function searchProduct(spec,depotIds){
   return [...seen.values()].sort((a,b)=>a.price-b.price || b.score-a.score);
 }
 function bestOf(arr){ return (!arr||arr.length===0)?null:[...arr].sort((a,b)=>a.price-b.price || b.score-a.score)[0]; }
+
+function makeGroupSummary(results){
+  const map={};
+  for(const x of results){
+    const g=x.group||"Diğer";
+    if(!map[g]) map[g]={group:g,total:0,tarimExpensive:0,tarimCheaper:0,equal:0,noTarim:0,incomplete:0};
+    map[g].total++;
+    if(x.comparison==="tarim_expensive") map[g].tarimExpensive++;
+    else if(x.comparison==="tarim_cheaper") map[g].tarimCheaper++;
+    else if(x.comparison==="equal") map[g].equal++;
+    else if(x.comparison==="no_tarim") map[g].noTarim++;
+    else map[g].incomplete++;
+  }
+  return Object.values(map);
+}
+
 export default async function handler(req,res){
   res.setHeader("Access-Control-Allow-Origin","*");
   res.setHeader("Access-Control-Allow-Methods","GET,OPTIONS");
@@ -148,7 +172,7 @@ export default async function handler(req,res){
     const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean);
     const results=[];
     for(const spec of PRODUCTS){
-      const item={target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
+      const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
         const found=await searchProduct(spec,depotIds);
         item.alternatives=found.slice(0,10);
@@ -170,6 +194,6 @@ export default async function handler(req,res){
     }
     const disadvantageCount=results.filter(x=>x.comparison==="tarim_expensive").length;
     const advantageCount=results.filter(x=>["tarim_cheaper","equal","only_tarim"].includes(x.comparison)).length;
-    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,summary:{disadvantageCount,advantageCount}});
+    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:PRODUCTS.length,disadvantageCount,advantageCount}});
   }catch(e){ return res.status(500).json({error:e.message}); }
 }
