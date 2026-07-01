@@ -7,7 +7,7 @@ const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
 const PRODUCTS = [
-  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
+  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
   {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]},
   {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
@@ -41,8 +41,7 @@ const PRODUCTS = [
   {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 1.5 L", keywords:["pepsi kola 1.5 l","pepsi kola 1,5 l","pepsi 1.5 l","pepsi 1,5 l","pepsi 1500 ml"], category:"beverage_exact", must:["pepsi"], size:{value:1.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 2.5 L", keywords:["pepsi kola 2.5 l","pepsi 2.5 l","pepsi 2,5 l"], category:"beverage_exact", must:["pepsi"], size:{value:2.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Yedigün Portakal 330 ml", keywords:["yedigün portakal 330 ml","yedigun portakal 330 ml","yedigün portakallı gazlı içecek 330 ml","yedigün portakal aromalı gazlı içecek 330 ml","yedigün orange 330 ml","yedigün 0.33 l","yedigün 33 cl"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:330, unit:"ml"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su","24x","koli"]},
-  {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
+    {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
 ];
 
 function ntr(s){return String(s||"").replaceAll("I","ı").replaceAll("İ","i").toLowerCase().replaceAll("â","a").replaceAll("î","i").replaceAll("û","u").replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c").replaceAll("ı","i");}
@@ -97,7 +96,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/15.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/16.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
