@@ -5,34 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ARTS - Akıllı Rekabet Takip Sistemi</title>
 <style>
-:root{--g:#2E7D32;--g2:#1B5E20;--soft:#E8F5E9;--red:#C62828;--text:#263238;--muted:#607D8B;--bg:#F6F8F7;--amber:#8A6D00;--blue:#1565C0}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,var(--g2),var(--g));color:white;padding:30px 36px}
-.brand{font-size:44px;font-weight:800;letter-spacing:2px}.sub{font-size:18px;opacity:.95}
-main{padding:24px 34px;max-width:1480px;margin:auto}
+:root{--g:#2E7D32;--g2:#1B5E20;--soft:#E8F5E9;--red:#C62828;--text:#243238;--muted:#607D8B;--bg:#F6F8F7;--amber:#8A6D00;--blue:#1565C0}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+header{background:linear-gradient(135deg,var(--g2),var(--g));color:white;padding:28px 36px}
+.brand{font-size:42px;font-weight:850;letter-spacing:2px}.sub{font-size:17px;opacity:.95}
+main{padding:24px 34px;max-width:1540px;margin:auto}
 .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin:18px 0}
-.card{background:white;border-radius:16px;padding:16px;box-shadow:0 4px 18px #0001;border-left:6px solid var(--g)}
+.card{background:white;border-radius:18px;padding:18px;box-shadow:0 6px 22px #00000010;border-left:6px solid var(--g)}
 .card.redline{border-left-color:var(--red)}.card.blueline{border-left-color:var(--blue)}
-.num{font-size:26px;font-weight:800;color:var(--g)}.rednum{color:var(--red)}.bluenum{color:var(--blue)}
-.label{color:var(--muted);font-size:13px;margin-top:4px}
-button{background:var(--g);color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+.num{font-size:28px;font-weight:850;color:var(--g)}.rednum{color:var(--red)}.bluenum{color:var(--blue)}
+.label{color:var(--muted);font-size:13px;margin-top:5px}
+button{background:var(--g);color:white;border:0;border-radius:11px;padding:13px 18px;font-weight:800;cursor:pointer;font-size:15px}
 button:disabled{opacity:.6;cursor:wait}.muted{color:var(--muted)}
-table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden;box-shadow:0 4px 18px #0001;margin:16px 0}
-th{background:var(--g);color:white;text-align:left;padding:12px;font-size:13px}
-td{padding:11px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
-.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
+table{width:100%;border-collapse:collapse;background:white;border-radius:16px;overflow:hidden;box-shadow:0 6px 22px #00000010;margin:16px 0}
+th{background:var(--g);color:white;text-align:left;padding:14px;font-size:14px}
+td{padding:13px 14px;border-bottom:1px solid #edf1ef;font-size:14px;vertical-align:top;line-height:1.35}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12.5px;font-weight:800}
 .green{background:var(--soft);color:var(--g2)}.amber{background:#FFF8E1;color:var(--amber)}.red{background:#FFEBEE;color:var(--red)}.blue{background:#E3F2FD;color:var(--blue)}
-.small{font-size:12px;color:var(--muted)}.topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-details{background:white;border-radius:12px;padding:12px;margin:16px 0;box-shadow:0 4px 18px #0001}
-.groupBlock{margin-top:28px}.groupBlock h3{margin:0 0 8px 0;color:#1B5E20}
-@media(max-width:950px){.cards{grid-template-columns:1fr}main{padding:18px} table{font-size:12px}}
+.small{font-size:12.5px;color:var(--muted)}.topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+details{background:white;border-radius:14px;padding:14px;margin:16px 0;box-shadow:0 6px 22px #00000010}
+.groupBlock{margin-top:30px}.groupBlock h3{margin:0 0 8px 0;color:#1B5E20;font-size:24px}
+.marketList{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:6px;margin-top:8px}
+.marketChip{background:#f3f7f4;border-radius:9px;padding:7px 9px;font-size:12.5px}
+@media(max-width:950px){.cards{grid-template-columns:1fr}main{padding:18px} table{font-size:12px}.marketList{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><div class="brand">ARTS</div><div class="sub">Akıllı Rekabet Takip Sistemi • v12 Kategori Paneli</div></header>
+<header><div class="brand">ARTS</div><div class="sub">Akıllı Rekabet Takip Sistemi • v13 Detaylı Market Paneli</div></header>
 <main>
 <h2>Sakarya / Adapazarı Rekabet Karşılaştırması</h2>
-<p class="muted">v12: kategoriler ayrı tablolara bölündü, 2 kg un çıkarıldı, içecekler marka/ölçü bazında ayrıldı.</p>
+<p class="muted">v13: Safya yağ ve Efor çay elendi, domates/limon düz ürün hedeflendi, Sarıyer gazlı içecek formatı eklendi, diğer market fiyatları detayda gösteriliyor.</p>
 <div class="topline"><button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button><span id="status" class="muted"></span></div>
 <div class="cards">
 <div class="card"><div class="num" id="productCount">-</div><div class="label">Takip edilen ürün</div></div>
@@ -52,14 +54,21 @@ details{background:white;border-radius:12px;padding:12px;margin:16px 0;box-shado
 <script>
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v12")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v12",JSON.stringify(h))}
+function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v13")||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem("arts_history_v13",JSON.stringify(h))}
 function snapshot(item){return {tarim:item.tarim?.price??null,rival:item.rival?.price??null,comparison:item.comparison,difference:item.difference,checkedAt:new Date().toLocaleString("tr-TR")}}
 function compareSnap(oldSnap,newSnap){if(!oldSnap)return null; const changes=[]; if(oldSnap.tarim!==newSnap.tarim)changes.push(`TK ${tl(oldSnap.tarim)} → ${tl(newSnap.tarim)}`); if(oldSnap.rival!==newSnap.rival)changes.push(`Rakip ${tl(oldSnap.rival)} → ${tl(newSnap.rival)}`); if(oldSnap.comparison!==newSnap.comparison)changes.push("Durum değişti"); return changes.length?changes.join(" | "):null}
-async function run(){const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı arttığı için birkaç dakika sürebilir."; try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt;}catch(e){status.innerHTML='<span class="badge red">Hata: '+esc(e.message)+'</span>'}finally{btn.disabled=false}}
+async function run(){const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir."; try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt;}catch(e){status.innerHTML='<span class="badge red">Hata: '+esc(e.message)+'</span>'}finally{btn.disabled=false}}
 function productCell(x){if(!x)return "-"; return `<b>${tl(x.price)}</b><br><span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span>`}
 function statusBadge(item){if(item.comparison==="tarim_expensive")return '<span class="badge red">Tarım Kredi/KOOP rakipten pahalı</span>'; if(item.comparison==="tarim_cheaper")return '<span class="badge green">Tarım Kredi/KOOP daha ucuz</span>'; if(item.comparison==="equal")return '<span class="badge green">Fiyat eşit</span>'; if(item.comparison==="only_tarim")return '<span class="badge green">Sadece Tarım Kredi/KOOP bulundu</span>'; if(item.comparison==="no_tarim")return '<span class="badge amber">Tarım Kredi/KOOP bulunamadı</span>'; if(item.status==="error")return '<span class="badge red">Hata</span>'; return '<span class="badge amber">Karşılaştırma eksik</span>'}
 function diffCell(item){if(item.comparison==="tarim_expensive")return `<b style="color:#C62828">+${tl(item.difference)}</b>`; if(item.comparison==="tarim_cheaper")return `<b style="color:#1B5E20">${tl(item.difference)}</b>`; if(item.comparison==="equal")return `<b>${tl(0)}</b>`; return "-"}
+function marketDetails(item){
+ const alts=(item.alternatives||[]).slice(0,12);
+ if(!alts.length) return '<span class="small">Alternatif market fiyatı bulunamadı.</span>';
+ return `<details><summary><span class="small"><b>Diğer market fiyatları (${alts.length})</b></span></summary><div class="marketList">`+
+ alts.map(x=>`<div class="marketChip"><b>${tl(x.price)}</b> · ${esc(x.market)}<br><span class="small">${esc(x.title)}</span></div>`).join("")+
+ `</div></details>`;
+}
 function render(data){
  const history=loadHistory(), newHistory={...history}, changes=[];
  document.getElementById("depotCount").textContent=data.depotCount||0; document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0; document.getElementById("advantageCount").textContent=data.summary?.advantageCount||0; document.getElementById("productCount").textContent=data.summary?.productCount||data.results.length; document.getElementById("markets").innerHTML=(data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
@@ -69,7 +78,7 @@ function render(data){
  document.getElementById("foundCount").textContent=found; document.getElementById("changedCount").textContent=changes.length;
  const cb=document.getElementById("changedBody"); cb.innerHTML=""; if(changes.length===0)cb.innerHTML='<tr><td colspan="4"><span class="badge green">Bu tarayıcıdaki son kontrole göre değişen ürün yok.</span></td></tr>'; for(const c of changes)cb.innerHTML+=`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`;
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
- for(const [group,items] of Object.entries(byGroup)){let rows=""; for(const item of items)rows+=`<tr><td><b>${esc(item.target)}</b><br><span class="small">${esc(item.keyword)}</span></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td><span class="small">${item.changeText?esc(item.changeText):"Değişiklik yok"}</span></td></tr>`; wrap.innerHTML+=`<section class="groupBlock"><h3>${esc(group)}</h3><table><thead><tr><th>Hedef Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Son Değişiklik</th></tr></thead><tbody>${rows}</tbody></table></section>`}
+ for(const [group,items] of Object.entries(byGroup)){let rows=""; for(const item of items)rows+=`<tr><td><b>${esc(item.target)}</b><br><span class="small">${esc(item.keyword)}</span><br>${marketDetails(item)}</td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td><span class="small">${item.changeText?esc(item.changeText):"Değişiklik yok"}</span></td></tr>`; wrap.innerHTML+=`<section class="groupBlock"><h3>${esc(group)}</h3><table><thead><tr><th>Hedef Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Son Değişiklik</th></tr></thead><tbody>${rows}</tbody></table></section>`}
  saveHistory(newHistory);
 }
 </script>
