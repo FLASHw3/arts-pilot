@@ -68,6 +68,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 }
 .productImage img{width:100%;height:100%;object-fit:cover;border-radius:18px}
 .productImage:hover{transform:scale(1.04);transition:.15s}
+.placeholderOnly{font-size:38px;background:linear-gradient(135deg,#f7fbf8,#eef8f1)}
 .koopBadge{
   display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 9px;border-radius:999px;
   background:#e8f7ed;color:var(--g2);font-size:12px;font-weight:950;border:1px solid #cfe8d5;
@@ -134,7 +135,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <div class="hero">
         <div>
           <h1>Özet Dashboard</h1>
-          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Tarım Kredi öncelikli ürün görselleri ve market detayları içeren pilot karar destek ekranı.</div>
+          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Tarım Kredi görsel güvenliği ve ürün görselleri ve market detayları içeren pilot karar destek ekranı.</div>
         </div>
         <button class="secondary" onclick="window.print()">📄 PDF Raporu İndir</button>
       </div>
@@ -165,7 +166,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Pilot v18</b><br>
+          <b>ARTS Pilot v19</b><br>
           <span class="small">Tarım Kredi / KOOP Market Karşılaştırma ve Rakip Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -214,10 +215,15 @@ function productEmoji(name){
  return "🛒";
 }
 function productImage(item){
- const img=item.tarim?.imageUrl || item.imageUrl || item.best?.imageUrl || item.rival?.imageUrl || "";
- const title=esc(item.tarim?.title || item.target || "");
+ // v19: Tarım Kredi ürünü varsa, rakip görseline asla düşme.
+ // Tarım Kredi görseli yoksa temiz placeholder göster; yanlış rakip görseli gösterme.
+ const hasTarim = !!item.tarim;
+ const img = hasTarim
+   ? (item.tarim?.imageUrl || "")
+   : (item.imageUrl || item.best?.imageUrl || item.rival?.imageUrl || "");
+ const title=esc(item.tarim?.title || item.best?.title || item.target || "");
  if(img) return `<div class="productImage" onclick="openImageModal('${esc(img)}','${title}')"><img src="${esc(img)}" onerror="this.parentElement.textContent='${productEmoji(item.target)}'"></div>`;
- return `<div class="productImage">${productEmoji(item.target)}</div>`;
+ return `<div class="productImage placeholderOnly">${productEmoji(item.target)}</div>`;
 }
 function koopBadge(item){
  if(item.tarim) return `<div class="koopBadge">+KOOP Tarım Kredi ürünü</div>`;
