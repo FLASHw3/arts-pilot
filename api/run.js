@@ -29,30 +29,20 @@ const PRODUCTS = [
   {group:"Meyve Sebze", label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
   {group:"Meyve Sebze", label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
   {group:"Meyve Sebze", label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker"]},
-  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates kg","domates 1 kg","normal domates kg","sofralık domates kg"], category:"produce", must:["domates"], unitOnly:true, ban:["salkım","salkim","atıştırmalık","atistirmalik","cherry","kokteyl","salça","salca","sos","kurutulmuş","kurutulmus","çorba","corba","konserve"]},
+  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates pembe 1 kg","pembe domates kg","domates kg","domates 1 kg"], category:"produce", must:["domates"], unitOnly:true, ban:["salkım","salkim","atıştırmalık","atistirmalik","cherry","kokteyl","salça","salca","sos","kurutulmuş","kurutulmus","çorba","corba","konserve"]},
   {group:"Meyve Sebze", label:"1 kg Muz", keywords:["muz kg","muz 1 kg"], category:"produce", must:["muz"], unitOnly:true, ban:["aroma","puding","bisküvi","çikolata","meyve suyu"]},
   {group:"Meyve Sebze", label:"1 kg Salatalık", keywords:["salatalık kg","salatalık 1 kg"], category:"produce", must:["salatalık"], unitOnly:true, ban:["turşu","tursu","cips","aroma","sos"]},
   {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["file","suyu","sos","aroma","kolonya","çay","cay"]},
   {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
 
-  {group:"Gazlı İçecek", label:"Sarıyer Kola 330 ml", keywords:["sarıyer kola 330 ml","sariyer kola gazlı içecek 330 ml","sarıyer kola gazlı içecek 330 ml"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:330, unit:"ml"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 330 ml", keywords:["sarıyer portakallı gazoz 330 ml","sarıyer portakallı gazlı içecek 330 ml","sariyer portakalli gazli icecek 330 ml"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:330, unit:"ml"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Sarıyer Gazoz 330 ml", keywords:["sarıyer gazoz 330 ml","sarıyer gazlı içecek 330 ml","sariyer gazli icecek 330 ml"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:330, unit:"ml"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
-
-  {group:"Gazlı İçecek", label:"Sarıyer Kola 1 L", keywords:["sarıyer kola 1 l","sarıyer kola gazlı içecek 1 l","sariyer kola gazli icecek 1 l"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:1, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 1 L", keywords:["sarıyer portakallı gazoz 1 l","sarıyer portakallı gazlı içecek 1 l","sariyer portakalli gazli icecek 1 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:1, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Sarıyer Gazoz 1 L", keywords:["sarıyer gazoz 1 l","sarıyer gazlı içecek 1 l","sariyer gazli icecek 1 l"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:1, unit:"l"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
-
   {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola gazlı içecek 2.5 l","sarıyer kola 2,5 l"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 2.5 L", keywords:["sarıyer portakallı gazoz 2.5 l","sarıyer portakallı gazlı içecek 2.5 l","sarıyer portakallı gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Gazoz 2.5 L", keywords:["sarıyer gazoz 2.5 l","sarıyer gazlı içecek 2.5 l","sarıyer gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
-
-  {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Pepsi Kola 1.5 L", keywords:["pepsi kola 1.5 lt","pepsi 1.5 lt","pepsi 1,5 lt"], category:"beverage_exact", must:["pepsi"], size:{value:1.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
+  {group:"Gazlı İçecek", label:"Pepsi Kola 1.5 L", keywords:["pepsi kola 1.5 l","pepsi kola 1,5 l","pepsi 1.5 l","pepsi 1,5 l","pepsi 1500 ml"], category:"beverage_exact", must:["pepsi"], size:{value:1.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 2.5 L", keywords:["pepsi kola 2.5 l","pepsi 2.5 l","pepsi 2,5 l"], category:"beverage_exact", must:["pepsi"], size:{value:2.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
-
-  {group:"Gazlı İçecek", label:"Yedigün Portakal 330 ml", keywords:["yedigün portakal 330 ml","yedigun portakal 330 ml","yedigün gazlı içecek 330 ml"], category:"beverage_exact", must:["yedigün"], prefer:["portakal"], size:{value:330, unit:"ml"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
-  {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l"], category:"beverage_exact", must:["yedigün"], prefer:["portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
+  {group:"Gazlı İçecek", label:"Yedigün Portakal 330 ml", keywords:["yedigün portakal 330 ml","yedigun portakal 330 ml","yedigün portakallı gazlı içecek 330 ml","yedigün portakal aromalı gazlı içecek 330 ml","yedigün orange 330 ml","yedigün 0.33 l","yedigün 33 cl"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:330, unit:"ml"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su","24x","koli"]},
+  {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
 ];
 
 function ntr(s){return String(s||"").replaceAll("I","ı").replaceAll("İ","i").toLowerCase().replaceAll("â","a").replaceAll("î","i").replaceAll("û","u").replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c").replaceAll("ı","i");}
@@ -67,8 +57,16 @@ function sizeMatches(product,spec){
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
   if(spec.unitOnly) return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
   const v=spec.size.value, unit=spec.size.unit;
-  if(unit==="ml") return [`${v} ml`,`${v}ml`,`${v} cc`].some(x=>text.includes(x));
-  if(unit==="l"){const s=String(v), c=s.replace(".",","); return [`${s} l`,`${s}lt`,`${s} lt`,`${s} litre`,`${c} l`,`${c}lt`,`${c} lt`,`${c} litre`].some(x=>text.includes(x));}
+  if(unit==="ml"){
+    const litre = v/1000;
+    const cl = v/10;
+    return [`${v} ml`,`${v}ml`,`${v} cc`,`${cl} cl`,`${cl}cl`,`${litre} l`,`${String(litre).replace(".",",")} l`,`${litre}lt`,`${String(litre).replace(".",",")}lt`].some(x=>text.includes(x));
+  }
+  if(unit==="l"){
+    const s=String(v), c=s.replace(".",",");
+    const ml = Math.round(v*1000), cl = Math.round(v*100);
+    return [`${s} l`,`${s}lt`,`${s} lt`,`${s} litre`,`${c} l`,`${c}lt`,`${c} lt`,`${c} litre`,`${ml} ml`,`${ml}ml`,`${cl} cl`,`${cl}cl`].some(x=>text.includes(x));
+  }
   if(unit==="kg"){const gram=v*1000; return [`${v} kg`,`${v}kg`,`${v}.0 kg`,`${gram} gr`,`${gram}g`,`${gram} g`,`${gram} gram`].some(x=>text.includes(x));}
   if(unit==="g") return [`${v} gr`,`${v}g`,`${v} g`,`${v} gram`].some(x=>text.includes(x));
   return true;
@@ -81,7 +79,7 @@ function categoryScore(product,spec){
   if(spec.category==="cheese_full"){if(text.includes("tam yagli"))score+=60; else score+=10;}
   if(spec.category==="beverage_exact"){score+=40; if(hasAny(text,spec.prefer))score+=20;}
   if(spec.category==="tea"){if(text.includes("siyah"))score+=25; if(text.includes("rize"))score+=10;}
-  if(spec.category==="produce")score+=20;
+  if(spec.category==="produce"){if(text.includes("pembe"))score+=40; score+=20;}
   return score;
 }
 function scoreProduct(product,spec){
@@ -99,7 +97,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/13.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/15.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
