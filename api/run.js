@@ -2,194 +2,67 @@ const API_BASE = "https://api.marketfiyati.org.tr";
 
 const LATITUDE = 40.7731;
 const LONGITUDE = 30.3948;
-const DISTANCE_KM = 5;
+const DISTANCE_KM = 8;
 
-const TARGET_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
+// Artık Tarım Kredi de dahil. Analiz Tarım Kredi vs rakipler şeklinde yapılır.
+const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tk kooperatif","kooperatif market","tarım kooperatif","tarim kooperatif"];
 
-const PRODUCTS = [
-  {
-    label:"30'lu M Boy Yumurta",
-    keyword:"30 lu yumurta m boy",
-    must:["yumurta"],
-    any:["30","otuz"],
-    ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret"]
-  },
-  {
-    label:"1 L Tam Yağlı Süt",
-    keyword:"1 lt tam yağlı süt",
-    must:["süt"],
-    any:["tam yağlı","tam yagli"],
-    size:{value:1, unit:"l"},
-    ban:["çikolata","bisküvi","tatlı","yoğurt","kefir","ayran","devam sütü","bebek"]
-  },
-  {
-    label:"1 L Yarım Yağlı Süt",
-    keyword:"1 lt yarım yağlı süt",
-    must:["süt"],
-    any:["yarım yağlı","yarim yagli"],
-    size:{value:1, unit:"l"},
-    ban:["çikolata","bisküvi","tatlı","yoğurt","kefir","ayran","devam sütü","bebek"]
-  },
-  {
-    label:"5 L Ayçiçek Yağı",
-    keyword:"5 lt ayçiçek yağı",
-    must:["ayçiçek"],
-    any:["5 l","5 lt","5 litre"],
-    size:{value:5, unit:"l"},
-    ban:["zeytin","mısır","fındık","tereyağ","margarin","1 lt","2 lt"]
-  },
-  {
-    label:"5 kg Toz Şeker",
-    keyword:"5 kg toz şeker",
-    must:["şeker"],
-    any:["5 kg","5000 gr","5.000 gr"],
-    size:{value:5, unit:"kg"},
-    ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi","1 kg","2 kg"]
-  },
-  {
-    label:"1 kg Baldo Pirinç",
-    keyword:"1 kg baldo pirinç",
-    must:["baldo","pirinç"],
-    size:{value:1, unit:"kg"},
-    ban:["bulgur","makarna","5 kg","2 kg"]
-  },
-  {
-    label:"1 kg Osmancık Pirinç",
-    keyword:"1 kg osmancık pirinç",
-    must:["osmancık","pirinç"],
-    size:{value:1, unit:"kg"},
-    ban:["bulgur","makarna","5 kg","2 kg"]
-  },
-  {
-    label:"1 kg Un",
-    keyword:"1 kg un",
-    must:["un"],
-    size:{value:1, unit:"kg"},
-    ban:["5 kg","10 kg","mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin"]
-  },
-  {
-    label:"5 kg Un",
-    keyword:"5 kg un",
-    must:["un"],
-    any:["5 kg","5000 gr","5.000 gr"],
-    size:{value:5, unit:"kg"},
-    ban:["1 kg","mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin"]
-  },
-  {
-    label:"1 kg Beyaz Peynir",
-    keyword:"1 kg beyaz peynir",
-    must:["beyaz","peynir"],
-    size:{value:1, unit:"kg"},
-    ban:["krem","labne","kaşar","süzme","lor","çökelek","500 gr","600 gr","700 gr"]
-  },
-  {
-    label:"400 g Dana Sucuk",
-    keyword:"400 gr dana sucuk",
-    must:["sucuk"],
-    any:["400 gr","400 g"],
-    size:{value:400, unit:"g"},
-    ban:["75 gr","50 gr","60 gr","kangal 250","250 gr","200 gr","fermente 300"]
-  },
-  {
-    label:"400 g Dana Kıyma",
-    keyword:"400 gr dana kıyma",
-    must:["kıyma"],
-    any:["400 gr","400 g"],
-    size:{value:400, unit:"g"},
-    ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]
-  },
-  {
-    label:"1 kg Dana Kıyma",
-    keyword:"1 kg dana kıyma",
-    must:["kıyma"],
-    any:["1 kg","1000 gr"],
-    size:{value:1, unit:"kg"},
-    ban:["kuzu","500 gr","400 gr","köfte","hamburger"]
-  },
-  {
-    label:"1 kg Çay",
-    keyword:"1 kg siyah çay",
-    must:["çay"],
-    size:{value:1, unit:"kg"},
-    ban:["buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon"]
-  },
-  {
-    label:"1 kg Karpuz",
-    keyword:"karpuz kg",
-    must:["karpuz"],
-    unitOnly:true,
-    ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]
-  },
-  {
-    label:"1 kg Soğan",
-    keyword:"soğan kg",
-    must:["soğan"],
-    unitOnly:true,
-    ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]
-  },
-  {
-    label:"1 kg Patates",
-    keyword:"patates kg",
-    must:["patates"],
-    unitOnly:true,
-    ban:["cips","kızartmalık dondurulmuş","dondurulmuş","püre","baharat","çubuk","kraker"]
-  },
+const RIVAL_MARKETS = [
+  "bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"
 ];
 
-function normalizeTurkish(s){
+const ALL_MARKETS = [...TARIM_KREDI_KEYS, ...RIVAL_MARKETS];
+
+const PRODUCTS = [
+  {label:"30'lu M Boy Yumurta", keyword:"30 lu m boy yumurta", must:["yumurta"], any:["30","m boy"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret"]},
+  {label:"1 L Tam Yağlı Süt", keyword:"1 lt tam yağlı süt", must:["süt"], any:["tam yağlı","tam yagli"], size:{value:1, unit:"l"}, ban:["çikolata","bisküvi","tatlı","yoğurt","kefir","ayran","devam sütü","bebek"]},
+  {label:"1 L Yarım Yağlı Süt", keyword:"1 lt yarım yağlı süt", must:["süt"], any:["yarım yağlı","yarim yagli"], size:{value:1, unit:"l"}, ban:["çikolata","bisküvi","tatlı","yoğurt","kefir","ayran","devam sütü","bebek"]},
+  {label:"5 L Ayçiçek Yağı", keyword:"5 lt ayçiçek yağı", must:["ayçiçek"], any:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["zeytin","mısır","fındık","tereyağ","margarin"]},
+  {label:"5 kg Toz Şeker", keyword:"5 kg toz şeker", must:["şeker"], any:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
+  {label:"1 kg Baldo Pirinç", keyword:"1 kg baldo pirinç", must:["baldo","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
+  {label:"1 kg Osmancık Pirinç", keyword:"1 kg osmancık pirinç", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna"]},
+
+  // Un için filtreleri özellikle esnettim.
+  {label:"1 kg Un", keyword:"un 1 kg", must:["un"], size:{value:1, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
+  {label:"5 kg Un", keyword:"un 5 kg", must:["un"], any:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
+
+  {label:"1 kg Beyaz Peynir", keyword:"1 kg beyaz peynir", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["krem","labne","kaşar","süzme","lor","çökelek"]},
+  {label:"400 g Dana Sucuk", keyword:"400 gr dana sucuk", must:["sucuk"], any:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["75 gr","50 gr","60 gr","250 gr","200 gr"]},
+  {label:"400 g Dana Kıyma", keyword:"400 gr dana kıyma", must:["kıyma"], any:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]},
+  {label:"1 kg Dana Kıyma", keyword:"1 kg dana kıyma", must:["kıyma"], any:["1 kg","1000 gr"], size:{value:1, unit:"kg"}, ban:["kuzu","500 gr","400 gr","köfte","hamburger"]},
+  {label:"1 kg Çay", keyword:"1 kg siyah çay", must:["çay"], size:{value:1, unit:"kg"}, ban:["buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon"]},
+  {label:"1 kg Karpuz", keyword:"karpuz kg", must:["karpuz"], unitOnly:true, ban:["sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
+  {label:"1 kg Soğan", keyword:"soğan kg", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
+  {label:"1 kg Patates", keyword:"patates kg", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker"]}
+];
+
+function ntr(s){
   return String(s || "")
-    .replaceAll("I","ı")
-    .replaceAll("İ","i")
+    .replaceAll("I","ı").replaceAll("İ","i")
     .toLowerCase()
-    .replaceAll("â","a")
-    .replaceAll("î","i")
-    .replaceAll("û","u");
+    .replaceAll("â","a").replaceAll("î","i").replaceAll("û","u");
+}
+
+function marketType(name){
+  const m = ntr(name);
+  if(TARIM_KREDI_KEYS.some(k => m.includes(ntr(k)))) return "tarim";
+  if(RIVAL_MARKETS.some(k => m.includes(ntr(k)))) return "rival";
+  return "other";
 }
 
 function textOfProduct(p){
-  return normalizeTurkish([
-    p.title,
-    p.brand,
-    p.refinedVolumeOrWeight,
-    p.refinedQuantityUnit,
-    p.quantity,
-    p.unit,
-  ].join(" "));
+  return ntr([p.title,p.brand,p.refinedVolumeOrWeight,p.refinedQuantityUnit,p.quantity,p.unit].join(" "));
 }
 
-function productSizeText(p){
-  return normalizeTurkish([
-    p.title,
-    p.refinedVolumeOrWeight,
-    p.refinedQuantityUnit,
-    p.quantity,
-    p.unit,
-  ].join(" "));
-}
-
-function hasAny(text, arr){
-  if(!arr || arr.length === 0) return true;
-  return arr.some(x => text.includes(normalizeTurkish(x)));
-}
-
-function hasAll(text, arr){
-  if(!arr || arr.length === 0) return true;
-  return arr.every(x => text.includes(normalizeTurkish(x)));
-}
-
-function hasNone(text, arr){
-  if(!arr || arr.length === 0) return true;
-  return !arr.some(x => text.includes(normalizeTurkish(x)));
-}
+function hasAny(text, arr){ return !arr || arr.length === 0 || arr.some(x => text.includes(ntr(x))); }
+function hasAll(text, arr){ return !arr || arr.length === 0 || arr.every(x => text.includes(ntr(x))); }
+function hasNone(text, arr){ return !arr || arr.length === 0 || !arr.some(x => text.includes(ntr(x))); }
 
 function sizeMatches(product, spec){
   if(!spec.size && !spec.unitOnly) return true;
 
-  const text = productSizeText(product)
-    .replaceAll(",", ".")
-    .replace(/\s+/g, " ");
+  const text = textOfProduct(product).replaceAll(",", ".").replace(/\s+/g, " ");
 
-  // Sebze/meyvede direkt kg birim fiyatlı ürünler daha güvenilir.
   if(spec.unitOnly){
     return text.includes("kg") || text.includes("kilogram") || text.includes("1 kg");
   }
@@ -198,24 +71,16 @@ function sizeMatches(product, spec){
   const unit = spec.size.unit;
 
   if(unit === "l"){
-    const patterns = [
-      `${v} l`, `${v}lt`, `${v} lt`, `${v} litre`, `${v}.0 l`, `${v},0 l`
-    ];
-    return patterns.some(x => text.includes(x));
+    return [`${v} l`,`${v}lt`,`${v} lt`,`${v} litre`,`${v}.0 l`].some(x => text.includes(x));
   }
 
   if(unit === "kg"){
     const gram = v * 1000;
-    const patterns = [
-      `${v} kg`, `${v}kg`, `${v}.0 kg`, `${v},0 kg`,
-      `${gram} gr`, `${gram}g`, `${gram} g`, `${gram} gram`
-    ];
-    return patterns.some(x => text.includes(x));
+    return [`${v} kg`,`${v}kg`,`${v}.0 kg`,`${gram} gr`,`${gram}g`,`${gram} g`,`${gram} gram`].some(x => text.includes(x));
   }
 
   if(unit === "g"){
-    const patterns = [`${v} gr`, `${v}g`, `${v} g`, `${v} gram`];
-    return patterns.some(x => text.includes(x));
+    return [`${v} gr`,`${v}g`,`${v} g`,`${v} gram`].some(x => text.includes(x));
   }
 
   return true;
@@ -230,23 +95,13 @@ function scoreProduct(product, spec){
   if(!sizeMatches(product, spec)) return -9999;
 
   let score = 0;
-
-  for(const m of spec.must || []){
-    if(text.includes(normalizeTurkish(m))) score += 20;
-  }
-
-  for(const a of spec.any || []){
-    if(text.includes(normalizeTurkish(a))) score += 10;
-  }
-
+  for(const m of spec.must || []) if(text.includes(ntr(m))) score += 20;
+  for(const a of spec.any || []) if(text.includes(ntr(a))) score += 10;
   if(spec.size) score += 25;
   if(spec.unitOnly) score += 15;
 
-  // Ürün adında hedef ana kelime geçiyorsa puan arttır.
-  const labelWords = normalizeTurkish(spec.label).split(/\s+/).filter(w => w.length > 2);
-  for(const w of labelWords){
-    if(text.includes(w)) score += 2;
-  }
+  const labelWords = ntr(spec.label).split(/\s+/).filter(w => w.length > 2);
+  for(const w of labelWords) if(text.includes(w)) score += 2;
 
   return score;
 }
@@ -257,7 +112,7 @@ async function apiPost(path, payload){
     headers:{
       "Content-Type":"application/json",
       "Accept":"application/json",
-      "User-Agent":"ARTS-Vercel-Pilot/2.0"
+      "User-Agent":"ARTS-Vercel-Pilot/4.0"
     },
     body:JSON.stringify(payload)
   });
@@ -271,8 +126,8 @@ async function getNearestDepots(){
   });
 
   return (Array.isArray(depots) ? depots : []).filter(d => {
-    const m = normalizeTurkish(d.marketName || d.sellerName || d.name);
-    return TARGET_MARKETS.some(x => m.includes(normalizeTurkish(x)));
+    const m = ntr(d.marketName || d.sellerName || d.name);
+    return ALL_MARKETS.some(x => m.includes(ntr(x)));
   });
 }
 
@@ -280,7 +135,7 @@ async function searchProduct(spec, depotIds){
   const data = await apiPost("/api/v2/search", {
     keywords:spec.keyword,
     pages:0,
-    size:80,
+    size:100,
     latitude:LATITUDE,
     longitude:LONGITUDE,
     distance:DISTANCE_KM,
@@ -295,8 +150,9 @@ async function searchProduct(spec, depotIds){
     if(score < 0) continue;
 
     for(const info of (p.productDepotInfoList || [])){
-      const market = normalizeTurkish(info.marketAdi || info.depotName || "");
-      if(!TARGET_MARKETS.some(x => market.includes(normalizeTurkish(x)))) continue;
+      const marketName = info.marketAdi || info.depotName || "";
+      const type = marketType(marketName);
+      if(type === "other") continue;
 
       const price = Number(info.price);
       if(!Number.isFinite(price)) continue;
@@ -306,8 +162,9 @@ async function searchProduct(spec, depotIds){
         title:p.title || "",
         brand:p.brand || "",
         quantity:p.refinedVolumeOrWeight || p.refinedQuantityUnit || "",
-        market:info.marketAdi || info.depotName || "",
+        market:marketName,
         depot:info.depotName || "",
+        marketType:type,
         price,
         unitPrice:info.unitPrice || "",
         indexTime:info.indexTime || "",
@@ -316,9 +173,13 @@ async function searchProduct(spec, depotIds){
     }
   }
 
-  // Önce fiyat, eşitlikte daha iyi eşleşme.
   candidates.sort((a,b) => a.price - b.price || b.score - a.score);
-  return candidates.slice(0,8);
+  return candidates;
+}
+
+function bestOf(arr){
+  if(!arr || arr.length === 0) return null;
+  return [...arr].sort((a,b)=>a.price-b.price || b.score-a.score)[0];
 }
 
 export default async function handler(req, res){
@@ -337,18 +198,39 @@ export default async function handler(req, res){
       const item = {
         target:spec.label,
         keyword:spec.keyword,
+        tarim:null,
+        rival:null,
         best:null,
         alternatives:[],
-        status:"not_found"
+        status:"not_found",
+        comparison:"unknown",
+        difference:null
       };
 
       try{
         const found = await searchProduct(spec, depotIds);
-        item.alternatives = found;
+        item.alternatives = found.slice(0,10);
 
-        if(found.length){
-          item.best = found[0];
+        const tarimCandidates = found.filter(x => x.marketType === "tarim");
+        const rivalCandidates = found.filter(x => x.marketType === "rival");
+
+        item.tarim = bestOf(tarimCandidates);
+        item.rival = bestOf(rivalCandidates);
+        item.best = bestOf(found);
+
+        if(item.tarim || item.rival){
           item.status = "ok";
+
+          if(item.tarim && item.rival){
+            item.difference = Math.round((item.tarim.price - item.rival.price) * 100) / 100;
+            if(item.difference > 0) item.comparison = "tarim_expensive";
+            else if(item.difference < 0) item.comparison = "tarim_cheaper";
+            else item.comparison = "equal";
+          } else if(item.tarim && !item.rival){
+            item.comparison = "only_tarim";
+          } else if(!item.tarim && item.rival){
+            item.comparison = "no_tarim";
+          }
         }
       }catch(e){
         item.status = "error";
@@ -358,11 +240,15 @@ export default async function handler(req, res){
       results.push(item);
     }
 
+    const disadvantageCount = results.filter(x => x.comparison === "tarim_expensive").length;
+    const advantageCount = results.filter(x => x.comparison === "tarim_cheaper" || x.comparison === "equal" || x.comparison === "only_tarim").length;
+
     return res.status(200).json({
       checkedAt:new Date().toLocaleString("tr-TR", {timeZone:"Europe/Istanbul"}),
       location:"Sakarya / Adapazarı",
       depotCount:depotIds.length,
-      results
+      results,
+      summary:{disadvantageCount, advantageCount}
     });
   }catch(e){
     return res.status(500).json({error:e.message});
