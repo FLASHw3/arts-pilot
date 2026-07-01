@@ -27,20 +27,11 @@
   </style>
 </head>
 <body>
-<header>
-  <div class="brand">ARTS</div>
-  <div class="sub">Akıllı Rekabet Takip Sistemi • Tarım Kredi / KOOP Karşılaştırma Paneli</div>
-</header>
-
+<header><div class="brand">ARTS</div><div class="sub">Akıllı Rekabet Takip Sistemi • Tarım Kredi / KOOP Karşılaştırma Paneli</div></header>
 <main>
   <h2>Sakarya / Adapazarı Rekabet Karşılaştırması</h2>
-  <p class="muted">V7: KOOP baştan elenmesin diye aramada yakındaki tüm depolar kullanılır, sınıflandırma sonuç geldikten sonra yapılır.</p>
-
-  <div class="topline">
-    <button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button>
-    <span id="status" class="muted"></span>
-  </div>
-
+  <p class="muted">V8 ürün listesi: tam yağlı süt çıkarıldı, 1 kg zeytin ve 2 kg un eklendi. Sucuk ve kıyma tanımları güncellendi.</p>
+  <div class="topline"><button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button><span id="status" class="muted"></span></div>
   <div class="cards">
     <div class="card"><div class="num">17</div><div class="label">Takip edilen ürün</div></div>
     <div class="card"><div class="num">KOOP + Rakip</div><div class="label">Market kapsamı</div></div>
@@ -48,91 +39,37 @@
     <div class="card redline"><div class="num rednum" id="disadvantageCount">0</div><div class="label">Rakipten pahalı olduğumuz ürün</div></div>
     <div class="card"><div class="num" id="depotCount">-</div><div class="label">Yakındaki şube/depo</div></div>
   </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Hedef Ürün</th>
-        <th>Tarım Kredi / KOOP</th>
-        <th>En Ucuz Rakip</th>
-        <th>Fark</th>
-        <th>Durum</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-
-  <details open>
-    <summary><b>Geliştirici Bilgisi: API'de Görülen Market Adları</b></summary>
-    <div id="markets" class="small" style="margin-top:10px"></div>
-  </details>
+  <table><thead><tr><th>Hedef Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th></tr></thead><tbody id="tbody"></tbody></table>
+  <details><summary><b>Geliştirici Bilgisi: API'de Görülen Market Adları</b></summary><div id="markets" class="small" style="margin-top:10px"></div></details>
 </main>
-
 <script>
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-
 async function run(){
-  const btn=document.getElementById("btn");
-  const status=document.getElementById("status");
+  const btn=document.getElementById("btn"), status=document.getElementById("status");
   btn.disabled=true; status.textContent=" Kontrol ediliyor... 17 ürün birkaç dakika sürebilir.";
-  try{
-    const res=await fetch("/api/run");
-    const data=await res.json();
-    if(!res.ok) throw new Error(data.error||"Bilinmeyen hata");
-    render(data); status.textContent=" Tamamlandı. Son kontrol: " + data.checkedAt;
-  }catch(e){
-    status.innerHTML='<span class="badge red">Hata: '+esc(e.message)+'</span>';
-  }finally{btn.disabled=false}
+  try{ const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok) throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; }
+  catch(e){ status.innerHTML='<span class="badge red">Hata: '+esc(e.message)+'</span>'; }
+  finally{btn.disabled=false}
 }
-
-function productCell(x){
-  if(!x) return "-";
-  return `<b>${tl(x.price)}</b><br><span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span>`;
-}
-
+function productCell(x){ if(!x) return "-"; return `<b>${tl(x.price)}</b><br><span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span>`; }
 function render(data){
   document.getElementById("depotCount").textContent=data.depotCount||0;
   document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
-  document.getElementById("markets").innerHTML = (data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
-
-  const tb=document.getElementById("tbody"); tb.innerHTML="";
-  let found=0;
-
+  document.getElementById("markets").innerHTML=(data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
+  const tb=document.getElementById("tbody"); tb.innerHTML=""; let found=0;
   for(const item of data.results){
-    if(item.tarim || item.rival) found++;
-
-    let diff = "-";
-    let status = '<span class="badge amber">Karşılaştırma eksik</span>';
-
-    if(item.comparison === "tarim_expensive"){
-      diff = `<b style="color:#C62828">+${tl(item.difference)}</b>`;
-      status = '<span class="badge red">Tarım Kredi/KOOP rakipten pahalı</span>';
-    } else if(item.comparison === "tarim_cheaper"){
-      diff = `<b style="color:#1B5E20">${tl(item.difference)}</b>`;
-      status = '<span class="badge green">Tarım Kredi/KOOP daha ucuz</span>';
-    } else if(item.comparison === "equal"){
-      diff = `<b>${tl(0)}</b>`;
-      status = '<span class="badge green">Fiyat eşit</span>';
-    } else if(item.comparison === "only_tarim"){
-      status = '<span class="badge green">Sadece Tarım Kredi/KOOP bulundu</span>';
-    } else if(item.comparison === "no_tarim"){
-      status = '<span class="badge amber">Tarım Kredi/KOOP bulunamadı</span>';
-    } else if(item.status === "error"){
-      status = '<span class="badge red">Hata</span>';
-    }
-
-    tb.innerHTML += `<tr>
-      <td><b>${esc(item.target)}</b><br><span class="small">${esc(item.keyword)}</span></td>
-      <td>${productCell(item.tarim)}</td>
-      <td>${productCell(item.rival)}</td>
-      <td>${diff}</td>
-      <td>${status}</td>
-    </tr>`;
+    if(item.tarim||item.rival) found++;
+    let diff="-", status='<span class="badge amber">Karşılaştırma eksik</span>';
+    if(item.comparison==="tarim_expensive"){ diff=`<b style="color:#C62828">+${tl(item.difference)}</b>`; status='<span class="badge red">Tarım Kredi/KOOP rakipten pahalı</span>'; }
+    else if(item.comparison==="tarim_cheaper"){ diff=`<b style="color:#1B5E20">${tl(item.difference)}</b>`; status='<span class="badge green">Tarım Kredi/KOOP daha ucuz</span>'; }
+    else if(item.comparison==="equal"){ diff=`<b>${tl(0)}</b>`; status='<span class="badge green">Fiyat eşit</span>'; }
+    else if(item.comparison==="only_tarim") status='<span class="badge green">Sadece Tarım Kredi/KOOP bulundu</span>';
+    else if(item.comparison==="no_tarim") status='<span class="badge amber">Tarım Kredi/KOOP bulunamadı</span>';
+    else if(item.status==="error") status='<span class="badge red">Hata</span>';
+    tb.innerHTML+=`<tr><td><b>${esc(item.target)}</b><br><span class="small">${esc(item.keyword)}</span></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diff}</td><td>${status}</td></tr>`;
   }
-
   document.getElementById("foundCount").textContent=found;
 }
 </script>
-</body>
-</html>
+</body></html>
