@@ -29,12 +29,12 @@
 <body>
 <header>
   <div class="brand">ARTS</div>
-  <div class="sub">Akıllı Rekabet Takip Sistemi • Tarım Kredi Karşılaştırma Paneli</div>
+  <div class="sub">Akıllı Rekabet Takip Sistemi • Tarım Kredi / KOOP Karşılaştırma Paneli</div>
 </header>
 
 <main>
   <h2>Sakarya / Adapazarı Rekabet Karşılaştırması</h2>
-  <p class="muted">Tarım Kredi/KOOP fiyatı ile en ucuz rakip fiyatı karşılaştırılır. Geliştirici kısmında API'de görülen gerçek market adları da listelenir.</p>
+  <p class="muted">V7: KOOP baştan elenmesin diye aramada yakındaki tüm depolar kullanılır, sınıflandırma sonuç geldikten sonra yapılır.</p>
 
   <div class="topline">
     <button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button>
@@ -43,7 +43,7 @@
 
   <div class="cards">
     <div class="card"><div class="num">17</div><div class="label">Takip edilen ürün</div></div>
-    <div class="card"><div class="num">KOOP + 8</div><div class="label">Market kapsamı</div></div>
+    <div class="card"><div class="num">KOOP + Rakip</div><div class="label">Market kapsamı</div></div>
     <div class="card"><div class="num" id="foundCount">0</div><div class="label">Bulunan ürün</div></div>
     <div class="card redline"><div class="num rednum" id="disadvantageCount">0</div><div class="label">Rakipten pahalı olduğumuz ürün</div></div>
     <div class="card"><div class="num" id="depotCount">-</div><div class="label">Yakındaki şube/depo</div></div>
@@ -62,7 +62,7 @@
     <tbody id="tbody"></tbody>
   </table>
 
-  <details>
+  <details open>
     <summary><b>Geliştirici Bilgisi: API'de Görülen Market Adları</b></summary>
     <div id="markets" class="small" style="margin-top:10px"></div>
   </details>
@@ -107,10 +107,10 @@ function render(data){
 
     if(item.comparison === "tarim_expensive"){
       diff = `<b style="color:#C62828">+${tl(item.difference)}</b>`;
-      status = '<span class="badge red">Tarım Kredi rakipten pahalı</span>';
+      status = '<span class="badge red">Tarım Kredi/KOOP rakipten pahalı</span>';
     } else if(item.comparison === "tarim_cheaper"){
       diff = `<b style="color:#1B5E20">${tl(item.difference)}</b>`;
-      status = '<span class="badge green">Tarım Kredi daha ucuz</span>';
+      status = '<span class="badge green">Tarım Kredi/KOOP daha ucuz</span>';
     } else if(item.comparison === "equal"){
       diff = `<b>${tl(0)}</b>`;
       status = '<span class="badge green">Fiyat eşit</span>';
