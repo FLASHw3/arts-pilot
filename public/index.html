@@ -112,15 +112,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
   border-radius:50%;
   background:rgba(22,122,53,.10);
 }
-.hero:before{
-  content:"Kurumsal Pilot";
-  position:absolute;
-  right:24px;
-  bottom:20px;
-  color:rgba(20,101,42,.12);
-  font-weight:950;
-  font-size:42px;
-}
+.hero:before{content:none;}
 .marketChip{
   display:block;
   border-left:4px solid var(--g);
@@ -226,7 +218,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Kurumsal Pilot v22</b><br>
+          <b>ARTS Kurumsal Pilot v23</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -253,8 +245,8 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v22")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v22",JSON.stringify(h))}
+function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v23")||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem("arts_history_v23",JSON.stringify(h))}
 function snapshot(item){return {
   tarim:item.tarim?.price??null,
   rival:item.rival?.price??null,
@@ -303,6 +295,7 @@ function productVisual(name){
  if(n.includes("sucuk"))return ["🥓","SUCUK"];
  if(n.includes("kıyma"))return ["🥩","KIYMA"];
  if(n.includes("çay"))return ["🍵","ÇAY"];
+ if(n.includes("maden suyu")||n.includes("kızılay"))return ["🫧","MADEN"]; 
  if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return ["🥤","İÇECEK"];
  if(n.includes("tuvalet kağıdı"))return ["🧻","TUVALET"];
  if(n.includes("kağıt havlu"))return ["🧻","HAVLU"];
