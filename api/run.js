@@ -52,7 +52,7 @@ const PRODUCTS = [
   {group:"İçecek", label:"Kızılay Mandalinalı Maden Suyu 6x200 ml", keywords:["Kızılay Maden Suyu Mandalina Aromalı 6x200 Ml","Kızılay Mandalinalı Maden Suyu 6x200 Ml","kızılay mandalina maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","mandalina"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","limon","karpuz","çilek","cilek","tekli","1 adet","200 ml tek"]},
   {group:"İçecek", label:"Kızılay Karpuz Çilek Maden Suyu 6x200 ml", keywords:["Kızılay Karpuz Ve Çilek Aromalı Maden Suyu 6x200 Ml","Kızılay Karpuz Çilek Aromalı Maden Suyu 6x200 Ml","kızılay karpuz çilek maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","karpuz"], prefer:["çilek","cilek"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","limon","mandalina","tekli","1 adet","200 ml tek"]},
 
-  {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola 2,5 l","sarıyer kola 2.5 lt","sarıyer kola 2,5 lt","sarıyer kola gazlı içecek 2.5 l","sarıyer kola gazlı içecek 2,5 lt","sariyer kola 2.5 lt"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola 2,5 l","sarıyer kola 2.5 lt","sarıyer kola 2,5 lt","sarıyer kola gazlı içecek 2.5 l","sarıyer kola gazlı içecek 2,5 lt","sariyer kola 2.5 lt"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 2.5 L", keywords:["sarıyer portakallı gazoz 2.5 l","sarıyer portakallı gazlı içecek 2.5 l","sarıyer portakallı gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Gazoz 2.5 L", keywords:["sarıyer gazoz 2.5 l","sarıyer gazlı içecek 2.5 l","sarıyer gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
@@ -101,7 +101,7 @@ function categoryScore(product,spec){
   if(spec.category==="detergent_color5"){if(text.includes("renkliler"))score+=45; score+=20;}
   if(spec.category==="detergent_white5"){if(text.includes("beyazlar"))score+=45; score+=20;}
   if(spec.category==="icecream"){score+=35; if(text.includes("dondurma"))score+=35;}
-  if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavored"){if(text.includes("kizilay"))score+=40; if(text.includes("6x200")||text.includes("6 x 200")||text.includes("1200 ml"))score+=35; score+=20;}
+if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavored"){if(text.includes("kizilay"))score+=40; if(text.includes("6x200")||text.includes("6 x 200")||text.includes("1200 ml"))score+=35; score+=20;}
   if(spec.category==="tea"){if(text.includes("siyah"))score+=25; if(text.includes("rize"))score+=10;}
   if(spec.category==="produce"){if(text.includes("pembe"))score+=40; score+=20;}
   return score;
@@ -123,7 +123,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/25.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/25.1"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
