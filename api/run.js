@@ -7,13 +7,13 @@ const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
 const PRODUCTS = [
-  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet","anadolu çiftliği","anadolu ciftligi","keskinoğlu","keskinoglu"]},
+  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet","keskinoğlu","keskinoglu"]},
 
   {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1","pınar","pinar","%0,5","%0.5","0,5 yağlı","0.5 yağlı","0,5 yagli","0.5 yagli"]},
   {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
   {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr","mengen","mengen çiftliği","mengen ciftligi"]},
 
-  {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L","5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], brandAny:["tmo"], size:{value:5, unit:"l"}, ban:["safya","orkide 395","zeytin","mısır","fındık","tereyağ","margarin"], minPrice:400},
+  {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek","TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["safya","zeytin","mısır","fındık","tereyağ","margarin"]},
   {group:"Temel Gıda / Bakliyat", label:"5 kg Toz Şeker", keywords:["5 kg toz şeker","toz şeker 5 kg","5 kg şeker"], category:"generic", must:["şeker"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
   {group:"Temel Gıda / Bakliyat", label:"1 kg Baldo Pirinç", keywords:["1 kg baldo pirinç","baldo pirinç 1 kg"], category:"generic", must:["baldo","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna","anadolu lezzetleri","gönen","gonen"]},
   {group:"Temel Gıda / Bakliyat", label:"1 kg Osmancık Pirinç", keywords:["1 kg osmancık pirinç","osmancık pirinç 1 kg"], category:"generic", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna","zeki"]},
@@ -122,7 +122,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/26.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/27.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
