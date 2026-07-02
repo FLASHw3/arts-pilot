@@ -442,6 +442,23 @@ hr{
   border-color:var(--line) !important;
 }
 
+
+/* v53 Flyer List + Readability */
+.aiHero{background:#fffaf0!important;color:#12242c!important;border:1px solid var(--line)!important}
+.aiHero h2{color:#0f6428!important}
+.aiText{color:#243943!important;font-weight:650}
+.aiPill{background:#e7f3e9!important;color:#0f6428!important;border-color:#cfe4d3!important}
+.scoreExplain{margin-top:12px;background:#fbf7ed;border:1px solid #e2dac8;border-radius:14px;padding:12px;color:#3c5058;font-size:13px;line-height:1.45}
+.flyerListWrap{margin-top:18px;background:#fffdf7;border:1px solid var(--line);border-radius:18px;padding:16px}
+.flyerListHeader{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.flyerMiniGrid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:10px}
+.flyerMiniItem{border:1px solid #e2dac8;background:#fffaf0;border-radius:14px;padding:10px 12px}
+.flyerMiniTitle{font-weight:950;color:#12242c}
+.flyerMiniMeta{font-size:12px;color:#667983;margin-top:3px}
+.flyerMiniStatus{display:inline-block;margin-top:6px;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:950}
+.flyerFound{background:#e7f3e9;color:#0f6428}.flyerMissing{background:#fff6d8;color:#8a6d00}
+@media(max-width:1100px){.flyerMiniGrid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -550,12 +567,27 @@ hr{
           <div class="flyerStat"><span class="muted">Kontrol gerekli</span><br><b id="flyerMissing">-</b></div>
         </div>
         <div class="flyerNote" id="flyerComment">Canlı kontrol sonrası haftalık afiş yorumu burada oluşacak.</div>
+        <div class="flyerListWrap">
+          <div class="flyerListHeader">
+            <b>Afiş Ürünleri Listesi</b>
+            <span class="muted">Afişteki tüm ürünler burada ayrı listelenir.</span>
+          </div>
+          <div id="flyerProductList" class="flyerMiniGrid"></div>
+        </div>
+
       </section>
 
       <section class="aiHero" id="aiExecutive">
         <h2>ARTS AI Yönetici Yorumu</h2>
         <div id="aiExecutiveText" class="aiText">Canlı kontrol sonrası sistem genel durumu yorumlayacak.</div>
         <div id="aiExecutivePills" class="aiPills"></div>
+        <div id="scoreExplain" class="scoreExplain">
+          <b>Genel rekabet skoru nasıl hesaplanır?</b><br>
+          Skor; Tarım Kredi'nin rakiplere göre ucuz olduğu ürün oranı, pahalı kaldığı ürün sayısı,
+          fiyatı eşit olan ürünler ve karşılaştırması eksik ürünlerin etkisiyle hesaplanır.
+          100'e yakın skor güçlü rekabet avantajını, düşük skor ise fiyat revizyonu ihtiyacını gösterir.
+        </div>
+
       </section>
 
       <div class="v50Grid">
@@ -631,7 +663,7 @@ hr{
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v52.1</b><br>
+          <b>ARTS Executive Edition v53</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -658,7 +690,7 @@ hr{
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v52_1";
+const HISTORY_KEY="arts_history_v53";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -883,28 +915,40 @@ function recommendationPrice(item){
 }
 
 
+
+const WEEKLY_FLYER_PRODUCTS=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
 function isFlyerItem(x){
   const g=(x.group||"").toLowerCase();
-  const k=(x.keyword||"").toLowerCase();
-  const t=(x.target||"").toLowerCase();
-  return g.includes("haftalık afiş") || k.includes("sarıyer kola 2.5") || k.includes("kabuklu yer fıstığı") || t.includes("solo ultra") || t.includes("bergamot aromalı çay") || t.includes("dana kasap sucuk") || t.includes("tarsüt");
+  return g.includes("haftalık afiş");
 }
 function renderFlyerPanel(data){
- const flyer=(data.results||[]).filter(isFlyerItem);
- const total=flyer.length;
+ const results=data.results||[];
+ const flyer=results.filter(isFlyerItem);
+ const total=WEEKLY_FLYER_PRODUCTS.length;
  const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
  const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
- const missing=flyer.filter(x=>!x.tarim||!x.rival).length;
+ const missing=total-flyer.filter(x=>x.tarim||x.rival||x.best).length;
  const equal=flyer.filter(x=>x.comparison==="equal").length;
+ const byTarget=Object.fromEntries(flyer.map(x=>[x.target,x]));
  const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
  const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
- set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
+ set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",Math.max(0,missing));
  const comment=document.getElementById("flyerComment");
  if(comment){
    comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
  }
+ const list=document.getElementById("flyerProductList");
+ if(list){
+   list.innerHTML=WEEKLY_FLYER_PRODUCTS.map(name=>{
+     const item=byTarget[name];
+     const status=item?(item.tarim&&item.rival?statusText(item.comparison):"Bulundu / kontrol gerekli"):"Henüz sonuç yok";
+     const price=item?`TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)}`:"Canlı aramada ürün sonucu bekleniyor";
+     return `<div class="flyerMiniItem"><div class="flyerMiniTitle">${esc(name)}</div><div class="flyerMiniMeta">${price}</div><span class="flyerMiniStatus ${item?'flyerFound':'flyerMissing'}">${esc(status)}</span></div>`;
+   }).join("");
+ }
 }
+
 
 
 function renderV50Panels(data,changes,byGroup){
