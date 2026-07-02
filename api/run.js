@@ -125,7 +125,13 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/29.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/30.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function getNearestDepotsAt(latitude,longitude,distance){
+  const depots=await apiPost("/api/v2/nearest",{latitude,longitude,distance});
+  const list=Array.isArray(depots)?depots:[];
+  const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))];
+  return {depots:list,marketNames};
+}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds,opts={}){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
@@ -179,12 +185,43 @@ export default async function handler(req,res){
         if(spec.category==="egg" && !found.some(x=>x.marketType==="tarim")){
           const eggFallbackSpec = {
             ...spec,
-            keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","Türem Yumurta 30 Adet","türem yumurta"],
+            keywords:[
+              "Türem Yumurta M Boy 30 Adet",
+              "Turem Yumurta M Boy 30 Adet",
+              "Türem Yumurta 53-62 Gr 30 Adet",
+              "Türem Yumurta 30 Adet",
+              "Türem Yumurta",
+              "türem yumurta",
+              "yumurta 53-62 gr 30 adet"
+            ],
             must:["yumurta"],
             prefer:["türem","turem","m boy","53-62"],
             ban:["keskinoğlu","keskinoglu","anadolu çiftliği","anadolu ciftligi","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]
           };
-          const fallbackFound = await searchProduct(eggFallbackSpec,depotIds,{latitude:SAKARYA_LATITUDE,longitude:SAKARYA_LONGITUDE,distance:SAKARYA_DISTANCE_KM,depots:[]});
+
+          // 1) Sakarya koordinatlı geniş arama
+          let fallbackFound = await searchProduct(eggFallbackSpec,depotIds,{
+            latitude:SAKARYA_LATITUDE,
+            longitude:SAKARYA_LONGITUDE,
+            distance:SAKARYA_DISTANCE_KM,
+            depots:[]
+          });
+
+          // 2) Eğer yine Tarım Kredi yoksa Sakarya çevresindeki gerçek depo ID'leriyle tekrar dene
+          if(!fallbackFound.some(x=>x.marketType==="tarim")){
+            try{
+              const sakaryaDepotResult = await getNearestDepotsAt(SAKARYA_LATITUDE,SAKARYA_LONGITUDE,SAKARYA_DISTANCE_KM);
+              const sakaryaDepotIds = sakaryaDepotResult.depots.map(d=>d.id).filter(Boolean);
+              const depotFallback = await searchProduct(eggFallbackSpec,sakaryaDepotIds,{
+                latitude:SAKARYA_LATITUDE,
+                longitude:SAKARYA_LONGITUDE,
+                distance:SAKARYA_DISTANCE_KM,
+                depots:sakaryaDepotIds
+              });
+              fallbackFound = [...depotFallback, ...fallbackFound];
+            }catch(e){}
+          }
+
           found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
         }
 
