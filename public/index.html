@@ -631,7 +631,7 @@ hr{
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v52</b><br>
+          <b>ARTS Executive Edition v52.1</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -658,7 +658,7 @@ hr{
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v52";
+const HISTORY_KEY="arts_history_v52_1";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -882,8 +882,15 @@ function recommendationPrice(item){
  return `${tl(low)} - ${tl(high)}`;
 }
 
+
+function isFlyerItem(x){
+  const g=(x.group||"").toLowerCase();
+  const k=(x.keyword||"").toLowerCase();
+  const t=(x.target||"").toLowerCase();
+  return g.includes("haftalık afiş") || k.includes("sarıyer kola 2.5") || k.includes("kabuklu yer fıstığı") || t.includes("solo ultra") || t.includes("bergamot aromalı çay") || t.includes("dana kasap sucuk") || t.includes("tarsüt");
+}
 function renderFlyerPanel(data){
- const flyer=(data.results||[]).filter(x=>(x.group||"").startsWith("Haftalık Afiş"));
+ const flyer=(data.results||[]).filter(isFlyerItem);
  const total=flyer.length;
  const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
  const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
@@ -898,6 +905,7 @@ function renderFlyerPanel(data){
    comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
  }
 }
+
 
 function renderV50Panels(data,changes,byGroup){
  const results=data.results||[];
