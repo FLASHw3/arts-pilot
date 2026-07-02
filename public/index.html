@@ -212,7 +212,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Kurumsal Pilot v27</b><br>
+          <b>ARTS Kurumsal Pilot v28</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -239,7 +239,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v27";
+const HISTORY_KEY="arts_history_v28";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
