@@ -31,6 +31,7 @@ body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);c
 .topRight{display:flex;gap:42px;align-items:center}
 .topMeta{font-size:13px}.topMeta b{display:block;color:var(--g2);margin-bottom:2px}
 .content{padding:28px 38px;max-width:1580px;margin:auto}
+.hero .secondary{position:relative;z-index:5}
 .hero{background:linear-gradient(135deg,#ffffff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:24px 26px;margin-bottom:20px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;box-shadow:0 10px 28px #00000007}
 h1{font-size:29px;margin:0 0 6px;color:#15252e} h2{font-size:22px;margin:26px 0 10px;color:#16212a} h3{font-size:21px;margin:30px 0 8px;color:var(--g2)}
 .muted{color:var(--muted)}
@@ -98,21 +99,13 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .logo-bim{color:#d71920}.logo-a101{color:#00a6c8}.logo-sok{color:#e21a2d}.logo-migros{color:#f58220}.logo-carrefour{color:#0050a4}
 
 
+.hero .secondary{position:relative;z-index:5}
 .hero{
   position:relative;
   overflow:hidden;
 }
-.hero:after{
-  content:"";
-  position:absolute;
-  right:-70px;
-  top:-90px;
-  width:260px;
-  height:260px;
-  border-radius:50%;
-  background:rgba(22,122,53,.10);
-}
-.hero:before{content:none;}
+.hero:after{content:none;display:none;pointer-events:none;}
+.hero:before{content:none;display:none;pointer-events:none;}
 .marketChip{
   display:block;
   border-left:4px solid var(--g);
@@ -133,7 +126,8 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
   font-weight:800;
 }
 
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebarFooter{position:relative;left:auto;right:auto;bottom:auto;margin-top:18px}.topbar{justify-content:flex-start;gap:20px;flex-wrap:wrap;height:auto;padding:18px}.topRight{display:block}.topMeta{margin:8px 0}.cards{grid-template-columns:1fr}.marketList{grid-template-columns:1fr}.content{padding:20px}.hero{display:block}}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebarFooter{position:relative;left:auto;right:auto;bottom:auto;margin-top:18px}.topbar{justify-content:flex-start;gap:20px;flex-wrap:wrap;height:auto;padding:18px}.topRight{display:block}.topMeta{margin:8px 0}.cards{grid-template-columns:1fr}.marketList{grid-template-columns:1fr}.content{padding:20px}.hero .secondary{position:relative;z-index:5}
+.hero{display:block}}
 </style>
 </head>
 <body>
@@ -151,7 +145,6 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <a href="#Temel_Gıda_/_Bakliyat">🌾 Temel Gıda</a>
       <a href="#İçecek">🍵 İçecek</a>
       <a href="#Gazlı_İçecek">🥤 Gazlı İçecek</a>
-      <a href="#Dondurma">🍦 Dondurma</a>
       <a href="#Temizlik">🧼 Temizlik</a>
       <hr>
       <a href="#changed">🕘 Fiyat Geçmişi</a>
@@ -219,7 +212,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Kurumsal Pilot v24</b><br>
+          <b>ARTS Kurumsal Pilot v25</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -246,8 +239,8 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v24")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v24",JSON.stringify(h))}
+function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v25")||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem("arts_history_v25",JSON.stringify(h))}
 function snapshot(item){return {
   tarim:item.tarim?.price??null,
   rival:item.rival?.price??null,
@@ -296,7 +289,6 @@ function productVisual(name){
  if(n.includes("sucuk"))return ["🥓","SUCUK"];
  if(n.includes("kıyma"))return ["🥩","KIYMA"];
  if(n.includes("çay"))return ["🍵","ÇAY"];
- if(n.includes("dondurma")||n.includes("golf")||n.includes("karpedo"))return ["🍦","DONDURMA"];
  if(n.includes("maden suyu")||n.includes("kızılay"))return ["🫧","MADEN"]; 
  if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return ["🥤","İÇECEK"];
  if(n.includes("tuvalet kağıdı"))return ["🧻","TUVALET"];
