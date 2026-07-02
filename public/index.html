@@ -195,7 +195,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <h2>Özet Tablo</h2>
       <table><thead><tr><th>Ürün Grubu</th><th>Toplam</th><th>Bizde Pahalı</th><th>Bizde Ucuz</th><th>Eşit</th><th>Kontrol Gerekli</th></tr></thead><tbody id="groupBody"></tbody></table>
 
-      <h2 id="changed">Sadece Fiyatı / Durumu Değişen Ürünler</h2>
+      <h2 id="changed">Dünden / Önceki Kontrolden Bugüne Değişen Ürünler</h2>
       <table><thead><tr><th>Ürün</th><th>Önceki</th><th>Güncel</th><th>Değişim</th></tr></thead><tbody id="changedBody"></tbody></table>
 
       <div id="categoryTables"></div>
@@ -212,7 +212,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Kurumsal Pilot v25.1</b><br>
+          <b>ARTS Kurumsal Pilot v26</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -239,8 +239,11 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v25_1")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v25_1",JSON.stringify(h))}
+const HISTORY_KEY="arts_history_v26";
+function todayKey(){return new Date().toLocaleDateString("tr-TR")}
+function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
+function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem(HISTORY_KEY,JSON.stringify(h))}
 function snapshot(item){return {
   tarim:item.tarim?.price??null,
   rival:item.rival?.price??null,
@@ -250,13 +253,23 @@ function snapshot(item){return {
   difference:item.difference,
   checkedAt:new Date().toLocaleString("tr-TR")
 }}
-function compareSnap(oldSnap,newSnap){
- if(!oldSnap)return null;
+function previousSnapshot(history,target){
+  const dates=Object.keys(history).sort((a,b)=>parseTRDate(a)-parseTRDate(b));
+  for(let i=dates.length-1;i>=0;i--){
+    const snap=history[dates[i]]?.[target];
+    if(snap) return {date:dates[i],snap};
+  }
+  return null;
+}
+function compareSnap(prev,newSnap){
+ if(!prev)return null;
+ const oldSnap=prev.snap||prev;
+ const dateLabel=prev.date ? `${prev.date} → ${todayKey()}` : "Önceki kontrol";
  const changes=[];
- if(oldSnap.tarim!==newSnap.tarim)changes.push(`TK (${oldSnap.tarimMarket||"Tarım Kredi"}) ${tl(oldSnap.tarim)} → ${tl(newSnap.tarim)}`);
+ if(oldSnap.tarim!==newSnap.tarim)changes.push(`TK (${newSnap.tarimMarket||oldSnap.tarimMarket||"Tarım Kredi"}) ${tl(oldSnap.tarim)} → ${tl(newSnap.tarim)}`);
  if(oldSnap.rival!==newSnap.rival)changes.push(`Rakip (${newSnap.rivalMarket||oldSnap.rivalMarket||"Rakip"}) ${tl(oldSnap.rival)} → ${tl(newSnap.rival)}`);
  if(oldSnap.comparison!==newSnap.comparison)changes.push("Durum değişti");
- return changes.length?changes.join(" | "):null
+ return changes.length ? `${dateLabel}: ${changes.join(" | ")}` : null;
 }
 async function run(){
  const btn=document.getElementById("btn"),status=document.getElementById("status");
@@ -354,7 +367,7 @@ function marketDetails(item){
  `</div></details>`;
 }
 function render(data){
- const history=loadHistory(), newHistory={...history}, changes=[];
+ const history=loadHistory(), today=todayKey(), newHistory={...history,[today]:{...(history[today]||{})}}, changes=[];
  document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
  document.getElementById("advantageCount").textContent=data.summary?.advantageCount||0;
  document.getElementById("productCount").textContent=data.summary?.productCount||data.results.length;
@@ -364,7 +377,7 @@ function render(data){
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
  document.getElementById("needCheckCount").textContent=needCheck;
  const byGroup={};
- for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(history[item.target],snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
+ for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
  document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Bu tarayıcıdaki son kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
