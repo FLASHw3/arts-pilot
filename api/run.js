@@ -95,6 +95,7 @@ function categoryScore(product,spec){
   if(spec.category==="milk_half"){if(text.includes("yarim yagli"))score+=60; else if(text.includes("sut"))score+=10;}
   if(spec.category==="esk_minced"){const isEsk=text.includes("et ve sut kurumu")||text.includes("esk"); if(isEsk)score+=80; if(text.includes("dana"))score+=20; if(text.includes("1 kg")||text.includes("1000 gr"))score+=30; if(!isEsk&&!(text.includes("1 kg")||text.includes("1000 gr")))return -9999;}
   if(spec.category==="cheese_full"){if(text.includes("tam yagli"))score+=60; else score+=10;}
+  if(spec.category==="flyer"){score+=25; if(spec.prefer&&hasAny(text,spec.prefer))score+=20;}
   if(spec.category==="beverage_exact"){score+=40; if(hasAny(text,spec.prefer))score+=20;}
   if(spec.category==="toilet40_bamboo"){if(text.includes("bambu"))score+=45; if(text.includes("3 kat"))score+=25; score+=20;}
   if(spec.category==="toilet16"){if(text.includes("2 kat")||text.includes("cift kat"))score+=30; score+=20;}
@@ -125,7 +126,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/50.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/51.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepotsAt(latitude,longitude,distance){
   const depots=await apiPost("/api/v2/nearest",{latitude,longitude,distance});
   const list=Array.isArray(depots)?depots:[];
