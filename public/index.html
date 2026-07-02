@@ -97,6 +97,50 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .logo-tarim{color:var(--g);border-color:#cfe8d5;background:#f2fbf4}
 .logo-bim{color:#d71920}.logo-a101{color:#00a6c8}.logo-sok{color:#e21a2d}.logo-migros{color:#f58220}.logo-carrefour{color:#0050a4}
 
+
+.hero{
+  position:relative;
+  overflow:hidden;
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  right:-70px;
+  top:-90px;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:rgba(22,122,53,.10);
+}
+.hero:before{
+  content:"Kurumsal Pilot";
+  position:absolute;
+  right:24px;
+  bottom:20px;
+  color:rgba(20,101,42,.12);
+  font-weight:950;
+  font-size:42px;
+}
+.marketChip{
+  display:block;
+  border-left:4px solid var(--g);
+}
+.statRibbon{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.statPill{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:13px;
+  color:var(--muted);
+  font-weight:800;
+}
+
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebarFooter{position:relative;left:auto;right:auto;bottom:auto;margin-top:18px}.topbar{justify-content:flex-start;gap:20px;flex-wrap:wrap;height:auto;padding:18px}.topRight{display:block}.topMeta{margin:8px 0}.cards{grid-template-columns:1fr}.marketList{grid-template-columns:1fr}.content{padding:20px}.hero{display:block}}
 </style>
 </head>
@@ -176,15 +220,14 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <div class="footerBox" style="display:block">
         <b>Geliştirme Yol Haritası</b><br>
         <span class="small">1. Ürün listesinin bölge müdürlüğü onayıyla genişletilmesi</span><br>
-        <span class="small">2. OBase entegrasyonu ile Tarım Kredi fiyatlarının otomatik alınması</span><br>
-        <span class="small">3. Sabah / akşam otomatik rapor ve fiyat değişim bildirimi</span><br>
-        <span class="small">4. Bölge, il ve mağaza bazlı karşılaştırma ekranları</span><br>
-        <span class="small">5. Ankara merkez raporlamasına uygun PDF / Excel çıktı sistemi</span>
+<span class="small">2. Sabah / akşam otomatik rapor ve fiyat değişim bildirimi</span><br>
+        <span class="small">3. Bölge, il ve mağaza bazlı karşılaştırma ekranları</span><br>
+        <span class="small">4. Ankara merkez raporlamasına uygun PDF / Excel çıktı sistemi</span>
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Resmî Pilot v21</b><br>
-          <span class="small">Tarım Kredi / KOOP Resmî Pilot Rekabet Analiz Sistemi</span><br>
+          <b>ARTS Kurumsal Pilot v22</b><br>
+          <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
         <div>
@@ -210,8 +253,8 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v16")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v16",JSON.stringify(h))}
+function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v22")||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem("arts_history_v22",JSON.stringify(h))}
 function snapshot(item){return {
   tarim:item.tarim?.price??null,
   rival:item.rival?.price??null,
@@ -290,10 +333,7 @@ function productImage(item){
  if(img) return `<div class="productImage" onclick="openImageModal('${esc(img)}','${title}')"><img src="${esc(img)}" onerror="this.outerHTML=safePlaceholder({target:'${esc(item.target)}'})"></div>`;
  return safePlaceholder(item);
 }
-function koopBadge(item){
- if(item.tarim) return `<div class="koopBadge">+KOOP Tarım Kredi ürünü</div>`;
- return "";
-}
+function koopBadge(item){ return ""; }
 function openImageModal(src,title){
  const modal=document.getElementById("imageModal");
  document.getElementById("imageModalImg").src=src;
@@ -322,7 +362,7 @@ function foundMarkets(item){const names=[...new Set((item.alternatives||[]).map(
 function marketDetails(item){
  const alts=(item.alternatives||[]).slice(0,12);
  if(!alts.length)return '<span class="small">Alternatif market fiyatı bulunamadı.</span>';
- return `<details class="marketDetails"><summary>Diğer Market Fiyatları (${alts.length})</summary><div class="marketList">`+
+ return `<details class="marketDetails"><summary>Tüm Marketler (${alts.length})</summary><div class="marketList">`+
  alts.map(x=>`<div class="marketChip"><b>${tl(x.price)}</b><br>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span></div>`).join("")+
  `</div></details>`;
 }
