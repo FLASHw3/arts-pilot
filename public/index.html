@@ -151,6 +151,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <a href="#Temel_Gıda_/_Bakliyat">🌾 Temel Gıda</a>
       <a href="#İçecek">🍵 İçecek</a>
       <a href="#Gazlı_İçecek">🥤 Gazlı İçecek</a>
+      <a href="#Dondurma">🍦 Dondurma</a>
       <a href="#Temizlik">🧼 Temizlik</a>
       <hr>
       <a href="#changed">🕘 Fiyat Geçmişi</a>
@@ -171,7 +172,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       <div class="topRight">
         <div class="topMeta"><b>Proje Sahibi</b>Ayberk Özdeniz</div>
         <div class="topMeta"><b>Bölge Müdürü</b>Suat Temizkan</div>
-        <div class="topMeta"><b>Bölge</b>📍 Sakarya / Adapazarı</div>
+        <div class="topMeta"><b>Bölge</b>📍 Türkiye Geneli</div>
       </div>
     </div>
 
@@ -218,7 +219,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Kurumsal Pilot v23</b><br>
+          <b>ARTS Kurumsal Pilot v24</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -245,8 +246,8 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v23")||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem("arts_history_v23",JSON.stringify(h))}
+function loadHistory(){try{return JSON.parse(localStorage.getItem("arts_history_v24")||"{}")}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem("arts_history_v24",JSON.stringify(h))}
 function snapshot(item){return {
   tarim:item.tarim?.price??null,
   rival:item.rival?.price??null,
@@ -295,6 +296,7 @@ function productVisual(name){
  if(n.includes("sucuk"))return ["🥓","SUCUK"];
  if(n.includes("kıyma"))return ["🥩","KIYMA"];
  if(n.includes("çay"))return ["🍵","ÇAY"];
+ if(n.includes("dondurma")||n.includes("golf")||n.includes("karpedo"))return ["🍦","DONDURMA"];
  if(n.includes("maden suyu")||n.includes("kızılay"))return ["🫧","MADEN"]; 
  if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return ["🥤","İÇECEK"];
  if(n.includes("tuvalet kağıdı"))return ["🧻","TUVALET"];
