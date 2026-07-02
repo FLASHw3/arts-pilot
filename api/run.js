@@ -2,6 +2,9 @@ const API_BASE = "https://api.marketfiyati.org.tr";
 const LATITUDE = 39.0;
 const LONGITUDE = 35.0;
 const DISTANCE_KM = 1000;
+const SAKARYA_LATITUDE = 40.7731;
+const SAKARYA_LONGITUDE = 30.3948;
+const SAKARYA_DISTANCE_KM = 25;
 
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","ko-op","kooperatif","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
@@ -122,12 +125,12 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/27.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/29.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
-async function searchProduct(spec,depotIds){
+async function searchProduct(spec,depotIds,opts={}){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
   for(const keyword of keywords){
-    const data=await apiPost("/api/v2/search",{keywords:keyword,pages:0,size:150,latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM,depots:[]});
+    const data=await apiPost("/api/v2/search",{keywords:keyword,pages:0,size:150,latitude:opts.latitude??LATITUDE,longitude:opts.longitude??LONGITUDE,distance:opts.distance??DISTANCE_KM,depots:opts.depots??[]});
     const products=Array.isArray(data?.content)?data.content:[];
     for(const p of products){
       const score=scoreProduct(p,spec); if(score<0)continue;
@@ -168,7 +171,24 @@ export default async function handler(req,res){
     for(const spec of PRODUCTS){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
-        const found=await searchProduct(spec,depotIds); item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
+        let found=await searchProduct(spec,depotIds);
+
+        // v29 özel düzeltme:
+        // Türkiye geneli aramada API bazen Tarım Kredi Türem yumurtayı döndürmüyor.
+        // Yumurta için Tarım Kredi bulunamazsa Sakarya/Adapazarı odaklı ek arama yapılır.
+        if(spec.category==="egg" && !found.some(x=>x.marketType==="tarim")){
+          const eggFallbackSpec = {
+            ...spec,
+            keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","Türem Yumurta 30 Adet","türem yumurta"],
+            must:["yumurta"],
+            prefer:["türem","turem","m boy","53-62"],
+            ban:["keskinoğlu","keskinoglu","anadolu çiftliği","anadolu ciftligi","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]
+          };
+          const fallbackFound = await searchProduct(eggFallbackSpec,depotIds,{latitude:SAKARYA_LATITUDE,longitude:SAKARYA_LONGITUDE,distance:SAKARYA_DISTANCE_KM,depots:[]});
+          found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
+        }
+
+        item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
         item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
