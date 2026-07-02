@@ -1,999 +1,240 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ARTS - Tarım Kredi Tarım Kredi Görsel Rekabet Takip Sistemi</title>
-<style>
-:root{
-  --g:#167a35;--g2:#0f6428;--g3:#0b4f20;--koop:#0d8f3d;--soft:#e8f7ed;--red:#c62828;--redbg:#fde8ea;
-  --text:#203039;--muted:#667986;--bg:#f6faf7;--amber:#8a6d00;--amberbg:#fff6d8;--blue:#1565c0;
-  --line:#e3ebe6;--white:#fff;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px}
-.layout{display:grid;grid-template-columns:292px 1fr;min-height:100vh}
-.sidebar{background:white;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh}
-.koopLogo{border:1px solid var(--line);border-radius:18px;padding:16px;background:linear-gradient(180deg,#ffffff,#f5fbf7);margin-bottom:18px}
-.koopWord{font-size:38px;font-weight:950;letter-spacing:-2px;color:var(--koop);line-height:1}
-.koopWord small{display:block;font-size:12px;letter-spacing:.8px;margin-top:4px;color:var(--g3);font-weight:900}
-.logoSub{font-size:11.5px;font-weight:850;color:var(--muted);margin-top:10px;line-height:1.35}
-.nav a{display:flex;align-items:center;gap:12px;text-decoration:none;color:#243238;padding:13px 14px;border-radius:12px;margin:6px 0;font-size:15.5px;transition:.15s}
-.nav a:hover{background:#eef8f1;color:var(--g2)}
-.nav a.active{background:linear-gradient(135deg,var(--g2),var(--g));color:white;font-weight:900;box-shadow:0 8px 18px #167a3520}
-.nav hr{border:0;border-top:1px solid var(--line);margin:18px 0}
-.sidebarFooter{position:absolute;bottom:18px;left:18px;right:18px;background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:15px;text-align:center;color:var(--muted);font-size:13px}
-.refreshSmall{margin-top:10px;border:1px solid var(--g);background:white;color:var(--g);border-radius:10px;padding:9px 22px;font-weight:900}
-.main{min-width:0}
-.topbar{height:82px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 36px}
-.topTitle{font-weight:950;color:var(--g2);font-size:17px}.topTitle span{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-top:3px}
-.topRight{display:flex;gap:42px;align-items:center}
-.topMeta{font-size:13px}.topMeta b{display:block;color:var(--g2);margin-bottom:2px}
-.content{padding:28px 38px;max-width:1580px;margin:auto}
-.hero .secondary{position:relative;z-index:5}
-.hero{background:linear-gradient(135deg,#ffffff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:24px 26px;margin-bottom:20px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;box-shadow:0 10px 28px #00000007}
-h1{font-size:29px;margin:0 0 6px;color:#15252e} h2{font-size:22px;margin:26px 0 10px;color:#16212a} h3{font-size:21px;margin:30px 0 8px;color:var(--g2)}
-.muted{color:var(--muted)}
-button{background:var(--g);color:white;border:0;border-radius:11px;padding:13px 18px;font-weight:900;cursor:pointer;font-size:15px}
-button.secondary{background:white;color:#263238;border:1px solid #d9e1dd}
-button:disabled{opacity:.6;cursor:wait}
-.topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:22px 0}
-.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 26px #00000008;display:flex;align-items:center;gap:16px}
-.cardIcon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--soft);font-size:28px;color:var(--g)}
-.card.red .cardIcon{background:var(--redbg);color:var(--red)}.card.amber .cardIcon{background:var(--amberbg);color:#d59200}
-.card .label{font-weight:900;font-size:14px}.num{font-size:28px;font-weight:950;color:#17242c;margin-top:3px}.subnum{font-size:13px;color:var(--muted)}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
-.tab{padding:10px 14px;border-radius:10px;background:white;border:1px solid var(--line);font-weight:800;color:#3b4d55;text-decoration:none}
-.tab.active{background:var(--g);color:white}
-table{width:100%;border-collapse:collapse;background:white;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px #00000008;margin:12px 0 20px;border:1px solid var(--line)}
-th{background:linear-gradient(135deg,var(--g2),var(--g));color:white;text-align:left;padding:14px 16px;font-size:14px}
-td{padding:14px 16px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;line-height:1.38}
-.productName{font-size:16px;font-weight:900;color:#17242c}.price{font-size:18px;font-weight:950;color:#17242c}
-.small{font-size:12.8px;color:var(--muted)}
-.badge{display:inline-block;padding:7px 11px;border-radius:999px;font-size:12.5px;font-weight:900;white-space:nowrap}
-.green{background:var(--soft);color:var(--g2)}.redBadge{background:var(--redbg);color:var(--red)}.amber{background:var(--amberbg);color:var(--amber)}.blue{background:#e3f2fd;color:var(--blue)}
-.marketList{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:8px;margin-top:10px}
-.marketChip{background:#f7faf8;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:12.6px}
-details.marketDetails{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px}
-details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
-.groupBlock{margin-top:28px;scroll-margin-top:22px}.groupBlock h2{color:#16212a;border-left:6px solid var(--g);padding-left:12px}
-.footerBox{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;justify-content:space-between;gap:20px;margin-top:28px;box-shadow:0 8px 26px #00000008}
+const API_BASE = "https://api.marketfiyati.org.tr";
+const LATITUDE = 39.0;
+const LONGITUDE = 35.0;
+const DISTANCE_KM = 1000;
+const SAKARYA_LATITUDE = 40.7731;
+const SAKARYA_LONGITUDE = 30.3948;
+const SAKARYA_DISTANCE_KM = 25;
 
-.productWrap{display:flex;gap:14px;align-items:flex-start}
-.productImage{
-  width:86px;height:86px;border-radius:18px;object-fit:cover;flex:0 0 auto;cursor:pointer;
-  background:linear-gradient(135deg,#f4faf6,#ffffff);border:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 4px 14px #00000008;
-}
-.productImage img{width:100%;height:100%;object-fit:cover;border-radius:18px}
-.productImage:hover{transform:scale(1.04);transition:.15s}
-.placeholderOnly{background:linear-gradient(135deg,#f7fbf8,#eef8f1)}
-.productPlaceholder{
-  width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;
-  background:linear-gradient(135deg,#f8fcf9,#eef8f1);border-radius:18px;color:var(--g2);font-weight:950;
-}
-.placeholderIcon{font-size:28px;line-height:1}
-.placeholderText{font-size:10px;margin-top:3px;letter-spacing:.4px}
+const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","ko-op","kooperatif","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
+const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
-.koopBadge{
-  display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 9px;border-radius:999px;
-  background:#e8f7ed;color:var(--g2);font-size:12px;font-weight:950;border:1px solid #cfe8d5;
-}
-.imageModal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:24px}
-.imageModal.open{display:flex}
-.imageModalBox{background:white;border-radius:22px;padding:18px;max-width:520px;width:min(92vw,520px);box-shadow:0 22px 60px #0005}
-.imageModalTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
-.imageModalTitle{font-weight:950;font-size:18px}
-.imageModalClose{background:#f2f5f3;color:#243238;border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
-.imageModalImg{width:100%;max-height:430px;object-fit:contain;border-radius:16px;background:#f7faf8;border:1px solid var(--line)}
+const PRODUCTS = [
+  {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], prefer:["türem","turem","m boy","53-62"], ban:["anadolu çiftliği","anadolu ciftligi","keskinoğlu","keskinoglu","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
-.productInfo{min-width:0}
-.marketLogo{
-  display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:26px;
-  border-radius:7px;padding:0 8px;font-size:12px;font-weight:950;margin-right:6px;
-  border:1px solid var(--line);background:white;color:#243238;
-}
-.logo-tarim{color:var(--g);border-color:#cfe8d5;background:#f2fbf4}
-.logo-bim{color:#d71920}.logo-a101{color:#00a6c8}.logo-sok{color:#e21a2d}.logo-migros{color:#f58220}.logo-carrefour{color:#0050a4}
+  {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1","pınar","pinar","%0,5","%0.5","0,5 yağlı","0.5 yağlı","0,5 yagli","0.5 yagli"]},
+  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr","mengen","mengen çiftliği","mengen ciftligi"]},
 
+  {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek","TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["safya","zeytin","mısır","fındık","tereyağ","margarin"]},
+  {group:"Temel Gıda / Bakliyat", label:"5 kg Toz Şeker", keywords:["5 kg toz şeker","toz şeker 5 kg","5 kg şeker"], category:"generic", must:["şeker"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["küp","pudra","vanilin","sakız","çikolata","bisküvi"]},
+  {group:"Temel Gıda / Bakliyat", label:"1 kg Baldo Pirinç", keywords:["1 kg baldo pirinç","baldo pirinç 1 kg"], category:"generic", must:["baldo","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna","anadolu lezzetleri","gönen","gonen"]},
+  {group:"Temel Gıda / Bakliyat", label:"1 kg Osmancık Pirinç", keywords:["1 kg osmancık pirinç","osmancık pirinç 1 kg"], category:"generic", must:["osmancık","pirinç"], size:{value:1, unit:"kg"}, ban:["bulgur","makarna","zeki"]},
+  {group:"Temel Gıda / Bakliyat", label:"5 kg Un", keywords:["5 kg un","un 5 kg","buğday unu 5 kg","5 kg buğday unu"], category:"flour5", must:["un"], acceptAny:["5 kg","5000 gr","5.000 gr"], size:{value:5, unit:"kg"}, ban:["mısır unu","pirinç unu","galeta","nişasta","kabartma","vanilin","irmik"]},
+  {group:"Temel Gıda / Bakliyat", label:"1 kg Zeytin", keywords:["1 kg zeytin","zeytin 1 kg","siyah zeytin 1 kg","yeşil zeytin 1 kg"], category:"generic", must:["zeytin"], size:{value:1, unit:"kg"}, ban:["ezmesi","sos","yağı","yagi","sabun","500 gr","400 gr","250 gr"]},
 
-.hero .secondary{position:relative;z-index:5}
-.hero{
-  position:relative;
-  overflow:hidden;
-}
-.hero:after{content:none;display:none;pointer-events:none;}
-.hero:before{content:none;display:none;pointer-events:none;}
-.marketChip{
-  display:block;
-  border-left:4px solid var(--g);
-}
-.statRibbon{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-.statPill{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:8px 12px;
-  font-size:13px;
-  color:var(--muted);
-  font-weight:800;
-}
+  {group:"Et Ürünleri", label:"400 g Dana Kasap Sucuk", keywords:["400 gr dana kasap sucuk","dana kasap sucuk 400 gr","400 g dana sucuk"], category:"generic", must:["sucuk"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["75 gr","50 gr","60 gr","250 gr","200 gr","maret"]},
+  {group:"Et Ürünleri", label:"400 g Dana Kıyma", keywords:["400 gr dana kıyma","dana kıyma 400 gr"], category:"generic", must:["kıyma"], acceptAny:["400 gr","400 g"], size:{value:400, unit:"g"}, ban:["kuzu","500 gr","1 kg","1000 gr","köfte","hamburger"]},
+  {group:"Et Ürünleri", label:"1 kg Et ve Süt Kurumu Dana Kıyma", keywords:["kıyma","et ve süt kurumu kıyma","et ve süt kurumu dana kıyma","esk dana kıyma","1 kg dana kıyma"], category:"esk_minced", must:["kıyma"], ban:["kuzu","400 gr","500 gr","köfte","hamburger"]},
 
+  {group:"İçecek", label:"1 kg Çay", keywords:["1 kg siyah çay","siyah çay 1 kg","rize çay 1 kg"], category:"tea", must:["çay"], size:{value:1, unit:"kg"}, ban:["efor","buzlu","ice tea","soğuk","bitki","yeşil çay","papatya","ıhlamur","adaçayı","oralet","sakız","şeftali","limon","doğuş","dogus","doğuş rize","dogus rize"]},
 
-.execGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
-.execPanel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
-.alertList{display:grid;gap:10px}
-.alertItem{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
-.alertItem.high{border-left-color:#c62828;background:#fff8f8}.alertItem.mid{border-left-color:#d59200;background:#fffdf4}
-.alertTitle{font-weight:950;font-size:15px}.alertText{font-size:13px;color:var(--muted);margin-top:4px}
-.barRow{display:grid;grid-template-columns:170px 1fr 70px;gap:10px;align-items:center;margin:10px 0}
-.barTrack{height:13px;background:#edf3ef;border-radius:999px;overflow:hidden}.barFill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g));border-radius:999px}
-.redBar{background:linear-gradient(90deg,#b71c1c,#e53935)}.amberBar{background:linear-gradient(90deg,#c17900,#ffb300)}
-.marketAnalysisGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}
-.marketCard{background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:14px}.marketStat{font-size:13px;color:var(--muted);margin-top:7px}
-.confidenceBadge{display:inline-block;margin-top:7px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:950}
-.confHigh{background:#e8f7ed;color:#0f6428}.confMid{background:#fff6d8;color:#8a6d00}.confLow{background:#fde8ea;color:#c62828}
-.starBtn{border:0;background:#f5f8f6;color:#75858d;border-radius:10px;padding:6px 9px;margin-right:8px;cursor:pointer;font-size:16px}
-.starBtn.active{background:#fff6d8;color:#d59200}
-.pdfCover{background:linear-gradient(135deg,#ffffff,#eef8f1);border:1px solid var(--line);border-radius:20px;padding:24px;margin:18px 0;display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.pdfCoverTitle{font-size:30px;font-weight:950;color:#14252e}.pdfCoverMeta{background:white;border:1px solid var(--line);border-radius:16px;padding:16px}
-.reportBadge{display:inline-block;background:var(--soft);color:var(--g2);border-radius:999px;padding:7px 11px;font-weight:950;font-size:12px;margin:4px}
+  {group:"Meyve Sebze", label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg","düz karpuz kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["çekirdeksiz","cekirdeksiz","mini","baby","sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
+  {group:"Meyve Sebze", label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
+  {group:"Meyve Sebze", label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker"]},
+  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates pembe 1 kg","pembe domates kg","domates kg","domates 1 kg"], category:"produce", must:["domates"], unitOnly:true, ban:["salkım","salkim","atıştırmalık","atistirmalik","cherry","kokteyl","salça","salca","sos","kurutulmuş","kurutulmus","çorba","corba","konserve","tagem","turuncu domates","turuncu","tagem","turuncu domates","turuncu"]},
+  {group:"Meyve Sebze", label:"1 kg Muz", keywords:["muz kg","muz 1 kg"], category:"produce", must:["muz"], unitOnly:true, ban:["aroma","puding","bisküvi","çikolata","meyve suyu"]},
+  {group:"Meyve Sebze", label:"1 kg Salatalık", keywords:["salatalık kg","salatalık 1 kg"], category:"produce", must:["salatalık"], unitOnly:true, ban:["turşu","tursu","cips","aroma","sos"]},
+  {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["file","suyu","sos","aroma","kolonya","çay","cay"]},
+  {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
 
-.confDetails{
-  margin-top:8px;
-  background:#fbfdfc;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px 12px;
-}
-.confDetails summary{
-  cursor:pointer;
-  font-weight:950;
-  color:var(--g2);
-  font-size:12.8px;
-}
-.confBreakdown{
-  margin-top:8px;
-  display:grid;
-  gap:6px;
-}
-.confLine{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-size:12.5px;
-  border-bottom:1px dashed #e1e9e4;
-  padding-bottom:5px;
-}
-.confLine:last-child{border-bottom:0}
-.confOk{color:var(--g2);font-weight:900}
-.confWarn{color:#8a6d00;font-weight:900}
-.confBad{color:#c62828;font-weight:900}
-.confExplain{
-  margin-top:8px;
-  font-size:12.5px;
-  color:var(--muted);
-  line-height:1.35;
-}
+  {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["çekirdeksiz karpuz kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz 1 kg"], category:"produce", must:["karpuz","çekirdeksiz"], unitOnly:true, ban:["mini","baby","sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
 
+  {group:"Temizlik", label:"Bambu 3 Katlı Tuvalet Kağıdı 40 Adet", keywords:["Aqua Bambulu 3 Katlı Tuvalet Kağıdı 40 Adet","Softy Bambu 3 Katlı Tuvalet Kağıdı 40 Adet"], category:"toilet40_bamboo", must:["tuvalet","kağıdı"], acceptAny:["40 adet","40'lı","40 lı"], brandAny:["aqua","softy"], requireAny:["3 kat","3 katlı","3 katli"], ban:["solo","blume","elit","confort","beyaz güvercin","geri dönüşüm","geri donusum","2 kat","çift kat","cift kat","havlu","peçete","mendil"]},
+  {group:"Temizlik", label:"2 Katlı Tuvalet Kağıdı 16 Adet", keywords:["Blume Çift Katlı Tuvalet Kağıdı 16 Adet","Elit 2 Katlı Tuvalet Kağıdı 16 Adet","Confort Tuvalet Kağıdı 16 Adet","Beyaz Güvercin Tuvalet Kağıdı 16 Adet"], category:"toilet16", must:["tuvalet","kağıdı"], acceptAny:["16 adet","16'lı","16 lı"], brandAny:["blume","elit","confort","beyaz güvercin"], requireAny:["2 kat","2 katlı","2 katli","çift kat","cift kat","tuvalet kağıdı 16"], ban:["solo","aqua","softy","bambu","geri dönüşüm","geri donusum","havlu","peçete","mendil","40 adet","40'lı"]},
 
-/* v50 Executive Edition */
-.aiHero{
-  background:linear-gradient(135deg,#0f6428,#167a35);
-  color:white;border-radius:22px;padding:22px;margin:22px 0;
-  box-shadow:0 14px 34px rgba(15,100,40,.18);
-}
-.aiHero h2{color:white;margin:0 0 8px}
-.aiText{font-size:15px;line-height:1.55;opacity:.96}
-.aiPills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.aiPill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);padding:8px 12px;border-radius:999px;font-weight:900;font-size:12px}
-.v50Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
-.v50Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
-.v50Panel h2{margin-top:0}
-.v50List{display:grid;gap:10px}
-.v50Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
-.v50Item.danger{border-left-color:#c62828;background:#fff8f8}
-.v50Item.warn{border-left-color:#d59200;background:#fffdf4}
-.v50Title{font-weight:950;font-size:15px}
-.v50Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
-.threatGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}
-.threatCard{background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:14px}
-.threatScore{font-size:28px;font-weight:950;color:var(--g2);margin-top:8px}
-.priceAlarm{font-weight:950}
-.historyLine{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.historyPoint{background:#f7faf8;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
-.spark{display:inline-flex;gap:3px;align-items:flex-end;height:28px;margin-top:8px}
-.spark span{display:block;width:6px;background:var(--g);border-radius:5px 5px 0 0;opacity:.8}
-.reportCover{
-  background:linear-gradient(135deg,#ffffff,#eef8f1);border:1px solid var(--line);
-  border-radius:22px;padding:26px;margin:18px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:18px;
-}
-.reportTitle{font-size:38px;font-weight:950;line-height:1.05;color:#14252e}
-.reportMeta{background:white;border:1px solid var(--line);border-radius:16px;padding:16px}
-.reportSection{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
-.reportBadge{display:inline-block;background:var(--soft);color:var(--g2);border-radius:999px;padding:7px 11px;font-weight:950;font-size:12px;margin:4px}
-.searchBox{
-  width:100%;max-width:420px;border:1px solid var(--line);border-radius:12px;
-  padding:12px 14px;font-size:15px;margin:10px 0;background:white;
-}
-.excelBtn{background:#0f6428;color:white;border:0;border-radius:11px;padding:12px 16px;font-weight:900;cursor:pointer}
+  {group:"Temizlik", label:"2 Katlı Kağıt Havlu 6 Adet", keywords:["Blume Kağıt Havlu 6 Adet","Mistral 2 Katlı Kağıt Havlu 6 Adet","Elit 2 Katlı Kağıt Havlu 6 Adet","Confort Kağıt Havlu 6 Adet"], category:"paper_towel6", must:["havlu"], acceptAny:["6 adet","6'lı","6 lı"], brandAny:["blume","mistral","elit","confort"], ban:["wells","peros","solo","aqua","softy","tuvalet","peçete","mendil","geri dönüşüm","geri donusum","geri dönüşümlü","geri donusumlu","recycled"]},
 
-.flyerHero{background:linear-gradient(135deg,#fff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0;box-shadow:0 10px 28px #00000008}
-.flyerHeader{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.flyerTitle{font-size:28px;font-weight:950;color:#123}
-.flyerDates{background:var(--soft);color:var(--g2);border-radius:999px;padding:9px 13px;font-weight:950}
-.flyerStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.flyerStat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}
-.flyerStat b{font-size:24px;color:var(--g2)}
-.flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
-@media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
+  {group:"Temizlik", label:"Bulaşık Makinesi Kapsülü 30-32 Adet", keywords:["Asperox Diamond Sparx Bulaşık Makinesi Kapsülü 30 Adet","Bingo Promax Bulaşık Makinesi Kapsülü 32 Adet"], category:"dish_capsule", must:["bulaşık","kapsül"], acceptAny:["30 adet","32 adet","30'lu","32'li"], brandAny:["asperox","bingo"], ban:["renax","finish","fairy","pril","elde","sıvı","jel","parlatıcı"]},
 
-@media(max-width:1100px){.v50Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
-@media print{
-  .sidebar,.topbar,.topline,.tabs,.searchBox,.excelBtn,button.refreshSmall,button.secondary{display:none!important}
-  .layout{display:block}.content{max-width:none;padding:0}body{background:white}
-  .v50Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
-  .aiHero{color:#14252e;background:#eef8f1}
-}
+  {group:"Temizlik", label:"Renkliler Toz Deterjan 5 kg", keywords:["Elit Matik Toz Deterjan Renkliler 5 Kg","Billmatik Renkliler Toz Deterjan 5 Kg"], category:"detergent_color5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], brandAny:["elit","billmatik"], requireAny:["renkliler"], ban:["peros","omo","alo","abc","tursil","beyazlar","sıvı","kapsül","jel","1.5 kg","1,5 kg"]},
+  {group:"Temizlik", label:"Beyazlar Toz Deterjan 5 kg", keywords:["Elit Matik Beyazlar Toz Deterjan 5 Kg","Billmatik Beyazlar Toz Deterjan 5 Kg"], category:"detergent_white5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], brandAny:["elit","billmatik"], requireAny:["beyazlar"], ban:["peros","omo","alo","abc","tursil","renkliler","sıvı","kapsül","jel","1.5 kg","1,5 kg"]},
 
+  {group:"İçecek", label:"Kızılay Sade / Doğal Maden Suyu 6x200 ml", keywords:["Kızılay Sade Maden Suyu 6x200 Ml","Kızılay Doğal Maden Suyu 6x200 Ml","kızılay maden suyu 6x200 ml","kızılay doğal maden suyu 6x200 ml","kızılay sade maden suyu 6x200 ml"], category:"mineral_water6_plain", must:["kızılay","maden suyu"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["limonlu","elmalı","elmali","mandalina","karpuz","çilek","cilek","meyveli","aromalı","aromali","tekli","1 adet","200 ml tek"]},
+  {group:"İçecek", label:"Kızılay Limonlu Maden Suyu 6x200 ml", keywords:["Kızılay Limonlu Maden Suyu 6x200 Ml","kızılay limonlu maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","limon"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","mandalina","karpuz","çilek","cilek","tekli","1 adet","200 ml tek"]},
+  {group:"İçecek", label:"Kızılay Mandalinalı Maden Suyu 6x200 ml", keywords:["Kızılay Maden Suyu Mandalina Aromalı 6x200 Ml","Kızılay Mandalinalı Maden Suyu 6x200 Ml","kızılay mandalina maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","mandalina"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","limon","karpuz","çilek","cilek","tekli","1 adet","200 ml tek"]},
 
-.flyerHero{background:linear-gradient(135deg,#fff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0;box-shadow:0 10px 28px #00000008}
-.flyerHeader{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.flyerTitle{font-size:28px;font-weight:950;color:#123}
-.flyerDates{background:var(--soft);color:var(--g2);border-radius:999px;padding:9px 13px;font-weight:950}
-.flyerStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.flyerStat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}
-.flyerStat b{font-size:24px;color:var(--g2)}
-.flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
-@media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
+  {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola 2,5 l","sarıyer kola 2.5 lt","sarıyer kola 2,5 lt","sarıyer kola gazlı içecek 2.5 l","sarıyer kola gazlı içecek 2,5 lt","sariyer kola 2.5 lt"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 2.5 L", keywords:["sarıyer portakallı gazoz 2.5 l","sarıyer portakallı gazlı içecek 2.5 l","sarıyer portakallı gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Sarıyer Gazoz 2.5 L", keywords:["sarıyer gazoz 2.5 l","sarıyer gazlı içecek 2.5 l","sarıyer gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
+  {group:"Gazlı İçecek", label:"Pepsi Kola 1.5 L", keywords:["pepsi kola 1.5 l","pepsi kola 1,5 l","pepsi 1.5 l","pepsi 1,5 l","pepsi 1500 ml"], category:"beverage_exact", must:["pepsi"], size:{value:1.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Pepsi Kola 2.5 L", keywords:["pepsi kola 2.5 l","pepsi 2.5 l","pepsi 2,5 l"], category:"beverage_exact", must:["pepsi"], size:{value:2.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
+    {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
+];
 
-@media(max-width:1100px){.execGrid,.pdfCover{grid-template-columns:1fr}.marketAnalysisGrid{grid-template-columns:1fr}.barRow{grid-template-columns:110px 1fr 55px}}
-@media print{.sidebar,.topbar,.topline,.tabs,button.refreshSmall,button.secondary{display:none!important}.layout{display:block}.content{max-width:none;padding:0}body{background:white}}
-
-
-.confDetails{
-  margin-top:8px;
-  background:#fbfdfc;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px 12px;
-}
-.confDetails summary{
-  cursor:pointer;
-  font-weight:950;
-  color:var(--g2);
-  font-size:12.8px;
-}
-.confBreakdown{
-  margin-top:8px;
-  display:grid;
-  gap:6px;
-}
-.confLine{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-size:12.5px;
-  border-bottom:1px dashed #e1e9e4;
-  padding-bottom:5px;
-}
-.confLine:last-child{border-bottom:0}
-.confOk{color:var(--g2);font-weight:900}
-.confWarn{color:#8a6d00;font-weight:900}
-.confBad{color:#c62828;font-weight:900}
-.confExplain{
-  margin-top:8px;
-  font-size:12.5px;
-  color:var(--muted);
-  line-height:1.35;
-}
-
-
-/* v50 Executive Edition */
-.aiHero{
-  background:linear-gradient(135deg,#0f6428,#167a35);
-  color:white;border-radius:22px;padding:22px;margin:22px 0;
-  box-shadow:0 14px 34px rgba(15,100,40,.18);
-}
-.aiHero h2{color:white;margin:0 0 8px}
-.aiText{font-size:15px;line-height:1.55;opacity:.96}
-.aiPills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.aiPill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);padding:8px 12px;border-radius:999px;font-weight:900;font-size:12px}
-.v50Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
-.v50Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
-.v50Panel h2{margin-top:0}
-.v50List{display:grid;gap:10px}
-.v50Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
-.v50Item.danger{border-left-color:#c62828;background:#fff8f8}
-.v50Item.warn{border-left-color:#d59200;background:#fffdf4}
-.v50Title{font-weight:950;font-size:15px}
-.v50Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
-.threatGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}
-.threatCard{background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:14px}
-.threatScore{font-size:28px;font-weight:950;color:var(--g2);margin-top:8px}
-.priceAlarm{font-weight:950}
-.historyLine{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.historyPoint{background:#f7faf8;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
-.spark{display:inline-flex;gap:3px;align-items:flex-end;height:28px;margin-top:8px}
-.spark span{display:block;width:6px;background:var(--g);border-radius:5px 5px 0 0;opacity:.8}
-.reportCover{
-  background:linear-gradient(135deg,#ffffff,#eef8f1);border:1px solid var(--line);
-  border-radius:22px;padding:26px;margin:18px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:18px;
-}
-.reportTitle{font-size:38px;font-weight:950;line-height:1.05;color:#14252e}
-.reportMeta{background:white;border:1px solid var(--line);border-radius:16px;padding:16px}
-.reportSection{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
-.reportBadge{display:inline-block;background:var(--soft);color:var(--g2);border-radius:999px;padding:7px 11px;font-weight:950;font-size:12px;margin:4px}
-.searchBox{
-  width:100%;max-width:420px;border:1px solid var(--line);border-radius:12px;
-  padding:12px 14px;font-size:15px;margin:10px 0;background:white;
-}
-.excelBtn{background:#0f6428;color:white;border:0;border-radius:11px;padding:12px 16px;font-weight:900;cursor:pointer}
-
-.flyerHero{background:linear-gradient(135deg,#fff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0;box-shadow:0 10px 28px #00000008}
-.flyerHeader{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.flyerTitle{font-size:28px;font-weight:950;color:#123}
-.flyerDates{background:var(--soft);color:var(--g2);border-radius:999px;padding:9px 13px;font-weight:950}
-.flyerStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.flyerStat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}
-.flyerStat b{font-size:24px;color:var(--g2)}
-.flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
-@media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
-
-@media(max-width:1100px){.v50Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
-@media print{
-  .sidebar,.topbar,.topline,.tabs,.searchBox,.excelBtn,button.refreshSmall,button.secondary{display:none!important}
-  .layout{display:block}.content{max-width:none;padding:0}body{background:white}
-  .v50Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
-  .aiHero{color:#14252e;background:#eef8f1}
-}
-
-
-.flyerHero{background:linear-gradient(135deg,#fff,#eef8f1);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0;box-shadow:0 10px 28px #00000008}
-.flyerHeader{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.flyerTitle{font-size:28px;font-weight:950;color:#123}
-.flyerDates{background:var(--soft);color:var(--g2);border-radius:999px;padding:9px 13px;font-weight:950}
-.flyerStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.flyerStat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}
-.flyerStat b{font-size:24px;color:var(--g2)}
-.flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
-@media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
-
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebarFooter{position:relative;left:auto;right:auto;bottom:auto;margin-top:18px}.topbar{justify-content:flex-start;gap:20px;flex-wrap:wrap;height:auto;padding:18px}.topRight{display:block}.topMeta{margin:8px 0}.cards{grid-template-columns:1fr}.marketList{grid-template-columns:1fr}.content{padding:20px}.hero .secondary{position:relative;z-index:5}
-.hero{display:block}}
-
-/* v52 Soft Cream Theme */
-:root{
-  --bg:#f3f0e7;
-  --panel:#fffaf0;
-  --panel2:#f8f4ea;
-  --line:#ded7c7;
-  --soft:#e7f3e9;
-  --text:#12242c;
-  --muted:#667983;
-  --g:#147533;
-  --g2:#0f6428;
-}
-body{
-  background:
-    radial-gradient(circle at top left, rgba(20,117,51,.08), transparent 35%),
-    linear-gradient(180deg,#f6f2e8 0%, #efeade 100%) !important;
-  color:var(--text);
-}
-.content{
-  background:transparent;
-}
-.card,.execPanel,.v50Panel,.flyerHero,.footerBox,.reportCover,.pdfCover,
-.groupBlock,table,.marketCard,.threatCard,.v50Item,.alertItem,.flyerStat{
-  background:var(--panel) !important;
-  border-color:var(--line) !important;
-}
-.groupBlock tbody tr,
-tbody tr{
-  background:#fffdf7 !important;
-}
-.groupBlock tbody tr:hover,
-tbody tr:hover{
-  background:#f4f0e5 !important;
-}
-.marketChip,
-details,
-.confDetails,
-.historyPoint{
-  background:#fbf7ed !important;
-  border-color:#e2dac8 !important;
-}
-.sidebar{
-  background:#f7f2e7 !important;
-  border-right:1px solid var(--line) !important;
-}
-.sidebar a{
-  color:#172f37 !important;
-}
-.sidebar a:hover,
-.sidebar a.active{
-  background:#e7f3e9 !important;
-}
-.hero,.aiHero{
-  background:linear-gradient(135deg,#11662d,#19823c) !important;
-}
-input,select,textarea,.searchBox{
-  background:#fffaf0 !important;
-  border-color:#d9d0bf !important;
-  color:var(--text) !important;
-}
-button.secondary,.pdfCoverMeta,.reportMeta{
-  background:#fffaf0 !important;
-}
-.badge,.statPill,.reportBadge,.aiPill{
-  border-color:rgba(20,117,51,.18) !important;
-}
-th{
-  background:#126d31 !important;
-}
-hr{
-  border-color:var(--line) !important;
-}
-
-</style>
-</head>
-<body>
-<div class="layout">
-  <aside class="sidebar">
-    <div class="koopLogo">
-      <div class="koopWord">+KOOP<small>Çiftçi Marketi</small></div>
-      <div class="logoSub">ARTS • Tarım Kredi Tarım Kredi Görsel Rekabet Takip Sistemi</div>
-    </div>
-    <nav class="nav">
-      <a class="active" href="#dashboard">📊 Özet Dashboard</a>
-      <a href="#Meyve_Sebze">🍅 Meyve & Sebze</a>
-      <a href="#Et_Ürünleri">🥩 Et Ürünleri</a>
-      <a href="#Süt_Ürünleri">🥛 Süt Ürünleri</a>
-      <a href="#Temel_Gıda_/_Bakliyat">🌾 Temel Gıda</a>
-      <a href="#İçecek">🍵 İçecek</a>
-      <a href="#Gazlı_İçecek">🥤 Gazlı İçecek</a>
-      <a href="#Temizlik">🧼 Temizlik</a>
-      <hr>
-      <a href="#changed">🕘 Fiyat Geçmişi</a>
-      <a href="#weeklyFlyer">🏷️ Haftalık Afiş</a>
-      <a href="#aiExecutive">🤖 AI Yorumu</a>
-      <a href="#priceAlarms">🚨 Fiyat Alarmları</a>
-      <a href="#campaignSuggestions">💰 Kampanya Önerileri</a>
-      <a href="#productHistory">📈 Ürün Geçmişi</a>
-      <a href="#proReport">📑 Profesyonel Rapor</a>
-      <a href="#smartAlerts">🚨 Akıllı Uyarılar</a>
-      <a href="#marketAnalysis">🏪 Rakip Analizi</a>
-      <a href="#favoriteProducts">⭐ Favoriler</a>
-      <a href="#pdfReport">📑 PDF Özeti</a>
-      <a href="#footer">📄 Rapor Bilgisi</a>
-    </nav>
-    <div class="sidebarFooter">
-      <div>Sistem Durumu</div>
-      <b style="color:var(--g)">Tüm sistemler çalışıyor</b><br><br>
-      <div>Son Güncelleme</div>
-      <b id="sideTime">Henüz çalıştırılmadı</b><br>
-      <button class="refreshSmall" onclick="run()">Yenile</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="topbar">
-      <div class="topTitle">Tarım Kredi / KOOP Rekabet Paneli<span>Pilot çalışma ekranı</span></div>
-      <div class="topRight">
-        <div class="topMeta"><b>Proje Sahibi</b>Ayberk Özdeniz</div>
-        <div class="topMeta"><b>Bölge Müdürü</b>Suat Temizkan</div>
-        <div class="topMeta"><b>Bölge</b>📍 Türkiye Geneli</div>
-      </div>
-    </div>
-
-    <section class="content" id="dashboard">
-      <div class="hero">
-        <div>
-          <h1>Özet Dashboard</h1>
-          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Resmî pilot ürün listesi, güvenli görseller ve gelişmiş fiyat değişim takibi ve market detayları içeren pilot karar destek ekranı.</div>
-        </div>
-        <button class="secondary" onclick="window.print()">📄 PDF Raporu İndir</button>
-      </div>
-
-      <div class="topline">
-        <button id="btn" onclick="run()">Canlı Kontrolü Çalıştır</button>
-        <span id="status" class="muted"></span>
-      </div>
-
-      <div class="cards">
-        <div class="card"><div class="cardIcon">🏷️</div><div><div class="label">Toplam Ürün</div><div class="num" id="productCount">-</div><div class="subnum">ürün takip ediliyor</div></div></div>
-        <div class="card red"><div class="cardIcon">↗</div><div><div class="label">Bizde Daha Pahalı</div><div class="num" id="disadvantageCount">0</div><div class="subnum">ürün</div></div></div>
-        <div class="card"><div class="cardIcon">↘</div><div><div class="label">Bizde Ucuz / Eşit</div><div class="num" id="advantageCount">0</div><div class="subnum">ürün</div></div></div>
-        <div class="card amber"><div class="cardIcon">?</div><div><div class="label">Kontrol Gerekli</div><div class="num" id="needCheckCount">0</div><div class="subnum">ürün</div></div></div>
-      </div>
-
-      
-      <div class="execGrid">
-        <section class="execPanel" id="smartAlerts">
-          <h2>Akıllı Uyarı Sistemi</h2>
-          <div id="smartAlertBody" class="alertList"><div class="muted">Canlı kontrol sonrası kritik ürünler burada listelenecek.</div></div>
-        </section>
-        <section class="execPanel">
-          <h2>Günün Kritik Ürünleri</h2>
-          <div id="criticalProductsBody" class="alertList"><div class="muted">Fiyat farkı en yüksek ürünler burada gösterilecek.</div></div>
-        </section>
-      </div>
-      <section class="execPanel" id="marketAnalysis"><h2>Market Bazlı Rakip Analizi</h2><div id="marketAnalysisBody" class="marketAnalysisGrid"></div></section>
-      <section class="execPanel"><h2>Yönetici Grafikleri</h2><div id="chartBody"></div></section>
-      <section class="execPanel" id="favoriteProducts"><h2>Favori / Kritik Ürünler</h2><div class="muted">Ürün satırındaki ⭐ ile kritik ürünleri işaretleyebilirsin.</div><div id="favoriteProductsBody" class="alertList" style="margin-top:12px"></div></section>
-      <section class="execPanel" id="pdfReport"><h2>PDF Rapor Özeti</h2>
-        <div class="pdfCover"><div><div class="pdfCoverTitle">ARTS<br>Rekabet Analizi</div><div class="muted" style="margin-top:10px">Tarım Kredi / KOOP Yönetici Karar Destek Raporu</div><div style="margin-top:14px"><span class="reportBadge">Türkiye Geneli</span><span class="reportBadge">Canlı Fiyat Takibi</span><span class="reportBadge">v50</span></div></div>
-        <div class="pdfCoverMeta"><b>Hazırlayan:</b> Ayberk Özdeniz<br><b>Proje Sponsoru:</b> Suat Temizkan<br><b>Son Kontrol:</b> <span id="pdfCheckedAt">Henüz çalıştırılmadı</span><br><b>Özet:</b> <span id="pdfSummary">Veri bekleniyor.</span></div></div>
-      </section>
-
-      
-      
-      <section class="flyerHero" id="weeklyFlyer">
-        <div class="flyerHeader">
-          <div>
-            <div class="flyerTitle">Haftalık Afiş Analizi</div>
-            <div class="muted">Kat Kat Fırsat afiş ürünleri genel listeye karışmadan ayrı kampanya grubu olarak analiz edilir.</div>
-          </div>
-          <div class="flyerDates">30 Haziran - 06 Temmuz 2026</div>
-        </div>
-        <div class="flyerStats">
-          <div class="flyerStat"><span class="muted">Afiş ürünü</span><br><b id="flyerTotal">-</b></div>
-          <div class="flyerStat"><span class="muted">Biz daha ucuz</span><br><b id="flyerCheap">-</b></div>
-          <div class="flyerStat"><span class="muted">Rakip daha ucuz</span><br><b id="flyerExpensive">-</b></div>
-          <div class="flyerStat"><span class="muted">Kontrol gerekli</span><br><b id="flyerMissing">-</b></div>
-        </div>
-        <div class="flyerNote" id="flyerComment">Canlı kontrol sonrası haftalık afiş yorumu burada oluşacak.</div>
-      </section>
-
-      <section class="aiHero" id="aiExecutive">
-        <h2>ARTS AI Yönetici Yorumu</h2>
-        <div id="aiExecutiveText" class="aiText">Canlı kontrol sonrası sistem genel durumu yorumlayacak.</div>
-        <div id="aiExecutivePills" class="aiPills"></div>
-      </section>
-
-      <div class="v50Grid">
-        <section class="v50Panel" id="dailySummary">
-          <h2>Günün Özeti</h2>
-          <div id="dailySummaryBody" class="v50List"></div>
-        </section>
-        <section class="v50Panel" id="threatAnalysis">
-          <h2>Rakip Tehdit Analizi</h2>
-          <div id="threatAnalysisBody" class="threatGrid"></div>
-        </section>
-      </div>
-
-      <div class="v50Grid">
-        <section class="v50Panel" id="priceAlarms">
-          <h2>Fiyat Alarm Sistemi</h2>
-          <div id="priceAlarmBody" class="v50List"></div>
-        </section>
-        <section class="v50Panel" id="campaignSuggestions">
-          <h2>Kampanya / Fiyat Önerileri</h2>
-          <div id="campaignSuggestionBody" class="v50List"></div>
-        </section>
-      </div>
-
-      <section class="v50Panel" id="productHistory">
-        <h2>Ürün Fiyat Geçmişi</h2>
-        <div id="productHistoryBody" class="v50List"></div>
-      </section>
-
-      <section class="v50Panel" id="proReport">
-        <h2>Profesyonel PDF / Sunum Raporu</h2>
-        <div class="reportCover">
-          <div>
-            <div class="reportTitle">ARTS<br>Rekabet Analiz Raporu</div>
-            <div class="muted" style="margin-top:12px">Tarım Kredi Kooperatifleri • Yönetici Karar Destek Raporu</div>
-            <div style="margin-top:14px">
-              <span class="reportBadge">Executive Edition</span>
-              <span class="reportBadge">v50</span>
-              <span class="reportBadge">Türkiye Geneli</span>
-            </div>
-          </div>
-          <div class="reportMeta">
-            <b>Hazırlayan:</b> Ayberk Özdeniz<br>
-            <b>Proje Sponsoru:</b> Suat Temizkan<br>
-            <b>Son Kontrol:</b> <span id="reportCheckedAt">Henüz çalıştırılmadı</span><br>
-            <b>Yönetici Özeti:</b> <span id="reportSummary">Veri bekleniyor.</span>
-          </div>
-        </div>
-      </section>
-
-      <input class="searchBox" id="productSearch" placeholder="Ürün ara / filtrele..." oninput="filterProductRows()">
-      <button class="excelBtn" onclick="exportCsv()">Excel/CSV Aktar</button>
-
-      <div class="tabs" id="tabs"></div>
-
-      <h2>Özet Tablo</h2>
-      <table><thead><tr><th>Ürün Grubu</th><th>Toplam</th><th>Bizde Pahalı</th><th>Bizde Ucuz</th><th>Eşit</th><th>Kontrol Gerekli</th></tr></thead><tbody id="groupBody"></tbody></table>
-
-      <h2 id="changed">Dünden / Önceki Kontrolden Bugüne Değişen Ürünler</h2>
-      <table><thead><tr><th>Ürün</th><th>Önceki</th><th>Güncel</th><th>Değişim</th></tr></thead><tbody id="changedBody"></tbody></table>
-
-      <div id="categoryTables"></div>
-
-      <details><summary><b>Geliştirici Bilgisi: API'de Görülen Market Adları</b></summary><div id="markets" class="small" style="margin-top:10px"></div></details>
-
-
-      <div class="footerBox" style="display:block">
-        <b>Geliştirme Yol Haritası</b><br>
-        <span class="small">1. Ürün listesinin bölge müdürlüğü onayıyla genişletilmesi</span><br>
-<span class="small">2. Sabah / akşam otomatik rapor ve fiyat değişim bildirimi</span><br>
-        <span class="small">3. Bölge, il ve mağaza bazlı karşılaştırma ekranları</span><br>
-        <span class="small">4. Ankara merkez raporlamasına uygun PDF / Excel çıktı sistemi</span>
-      </div>
-      <div class="footerBox" id="footer">
-        <div>
-          <b>ARTS Executive Edition v52.1</b><br>
-          <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
-          <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
-        </div>
-        <div>
-          <b>Hazırlayan:</b> Ayberk Özdeniz<br>
-          <b>Proje Sponsoru:</b> Suat Temizkan
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<div class="imageModal" id="imageModal" onclick="if(event.target.id==='imageModal') closeImageModal()">
-  <div class="imageModalBox">
-    <div class="imageModalTop">
-      <div class="imageModalTitle" id="imageModalTitle">Ürün görseli</div>
-      <button class="imageModalClose" onclick="closeImageModal()">Kapat</button>
-    </div>
-    <img class="imageModalImg" id="imageModalImg" src="" alt="Ürün görseli">
-  </div>
-</div>
-
-<script>
-function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
-function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v52_1";
-function todayKey(){return new Date().toLocaleDateString("tr-TR")}
-function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
-function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
-function saveHistory(h){localStorage.setItem(HISTORY_KEY,JSON.stringify(h))}
-function snapshot(item){return {
-  tarim:item.tarim?.price??null,
-  rival:item.rival?.price??null,
-  tarimMarket:item.tarim?.market||"Tarım Kredi / KOOP",
-  rivalMarket:item.rival?.market||"Rakip",
-  comparison:item.comparison,
-  difference:item.difference,
-  checkedAt:new Date().toLocaleString("tr-TR")
-}}
-function previousSnapshot(history,target){
-  const dates=Object.keys(history).sort((a,b)=>parseTRDate(a)-parseTRDate(b));
-  for(let i=dates.length-1;i>=0;i--){
-    const snap=history[dates[i]]?.[target];
-    if(snap) return {date:dates[i],snap};
+function ntr(s){return String(s||"").replaceAll("I","ı").replaceAll("İ","i").toLowerCase().replaceAll("â","a").replaceAll("î","i").replaceAll("û","u").replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c").replaceAll("ı","i");}
+function marketType(name){const m=ntr(name); if(TARIM_KREDI_KEYS.some(k=>m.includes(ntr(k)))) return "tarim"; if(RIVAL_MARKETS.some(k=>m.includes(ntr(k)))) return "rival"; return "other";}
+function textOfProduct(p){return ntr([p.title,p.brand,p.refinedVolumeOrWeight,p.refinedQuantityUnit,p.quantity,p.unit].join(" "));}
+function hasAny(text,arr){return !arr||arr.length===0||arr.some(x=>text.includes(ntr(x)));}
+function hasAll(text,arr){return !arr||arr.length===0||arr.every(x=>text.includes(ntr(x)));}
+function hasNone(text,arr){return !arr||arr.length===0||!arr.some(x=>text.includes(ntr(x)));}
+function sizeMatches(product,spec){
+  if(spec.category==="esk_minced") return true;
+  if(!spec.size&&!spec.unitOnly) return true;
+  const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
+  if(spec.unitOnly) return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
+  const v=spec.size.value, unit=spec.size.unit;
+  if(unit==="ml"){
+    const litre = v/1000;
+    const cl = v/10;
+    return [`${v} ml`,`${v}ml`,`${v} cc`,`${cl} cl`,`${cl}cl`,`${litre} l`,`${String(litre).replace(".",",")} l`,`${litre}lt`,`${String(litre).replace(".",",")}lt`].some(x=>text.includes(x));
   }
-  return null;
+  if(unit==="l"){
+    const s=String(v), c=s.replace(".",",");
+    const ml = Math.round(v*1000), cl = Math.round(v*100);
+    return [`${s} l`,`${s}lt`,`${s} lt`,`${s} litre`,`${c} l`,`${c}lt`,`${c} lt`,`${c} litre`,`${ml} ml`,`${ml}ml`,`${cl} cl`,`${cl}cl`].some(x=>text.includes(x));
+  }
+  if(unit==="kg"){const gram=v*1000; return [`${v} kg`,`${v}kg`,`${v}.0 kg`,`${gram} gr`,`${gram}g`,`${gram} g`,`${gram} gram`].some(x=>text.includes(x));}
+  if(unit==="g") return [`${v} gr`,`${v}g`,`${v} g`,`${v} gram`].some(x=>text.includes(x));
+  return true;
 }
-function compareSnap(prev,newSnap){
- if(!prev)return null;
- const oldSnap=prev.snap||prev;
- const dateLabel=prev.date ? `${prev.date} → ${todayKey()}` : "Önceki kontrol";
- const changes=[];
- if(oldSnap.tarim!==newSnap.tarim)changes.push(`TK (${newSnap.tarimMarket||oldSnap.tarimMarket||"Tarım Kredi"}) ${tl(oldSnap.tarim)} → ${tl(newSnap.tarim)}`);
- if(oldSnap.rival!==newSnap.rival)changes.push(`Rakip (${newSnap.rivalMarket||oldSnap.rivalMarket||"Rakip"}) ${tl(oldSnap.rival)} → ${tl(newSnap.rival)}`);
- if(oldSnap.comparison!==newSnap.comparison)changes.push("Durum değişti");
- return changes.length ? `${dateLabel}: ${changes.join(" | ")}` : null;
+function categoryScore(product,spec){
+  const text=textOfProduct(product); let score=0;
+  if(spec.category==="egg"){const has30=text.includes("30")||text.includes("otuz"); const hasM=text.includes("m boy")||text.includes("53-62")||text.includes("53 62"); if(!has30)return -9999; if(hasM)score+=50; if(text.includes("turem")||text.includes("türem"))score+=80; score+=20;}
+  if(spec.category==="milk_half"){if(text.includes("yarim yagli"))score+=60; else if(text.includes("sut"))score+=10;}
+  if(spec.category==="esk_minced"){const isEsk=text.includes("et ve sut kurumu")||text.includes("esk"); if(isEsk)score+=80; if(text.includes("dana"))score+=20; if(text.includes("1 kg")||text.includes("1000 gr"))score+=30; if(!isEsk&&!(text.includes("1 kg")||text.includes("1000 gr")))return -9999;}
+  if(spec.category==="cheese_full"){if(text.includes("tam yagli"))score+=60; else score+=10;}
+  if(spec.category==="flyer"){score+=25; if(spec.prefer&&hasAny(text,spec.prefer))score+=20;}
+  if(spec.category==="beverage_exact"){score+=40; if(hasAny(text,spec.prefer))score+=20;}
+  if(spec.category==="toilet40_bamboo"){if(text.includes("bambu"))score+=45; if(text.includes("3 kat"))score+=25; score+=20;}
+  if(spec.category==="toilet16"){if(text.includes("2 kat")||text.includes("cift kat"))score+=30; score+=20;}
+  if(spec.category==="paper_towel6"){if(text.includes("2 kat"))score+=20; score+=25;}
+  if(spec.category==="dish_capsule"){if(text.includes("asperox")||text.includes("bingo"))score+=35; score+=25;}
+  if(spec.category==="detergent_color5"){if(text.includes("renkliler"))score+=45; score+=20;}
+  if(spec.category==="detergent_white5"){if(text.includes("beyazlar"))score+=45; score+=20;}
+  if(spec.category==="icecream"){score+=35; if(text.includes("dondurma"))score+=35;}
+if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavored"){if(text.includes("kizilay"))score+=40; if(text.includes("6x200")||text.includes("6 x 200")||text.includes("1200 ml"))score+=35; score+=20;}
+  if(spec.category==="tea"){if(text.includes("siyah"))score+=25; if(text.includes("rize"))score+=10;}
+  if(spec.category==="produce"){if(text.includes("pembe"))score+=40; score+=20;}
+  return score;
 }
-async function run(){
- const btn=document.getElementById("btn"),status=document.getElementById("status");
- btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir.";
- try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
- catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'}
- finally{btn.disabled=false}
+function scoreProduct(product,spec){
+  const text=textOfProduct(product);
+  if(!hasAll(text,spec.must))return -9999;
+  if(!hasNone(text,spec.ban))return -9999;
+  if(spec.prefer && !hasAny(text,spec.prefer)) return -9999;
+  if(spec.acceptAny&&!hasAny(text,spec.acceptAny))return -9999;
+  if(spec.requireAny&&!hasAny(text,spec.requireAny))return -9999;
+  if(spec.brandAny&&!hasAny(text,spec.brandAny))return -9999;
+  if(!sizeMatches(product,spec))return -9999;
+  const cat=categoryScore(product,spec); if(cat<0)return -9999;
+  let score=cat;
+  for(const m of spec.must||[]) if(text.includes(ntr(m)))score+=20;
+  for(const a of spec.acceptAny||[]) if(text.includes(ntr(a)))score+=10;
+  if(spec.size)score+=25; if(spec.unitOnly)score+=15;
+  for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
+  return score;
 }
-function productCell(x){if(!x)return "-"; return `<div class="price">${tl(x.price)}</div>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span>`}
-function productVisual(name){
- const n=String(name||"").toLowerCase();
- // Sıra önemli: kavun içinde "un" geçtiği için kavun/un karışmasın.
- if(n.includes("kavun"))return ["🍈","KAVUN"];
- if(n.includes("karpuz"))return ["🍉","KARPUZ"];
- if(n.includes("domates"))return ["🍅","DOMATES"];
- if(n.includes("muz"))return ["🍌","MUZ"];
- if(n.includes("salatalık"))return ["🥒","SALATALIK"];
- if(n.includes("limon"))return ["🍋","LİMON"];
- if(n.includes("soğan"))return ["🧅","SOĞAN"];
- if(n.includes("patates"))return ["🥔","PATATES"];
- if(n.includes("beyaz peynir")||n.includes("peynir"))return ["▰","BEYAZ PEYNİR"];
- if(n.includes("pirinç"))return ["🍚","PİRİNÇ"];
- if(n.includes("yumurta"))return ["🥚","YUMURTA"];
- if(n.includes("süt"))return ["🥛","SÜT"];
- if(n.includes("tereyağ"))return ["🧈","TEREYAĞ"];
- if(n.includes("ayçiçek")||n.includes("yağ"))return ["🛢️","YAĞ"];
- if(n.includes("şeker"))return ["🍬","ŞEKER"];
- if(n.includes("un"))return ["🌾","UN"];
- if(n.includes("zeytin"))return ["🫒","ZEYTİN"];
- if(n.includes("sucuk"))return ["🥓","SUCUK"];
- if(n.includes("kıyma"))return ["🥩","KIYMA"];
- if(n.includes("çay"))return ["🍵","ÇAY"];
- if(n.includes("maden suyu")||n.includes("kızılay"))return ["🫧","MADEN"]; 
- if(n.includes("pepsi")||n.includes("sarıyer")||n.includes("yedigün")||n.includes("gazoz")||n.includes("kola"))return ["🥤","İÇECEK"];
- if(n.includes("tuvalet kağıdı"))return ["🧻","TUVALET"];
- if(n.includes("kağıt havlu"))return ["🧻","HAVLU"];
- if(n.includes("bulaşık"))return ["💊","KAPSÜL"];
- if(n.includes("deterjan"))return ["🧼","DETERJAN"];
- return ["🛒","ÜRÜN"];
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/52.1"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function getNearestDepotsAt(latitude,longitude,distance){
+  const depots=await apiPost("/api/v2/nearest",{latitude,longitude,distance});
+  const list=Array.isArray(depots)?depots:[];
+  const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))];
+  return {depots:list,marketNames};
 }
-function productEmoji(name){return productVisual(name)[0]}
-function safePlaceholder(item){
- const v=productVisual(item.target);
- return `<div class="productImage placeholderOnly"><div class="productPlaceholder"><div class="placeholderIcon">${v[0]}</div><div class="placeholderText">${v[1]}</div></div></div>`;
+async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
+async function searchProduct(spec,depotIds,opts={}){
+  const all=[]; const keywords=spec.keywords||[spec.keyword];
+  for(const keyword of keywords){
+    const data=await apiPost("/api/v2/search",{keywords:keyword,pages:0,size:150,latitude:opts.latitude??LATITUDE,longitude:opts.longitude??LONGITUDE,distance:opts.distance??DISTANCE_KM,depots:opts.depots??[]});
+    const products=Array.isArray(data?.content)?data.content:[];
+    for(const p of products){
+      const score=scoreProduct(p,spec); if(score<0)continue;
+      for(const info of (p.productDepotInfoList||[])){
+        const marketName=info.marketAdi||info.depotName||""; const type=marketType(marketName); if(type==="other")continue;
+        const price=Number(info.price); if(!Number.isFinite(price))continue; if(spec.minPrice&&price<spec.minPrice)continue;
+        all.push({
+          group:spec.group,
+          target:spec.label,
+          title:p.title||"",
+          brand:p.brand||"",
+          quantity:p.refinedVolumeOrWeight||p.refinedQuantityUnit||"",
+          imageUrl:p.imageUrl||p.image||p.imagePath||p.pictureUrl||p.productImageUrl||p.thumbnail||"",
+          productId:p.id||p.productId||p.gtin||"",
+          market:marketName,
+          depot:info.depotName||"",
+          marketType:type,
+          price,
+          unitPrice:info.unitPrice||"",
+          indexTime:info.indexTime||"",
+          score,
+          keyword
+        });
+      }
+    }
+  }
+  const seen=new Map();
+  for(const c of all){const key=[c.title,c.market,c.price].join("|"); if(!seen.has(key)||seen.get(key).score<c.score)seen.set(key,c);}
+  return [...seen.values()].sort((a,b)=>a.price-b.price||b.score-a.score);
 }
-function mustUsePlaceholder(item){
- const n=String(item.target||"").toLowerCase();
- // Bu ürünlerde API görselleri sık sık rakip/yanlış ürün olarak geliyor; güvenli placeholder kullan.
- return n.includes("beyaz peynir") || n.includes("pirinç") || n.includes("kavun");
-}
-function productImage(item){
- // v20: Yanlış görsel riski olan ürünlerde API görseli hiç kullanılmaz.
- if(mustUsePlaceholder(item)) return safePlaceholder(item);
+function bestOf(arr){return(!arr||arr.length===0)?null:[...arr].sort((a,b)=>a.price-b.price||b.score-a.score)[0];}
+function makeGroupSummary(results){const map={}; for(const x of results){const g=x.group||"Diğer"; if(!map[g])map[g]={group:g,total:0,tarimExpensive:0,tarimCheaper:0,equal:0,noTarim:0,incomplete:0}; map[g].total++; if(x.comparison==="tarim_expensive")map[g].tarimExpensive++; else if(x.comparison==="tarim_cheaper")map[g].tarimCheaper++; else if(x.comparison==="equal")map[g].equal++; else if(x.comparison==="no_tarim")map[g].noTarim++; else map[g].incomplete++;} return Object.values(map);}
+export default async function handler(req,res){
+  res.setHeader("Access-Control-Allow-Origin","*"); res.setHeader("Access-Control-Allow-Methods","GET,OPTIONS"); res.setHeader("Access-Control-Allow-Headers","Content-Type");
+  if(req.method==="OPTIONS")return res.status(200).end();
+  try{
+    const depotResult=await getNearestDepots(); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
+    for(const spec of PRODUCTS){
+      const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
+      try{
+        let found=await searchProduct(spec,depotIds);
 
- // Tarım Kredi ürünü varsa, rakip görseline asla düşme.
- const hasTarim = !!item.tarim;
- const img = hasTarim
-   ? (item.tarim?.imageUrl || "")
-   : (item.imageUrl || item.best?.imageUrl || item.rival?.imageUrl || "");
- const title=esc(item.tarim?.title || item.best?.title || item.target || "");
- if(img) return `<div class="productImage" onclick="openImageModal('${esc(img)}','${title}')"><img src="${esc(img)}" onerror="this.outerHTML=safePlaceholder({target:'${esc(item.target)}'})"></div>`;
- return safePlaceholder(item);
+        // v29 özel düzeltme:
+        // Türkiye geneli aramada API bazen Tarım Kredi Türem yumurtayı döndürmüyor.
+        // Yumurta için Tarım Kredi bulunamazsa Sakarya/Adapazarı odaklı ek arama yapılır.
+        if(spec.category==="egg" && !found.some(x=>x.marketType==="tarim")){
+          const eggFallbackSpec = {
+            ...spec,
+            keywords:[
+              "Türem Yumurta M Boy 30 Adet",
+              "Turem Yumurta M Boy 30 Adet",
+              "Türem Yumurta 53-62 Gr 30 Adet",
+              "Türem Yumurta 30 Adet",
+              "Türem Yumurta",
+              "türem yumurta",
+              "yumurta 53-62 gr 30 adet"
+            ],
+            must:["yumurta"],
+            prefer:["türem","turem","m boy","53-62"],
+            ban:["keskinoğlu","keskinoglu","anadolu çiftliği","anadolu ciftligi","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]
+          };
+
+          // 1) Sakarya koordinatlı geniş arama
+          let fallbackFound = await searchProduct(eggFallbackSpec,depotIds,{
+            latitude:SAKARYA_LATITUDE,
+            longitude:SAKARYA_LONGITUDE,
+            distance:SAKARYA_DISTANCE_KM,
+            depots:[]
+          });
+
+          // 2) Eğer yine Tarım Kredi yoksa Sakarya çevresindeki gerçek depo ID'leriyle tekrar dene
+          if(!fallbackFound.some(x=>x.marketType==="tarim")){
+            try{
+              const sakaryaDepotResult = await getNearestDepotsAt(SAKARYA_LATITUDE,SAKARYA_LONGITUDE,SAKARYA_DISTANCE_KM);
+              const sakaryaDepotIds = sakaryaDepotResult.depots.map(d=>d.id).filter(Boolean);
+              const depotFallback = await searchProduct(eggFallbackSpec,sakaryaDepotIds,{
+                latitude:SAKARYA_LATITUDE,
+                longitude:SAKARYA_LONGITUDE,
+                distance:SAKARYA_DISTANCE_KM,
+                depots:sakaryaDepotIds
+              });
+              fallbackFound = [...depotFallback, ...fallbackFound];
+            }catch(e){}
+          }
+
+          found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
+        }
+
+        item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
+        const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
+        item.imageUrl = imageCandidate?.imageUrl || "";
+        item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
+        if(item.tarim||item.rival){item.status="ok"; if(item.tarim&&item.rival){item.difference=Math.round((item.tarim.price-item.rival.price)*100)/100; if(item.difference>0)item.comparison="tarim_expensive"; else if(item.difference<0)item.comparison="tarim_cheaper"; else item.comparison="equal";}else if(item.tarim&&!item.rival)item.comparison="only_tarim"; else if(!item.tarim&&item.rival)item.comparison="no_tarim";}
+      }catch(e){item.status="error"; item.error=e.message;}
+      results.push(item);
+    }
+    const disadvantageCount=results.filter(x=>x.comparison==="tarim_expensive").length; const advantageCount=results.filter(x=>["tarim_cheaper","equal","only_tarim"].includes(x.comparison)).length;
+    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:PRODUCTS.length,disadvantageCount,advantageCount,changedCount:0}});
+  }catch(e){return res.status(500).json({error:e.message});}
 }
-function koopBadge(item){ return ""; }
-function openImageModal(src,title){
- const modal=document.getElementById("imageModal");
- document.getElementById("imageModalImg").src=src;
- document.getElementById("imageModalTitle").textContent=title || "Ürün görseli";
- modal.classList.add("open");
-}
-function closeImageModal(){
- document.getElementById("imageModal").classList.remove("open");
- document.getElementById("imageModalImg").src="";
-}
-function marketLogo(name){
- const n=String(name||"").toLowerCase();
- let cls="", text=name||"";
- if(n.includes("tarim")||n.includes("tarım")||n.includes("koop")){cls="logo-tarim";text="+KOOP"}
- else if(n.includes("bim")){cls="logo-bim";text="BİM"}
- else if(n.includes("a101")){cls="logo-a101";text="A101"}
- else if(n.includes("sok")||n.includes("şok")){cls="logo-sok";text="ŞOK"}
- else if(n.includes("migros")){cls="logo-migros";text="Migros"}
- else if(n.includes("carrefour")){cls="logo-carrefour";text="Carrefour"}
- else {text=String(name||"Market").slice(0,10)}
- return `<span class="marketLogo ${cls}">${esc(text)}</span>`;
-}
-function statusBadge(item){if(item.comparison==="tarim_expensive")return '<span class="badge redBadge">Bizde Daha Pahalı</span>'; if(item.comparison==="tarim_cheaper")return '<span class="badge green">Bizde Daha Ucuz</span>'; if(item.comparison==="equal")return '<span class="badge green">Fiyat Eşit</span>'; if(item.comparison==="only_tarim")return '<span class="badge green">Sadece Bizde Bulundu</span>'; if(item.comparison==="no_tarim")return '<span class="badge amber">Kontrol Gerekli</span>'; if(item.status==="error")return '<span class="badge redBadge">Hata</span>'; return '<span class="badge amber">Karşılaştırma Eksik</span>'}
-function diffCell(item){if(item.comparison==="tarim_expensive")return `<b style="color:#C62828">+${tl(item.difference)}</b>`; if(item.comparison==="tarim_cheaper")return `<b style="color:#1B5E20">${tl(item.difference)}</b>`; if(item.comparison==="equal")return `<b>${tl(0)}</b>`; return "-"}
-function foundMarkets(item){const names=[...new Set((item.alternatives||[]).map(x=>x.market).filter(Boolean))]; return names.length?`<div class="small"><b>Bulunan Marketler:</b> ${names.map(esc).join(" • ")}</div>`:""}
-function marketDetails(item){
- const alts=(item.alternatives||[]).slice(0,12);
- if(!alts.length)return '<span class="small">Alternatif market fiyatı bulunamadı.</span>';
- return `<details class="marketDetails"><summary>Tüm Marketler (${alts.length})</summary><div class="marketList">`+
- alts.map(x=>`<div class="marketChip"><b>${tl(x.price)}</b><br>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span></div>`).join("")+
- `</div></details>`;
-}
-
-function getFavorites(){try{return JSON.parse(localStorage.getItem("arts_favorites_v50")||"[]")}catch(e){return []}}
-function saveFavorites(list){localStorage.setItem("arts_favorites_v50",JSON.stringify([...new Set(list)]))}
-function toggleFavorite(name){const list=getFavorites();const i=list.indexOf(name);if(i>=0)list.splice(i,1);else list.push(name);saveFavorites(list);document.querySelectorAll(`[data-fav="${CSS.escape(name)}"]`).forEach(btn=>btn.classList.toggle("active",list.includes(name)));updateFavoritesFromLastRender();}
-let lastRenderData=null;
-function pctDiff(item){if(!item.tarim||!item.rival||!item.rival.price)return null;return ((item.tarim.price-item.rival.price)/item.rival.price)*100}
-function confidenceParts(item){
- const altCount=(item.alternatives||[]).length;
- const title=((item.tarim?.title||item.rival?.title||item.best?.title||"")+"").toLowerCase();
- const target=(item.target||"").toLowerCase();
- const hasBoth=!!(item.tarim&&item.rival);
- const hasTarim=!!item.tarim;
- const hasRival=!!item.rival;
-
- const sizeWords=["kg","gr","g ","lt"," l","ml","adet","6x200","2.5","2,5","1.5","1,5","40","30","16","6"];
- const sizeMatch=sizeWords.some(w=>target.includes(w.trim()) && title.includes(w.trim()));
-
- const targetTokens=target.split(/\s+/).filter(x=>x.length>2);
- const matchedTokens=targetTokens.filter(t=>title.includes(t)).length;
- const nameRatio=targetTokens.length?matchedTokens/targetTokens.length:0;
-
- const brandHints=["türem","tmo","elit","billmatik","blume","mistral","confort","softy","aqua","bingo","asperox","kızılay","sarıyer","pepsi","yedigün","turem"];
- const brandMatch=brandHints.some(b=>target.includes(b)&&title.includes(b)) || nameRatio>=0.55;
-
- const categoryMatch= nameRatio>=0.35 || title.includes(targetTokens[0]||"");
- const noBadStatus=item.status!=="error" && item.comparison!=="unknown";
- const enoughMarket=altCount>=3;
-
- return [
-  {label:"Tarım Kredi fiyatı bulundu", ok:hasTarim, points:hasTarim?20:0, max:20},
-  {label:"Rakip fiyatı bulundu", ok:hasRival, points:hasRival?15:0, max:15},
-  {label:"Ürün adı benzerliği", ok:nameRatio>=0.55, warn:nameRatio>=0.35, points:nameRatio>=0.55?20:nameRatio>=0.35?12:4, max:20},
-  {label:"Marka / ürün ailesi uyumu", ok:brandMatch, points:brandMatch?15:5, max:15},
-  {label:"Gramaj / adet uyumu", ok:sizeMatch, warn:!sizeMatch, points:sizeMatch?15:7, max:15},
-  {label:"Yeterli market verisi", ok:enoughMarket, warn:altCount>0, points:enoughMarket?10:altCount>0?5:0, max:10},
-  {label:"Sistem durumu", ok:noBadStatus, points:noBadStatus?5:0, max:5}
- ];
-}
-function confidenceScore(item){
- const parts=confidenceParts(item);
- return Math.max(10,Math.min(100,Math.round(parts.reduce((a,b)=>a+b.points,0))));
-}
-function confidenceBadge(item){
- const s=confidenceScore(item);
- const cls=s>=85?"confHigh":s>=60?"confMid":"confLow";
- return `<span class="confidenceBadge ${cls}">Güven Skoru: %${s}</span>`;
-}
-function confidenceDetails(item){
- const s=confidenceScore(item);
- const parts=confidenceParts(item);
- const level=s>=85?"Yüksek güven":s>=60?"Orta güven":"Kontrol gerekli";
- const levelCls=s>=85?"confOk":s>=60?"confWarn":"confBad";
- const lines=parts.map(p=>{
-   const status=p.ok?"✓":p.warn?"⚠":"✕";
-   const cls=p.ok?"confOk":p.warn?"confWarn":"confBad";
-   return `<div class="confLine"><span>${esc(p.label)}</span><span class="${cls}">${status} ${p.points}/${p.max}</span></div>`;
- }).join("");
- return `<details class="confDetails">
-   <summary>Güven skoru detayı</summary>
-   <div class="confBreakdown">${lines}</div>
-   <div class="confExplain"><b class="${levelCls}">${level}.</b> Bu skor ürün adı, gramaj/adet, marka uyumu, Tarım Kredi ve rakip fiyatının bulunması ve market sayısına göre hesaplanır.</div>
- </details>`;
-}
-
-function smartAdvice(item){const p=pctDiff(item);if(p===null)return {level:"mid",title:item.target,text:"Karşılaştırma eksik. Ürün eşleşmesi veya Tarım Kredi fiyatı kontrol edilmeli."};if(p>15)return {level:"high",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} pahalı. Fiyat güncellemesi için kritik aday.`};if(p>5)return {level:"mid",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} pahalı. Takip listesine alınabilir.`};if(p<-10)return {level:"ok",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} ucuz. Güçlü fiyat avantajı var.`};return {level:"ok",title:item.target,text:"Fiyat farkı düşük. Mevcut fiyat korunabilir."}}
-function renderExecutivePanels(data,changes,byGroup){
- const results=data.results||[];
- const disadvantage=results.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0));
- const advantage=results.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0));
- const incomplete=results.filter(x=>!x.tarim||!x.rival).slice(0,5);
- const alerts=[...disadvantage.slice(0,5),...incomplete.slice(0,3)];
- document.getElementById("smartAlertBody").innerHTML=alerts.length?alerts.map(item=>{const a=smartAdvice(item);return `<div class="alertItem ${a.level==='high'?'high':a.level==='mid'?'mid':''}"><div class="alertTitle">${esc(a.title)}</div><div class="alertText">${esc(a.text)}</div>${confidenceBadge(item)}</div>`}).join(""):'<div class="alertItem"><div class="alertTitle">Kritik uyarı yok</div><div class="alertText">Acil müdahale gerektiren durum görünmüyor.</div></div>';
- const critical=[...disadvantage.slice(0,4),...advantage.slice(0,2)].slice(0,6);
- document.getElementById("criticalProductsBody").innerHTML=critical.length?critical.map(item=>`<div class="alertItem ${item.comparison==="tarim_expensive"?"high":""}"><div class="alertTitle">${esc(item.target)} — ${item.difference!=null?tl(item.difference):"-"}</div><div class="alertText">${confidenceBadge(item)}</div></div>`).join(""):'<div class="muted">Kritik ürün bulunamadı.</div>';
- const marketStats={};
- for(const item of results){for(const x of (item.alternatives||[])){const m=x.market||"Diğer";if(!marketStats[m])marketStats[m]={market:m,count:0,totalPrice:0,cheaper:0};marketStats[m].count++;marketStats[m].totalPrice+=x.price||0;if(item.tarim&&x.marketType==="rival"&&x.price<item.tarim.price)marketStats[m].cheaper++;}}
- const rows=Object.values(marketStats).sort((a,b)=>b.count-a.count).slice(0,8);
- document.getElementById("marketAnalysisBody").innerHTML=rows.length?rows.map(m=>`<div class="marketCard">${marketLogo(m.market)} <b>${esc(m.market)}</b><div class="marketStat">Bulunan ürün: <b>${m.count}</b></div><div class="marketStat">Bizden ucuz olduğu ürün: <b>${m.cheaper}</b></div><div class="marketStat">Ortalama görünen fiyat: <b>${tl(m.totalPrice/Math.max(1,m.count))}</b></div></div>`).join(""):'<div class="muted">Market analizi için veri yok.</div>';
- const total=results.length||1, cheap=results.filter(x=>x.comparison==="tarim_cheaper").length, expensive=results.filter(x=>x.comparison==="tarim_expensive").length, equal=results.filter(x=>x.comparison==="equal").length, missing=results.filter(x=>!x.tarim||!x.rival).length, changed=changes.length;
- const bars=[["Tarım Kredi daha ucuz",cheap,total,""],["Tarım Kredi daha pahalı",expensive,total,"redBar"],["Fiyat eşit",equal,total,""],["Kontrol gerekli",missing,total,"amberBar"],["Bugün değişen",changed,total,"amberBar"]];
- document.getElementById("chartBody").innerHTML=bars.map(r=>{const w=Math.round((r[1]/Math.max(1,r[2]))*100);return `<div class="barRow"><div>${r[0]}</div><div class="barTrack"><div class="barFill ${r[3]}" style="width:${w}%"></div></div><b>${r[1]}</b></div>`}).join("");
- document.getElementById("pdfCheckedAt").textContent=data.checkedAt||"-";document.getElementById("pdfSummary").textContent=`${results.length} ürün, ${cheap} ucuz, ${expensive} pahalı, ${changed} değişim.`;
- updateFavoritesFromLastRender();
-}
-function updateFavoritesFromLastRender(){const favs=getFavorites();const box=document.getElementById("favoriteProductsBody");if(!box||!lastRenderData)return;const items=(lastRenderData.results||[]).filter(x=>favs.includes(x.target));box.innerHTML=items.length?items.map(item=>`<div class="alertItem"><div class="alertTitle">⭐ ${esc(item.target)}</div><div class="alertText">TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)} | ${item.comparison}</div></div>`).join(""):'<div class="muted">Henüz favori ürün seçilmedi.</div>'}
-
-
-function safePct(n){return Number.isFinite(n)?Math.round(n):0}
-function percentDiff(item){if(!item.tarim||!item.rival||!item.rival.price)return null;return ((item.tarim.price-item.rival.price)/item.rival.price)*100}
-function recommendationPrice(item){
- if(!item.tarim||!item.rival)return null;
- const rival=item.rival.price;
- const low=Math.max(0, rival);
- const high=Math.max(0, rival*1.03);
- return `${tl(low)} - ${tl(high)}`;
-}
-
-
-function isFlyerItem(x){
-  const g=(x.group||"").toLowerCase();
-  const k=(x.keyword||"").toLowerCase();
-  const t=(x.target||"").toLowerCase();
-  return g.includes("haftalık afiş") || k.includes("sarıyer kola 2.5") || k.includes("kabuklu yer fıstığı") || t.includes("solo ultra") || t.includes("bergamot aromalı çay") || t.includes("dana kasap sucuk") || t.includes("tarsüt");
-}
-function renderFlyerPanel(data){
- const flyer=(data.results||[]).filter(isFlyerItem);
- const total=flyer.length;
- const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
- const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
- const missing=flyer.filter(x=>!x.tarim||!x.rival).length;
- const equal=flyer.filter(x=>x.comparison==="equal").length;
- const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
- const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
- const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
- set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
- const comment=document.getElementById("flyerComment");
- if(comment){
-   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
- }
-}
-
-
-function renderV50Panels(data,changes,byGroup){
- const results=data.results||[];
- const total=results.length;
- const cheap=results.filter(x=>x.comparison==="tarim_cheaper").length;
- const expensive=results.filter(x=>x.comparison==="tarim_expensive").length;
- const equal=results.filter(x=>x.comparison==="equal").length;
- const missing=results.filter(x=>!x.tarim||!x.rival).length;
- const critical=results.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,5);
- const groups=[...new Set(critical.map(x=>x.group).filter(Boolean))].slice(0,3);
-
- const overall=Math.round(((cheap+equal*0.7)/Math.max(1,total-missing))*100);
- document.getElementById("aiExecutiveText").innerHTML=`Bugünkü analizde <b>${total}</b> ürün incelendi. Tarım Kredi <b>${cheap}</b> üründe fiyat avantajı sağlıyor, <b>${expensive}</b> üründe rakipler daha avantajlı görünüyor. ${groups.length?`Öncelikli takip edilmesi gereken gruplar: <b>${groups.map(esc).join(", ")}</b>.`:"Genel fiyat dengesi olumlu görünüyor."} Genel rekabet skoru: <b>${overall}/100</b>.`;
- document.getElementById("aiExecutivePills").innerHTML=`<span class="aiPill">Genel Skor: ${overall}/100</span><span class="aiPill">Avantajlı: ${cheap}</span><span class="aiPill">Riskli: ${expensive}</span><span class="aiPill">Değişen: ${changes.length}</span>`;
-
- document.getElementById("dailySummaryBody").innerHTML=[
-  ["Toplam ürün",total],["Biz daha ucuz",cheap],["Biz daha pahalı",expensive],["Eşit",equal],["Karşılaştırılamayan",missing],["Bugün değişen",changes.length]
- ].map(x=>`<div class="v50Item"><div class="v50Title">${x[0]}</div><div class="v50Text"><b>${x[1]}</b></div></div>`).join("");
-
- const threat={};
- for(const item of results){
-   for(const x of (item.alternatives||[])){
-    if(x.marketType!=="rival")continue;
-    const m=x.market||"Rakip";
-    if(!threat[m])threat[m]={market:m,cheaper:0,total:0,score:0};
-    threat[m].total++;
-    if(item.tarim&&x.price<item.tarim.price)threat[m].cheaper++;
-   }
- }
- const threats=Object.values(threat).map(t=>({...t,score:Math.min(100,Math.round((t.cheaper*8)+(t.total*1.5)))})).sort((a,b)=>b.score-a.score).slice(0,4);
- document.getElementById("threatAnalysisBody").innerHTML=threats.length?threats.map((t,i)=>`<div class="threatCard">${marketLogo(t.market)} <b>${esc(t.market)}</b><div class="threatScore">${t.score}/100</div><div class="v50Text">Bizden ucuz olduğu ürün: <b>${t.cheaper}</b><br>Görülen ürün: <b>${t.total}</b></div></div>`).join(""):'<div class="muted">Tehdit analizi için veri yok.</div>';
-
- const alarms=results.map(item=>({item,p:percentDiff(item)})).filter(x=>x.p!==null&&x.p>10).sort((a,b)=>b.p-a.p).slice(0,8);
- document.getElementById("priceAlarmBody").innerHTML=alarms.length?alarms.map(x=>`<div class="v50Item ${x.p>20?'danger':'warn'}"><div class="v50Title">🚨 ${esc(x.item.target)}</div><div class="v50Text">Rakibe göre <b>%${x.p.toFixed(1)}</b> pahalı. TK: ${tl(x.item.tarim?.price)} | Rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v50Item"><div class="v50Title">Alarm yok</div><div class="v50Text">Şu an %10 üzeri fiyat dezavantajı görünmüyor.</div></div>';
-
- const suggestions=results.map(item=>({item,p:percentDiff(item)})).filter(x=>x.p!==null&&x.p>5).sort((a,b)=>b.p-a.p).slice(0,8);
- document.getElementById("campaignSuggestionBody").innerHTML=suggestions.length?suggestions.map(x=>`<div class="v50Item ${x.p>15?'danger':'warn'}"><div class="v50Title">💰 ${esc(x.item.target)}</div><div class="v50Text">Önerilen fiyat bandı: <b>${recommendationPrice(x.item)}</b><br>Mevcut TK: ${tl(x.item.tarim?.price)} | En ucuz rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v50Item"><div class="v50Title">Öneri yok</div><div class="v50Text">Öncelikli fiyat kampanyası gerektiren ürün görünmüyor.</div></div>';
-
- const history=loadHistory();
- const dateKeys=Object.keys(history).slice(-7);
- const histItems=results.slice(0,10);
- document.getElementById("productHistoryBody").innerHTML=histItems.map(item=>{
-   const pts=dateKeys.map(d=>({d,v:history[d]?.[item.target]?.tarim})).filter(x=>x.v!=null);
-   const bars=pts.length?`<div class="spark">${pts.map((p,i)=>`<span title="${p.d}: ${tl(p.v)}" style="height:${Math.max(6,Math.min(28,p.v/20))}px"></span>`).join("")}</div>`:"";
-   return `<div class="v50Item"><div class="v50Title">${esc(item.target)}</div><div class="historyLine">${pts.length?pts.map(p=>`<span class="historyPoint">${esc(p.d)}<br><b>${tl(p.v)}</b></span>`).join(""):'<span class="muted">Henüz geçmiş veri yok.</span>'}</div>${bars}</div>`;
- }).join("");
-
- document.getElementById("reportCheckedAt").textContent=data.checkedAt||"-";
- document.getElementById("reportSummary").textContent=`${total} ürün incelendi. ${cheap} avantajlı, ${expensive} riskli, ${changes.length} değişen ürün. Genel skor ${overall}/100.`;
-}
-function exportCsv(){
- if(!lastRenderData)return alert("Önce canlı kontrolü çalıştır.");
- const rows=[["Grup","Ürün","Tarım Kredi Fiyat","Rakip Fiyat","Rakip Market","Fark","Durum"]];
- for(const item of lastRenderData.results||[])rows.push([item.group,item.target,item.tarim?.price??"",item.rival?.price??"",item.rival?.market??"",item.difference??"",item.comparison]);
- const csv=rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")).join("\n");
- const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ARTS_Rapor.csv";a.click();
-}
-function filterProductRows(){
- const q=(document.getElementById("productSearch")?.value||"").toLowerCase();
- document.querySelectorAll(".groupBlock tbody tr").forEach(tr=>{tr.style.display=tr.innerText.toLowerCase().includes(q)?"":"none"});
-}
-
-function render(data){
- lastRenderData=data;
- const history=loadHistory(), today=todayKey(), newHistory={...history,[today]:{...(history[today]||{})}}, changes=[];
- document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
- document.getElementById("advantageCount").textContent=data.summary?.advantageCount||0;
- document.getElementById("productCount").textContent=data.summary?.productCount||data.results.length;
- document.getElementById("markets").innerHTML=(data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
- let needCheck=0;
- const gb=document.getElementById("groupBody"); gb.innerHTML="";
- for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
- document.getElementById("needCheckCount").textContent=needCheck;
- const byGroup={};
- for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
- document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
- const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
- const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
- for(const [group,items] of Object.entries(byGroup)){
-  let rows="";
-  for(const item of items)rows+=`<tr><td><div class="productWrap">${productImage(item)}<div class="productInfo"><div class="productName"><button class="starBtn ${getFavorites().includes(item.target)?'active':''}" data-fav="${esc(item.target)}" onclick="toggleFavorite(\'${esc(item.target)}\')">⭐</button>${esc(item.target)}</div><span class="small">${esc(item.keyword)}</span><br>${confidenceBadge(item)}${confidenceDetails(item)}${koopBadge(item)}${marketDetails(item)}</div></div></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td>${foundMarkets(item)}</td></tr>`;
-  wrap.innerHTML+=`<section class="groupBlock" id="${slug(esc(group))}"><h2>${esc(group)}</h2><table><thead><tr><th>Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Bulunan Marketler</th></tr></thead><tbody>${rows}</tbody></table></section>`
- }
- renderExecutivePanels(data,changes,byGroup);
- renderV50Panels(data,changes,byGroup);
- renderFlyerPanel(data);
- saveHistory(newHistory);
-}
-</script>
-</body></html>
