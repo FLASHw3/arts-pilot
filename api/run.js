@@ -9,7 +9,7 @@ const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefour
 const PRODUCTS = [
   {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], ban:["çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
-  {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek"]},
+  {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1"]},
   {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
   {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr"]},
 
@@ -40,12 +40,14 @@ const PRODUCTS = [
   {group:"Temizlik", label:"Bambu 3 Katlı Tuvalet Kağıdı 40 Adet", keywords:["Aqua Bambulu 3 Katlı Tuvalet Kağıdı 40 Adet","Softy Bambu 3 Katlı Tuvalet Kağıdı 40 Adet","bambu 3 katlı tuvalet kağıdı 40 adet"], category:"toilet40_bamboo", must:["tuvalet","kağıdı"], acceptAny:["40 adet","40'lı","40 lı"], ban:["havlu","peçete","mendil"]},
   {group:"Temizlik", label:"2 Katlı Tuvalet Kağıdı 16 Adet", keywords:["Blume Çift Katlı Tuvalet Kağıdı 16 Adet","Elit 2 Katlı Tuvalet Kağıdı 16 Adet","Confort Tuvalet Kağıdı 16 Adet","Beyaz Güvercin Tuvalet Kağıdı 16 Adet","2 katlı tuvalet kağıdı 16 adet","çift katlı tuvalet kağıdı 16 adet"], category:"toilet16", must:["tuvalet","kağıdı"], acceptAny:["16 adet","16'lı","16 lı"], ban:["havlu","peçete","mendil","40 adet","40'lı"]},
 
-  {group:"Temizlik", label:"2 Katlı Kağıt Havlu 6 Adet", keywords:["Blume Kağıt Havlu 6 Adet","Mistral 2 Katlı Kağıt Havlu 6 Adet","Elit 2 Katlı Kağıt Havlu 6 Adet","Confort Kağıt Havlu 6 Adet","kağıt havlu 6 adet","2 katlı kağıt havlu 6 adet"], category:"paper_towel6", must:["havlu"], acceptAny:["6 adet","6'lı","6 lı"], ban:["tuvalet","peçete","mendil"]},
+  {group:"Temizlik", label:"2 Katlı Kağıt Havlu 6 Adet", keywords:["Blume Kağıt Havlu 6 Adet","Mistral 2 Katlı Kağıt Havlu 6 Adet","Elit 2 Katlı Kağıt Havlu 6 Adet","Confort Kağıt Havlu 6 Adet"], category:"paper_towel6", must:["havlu"], acceptAny:["6 adet","6'lı","6 lı"], brandAny:["blume","mistral","elit","confort"], ban:["wells","peros","tuvalet","peçete","mendil"]},
 
-  {group:"Temizlik", label:"Bulaşık Makinesi Kapsülü 30-32 Adet", keywords:["Asperox Diamond Sparx Bulaşık Makinesi Kapsülü 30 Adet","Bingo Promax Bulaşık Makinesi Kapsülü 32 Adet","bulaşık makinesi kapsülü 30 adet","bulaşık makinesi kapsülü 32 adet"], category:"dish_capsule", must:["bulaşık","kapsül"], acceptAny:["30 adet","32 adet","30'lu","32'li"], ban:["elde","sıvı","jel","parlatıcı"]},
+  {group:"Temizlik", label:"Bulaşık Makinesi Kapsülü 30-32 Adet", keywords:["Asperox Diamond Sparx Bulaşık Makinesi Kapsülü 30 Adet","Bingo Promax Bulaşık Makinesi Kapsülü 32 Adet"], category:"dish_capsule", must:["bulaşık","kapsül"], acceptAny:["30 adet","32 adet","30'lu","32'li"], brandAny:["asperox","bingo"], ban:["renax","finish","fairy","pril","elde","sıvı","jel","parlatıcı"]},
 
-  {group:"Temizlik", label:"Renkliler Toz Deterjan 5 kg", keywords:["Elit Matik Toz Deterjan Renkliler 5 Kg","Billmatik Renkliler Toz Deterjan 5 Kg","renkliler toz deterjan 5 kg"], category:"detergent_color5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], ban:["beyazlar","sıvı","kapsül","jel"]},
-  {group:"Temizlik", label:"Beyazlar Toz Deterjan 5 kg", keywords:["Elit Matik Beyazlar Toz Deterjan 5 Kg","Billmatik Beyazlar Toz Deterjan 5 Kg","beyazlar toz deterjan 5 kg"], category:"detergent_white5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], ban:["renkliler","sıvı","kapsül","jel"]},
+  {group:"Temizlik", label:"Renkliler Toz Deterjan 5 kg", keywords:["Elit Matik Toz Deterjan Renkliler 5 Kg","Billmatik Renkliler Toz Deterjan 5 Kg"], category:"detergent_color5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], brandAny:["elit","billmatik"], ban:["peros","omo","alo","abc","tursil","beyazlar","sıvı","kapsül","jel","1.5 kg","1,5 kg"]},
+  {group:"Temizlik", label:"Beyazlar Toz Deterjan 5 kg", keywords:["Elit Matik Beyazlar Toz Deterjan 5 Kg","Billmatik Beyazlar Toz Deterjan 5 Kg"], category:"detergent_white5", must:["toz","deterjan"], acceptAny:["5 kg","5000 gr","5.000 gr"], brandAny:["elit","billmatik"], ban:["peros","omo","alo","abc","tursil","renkliler","sıvı","kapsül","jel","1.5 kg","1,5 kg"]},
+
+  {group:"İçecek", label:"Kızılay Sade Maden Suyu 6x200 ml", keywords:["Kızılay Sade Maden Suyu 6x200 Ml","Kızılay Doğal Maden Suyu 6x200 Ml","kızılay maden suyu 6x200 ml","kızılay doğal maden suyu 6x200 ml","kızılay sade maden suyu 6x200 ml"], category:"mineral_water6", must:["kızılay","maden suyu"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["aromalı","meyveli","limon","soda 200 ml tek","tekli"]},
 
   {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola gazlı içecek 2.5 l","sarıyer kola 2,5 l"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 2.5 L", keywords:["sarıyer portakallı gazoz 2.5 l","sarıyer portakallı gazlı içecek 2.5 l","sarıyer portakallı gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
@@ -95,6 +97,7 @@ function categoryScore(product,spec){
   if(spec.category==="dish_capsule"){if(text.includes("asperox")||text.includes("bingo"))score+=35; score+=25;}
   if(spec.category==="detergent_color5"){if(text.includes("renkliler"))score+=45; score+=20;}
   if(spec.category==="detergent_white5"){if(text.includes("beyazlar"))score+=45; score+=20;}
+  if(spec.category==="mineral_water6"){if(text.includes("kizilay"))score+=40; if(text.includes("6x200")||text.includes("6 x 200")||text.includes("1200 ml"))score+=35; score+=20;}
   if(spec.category==="tea"){if(text.includes("siyah"))score+=25; if(text.includes("rize"))score+=10;}
   if(spec.category==="produce"){if(text.includes("pembe"))score+=40; score+=20;}
   return score;
@@ -105,6 +108,7 @@ function scoreProduct(product,spec){
   if(!hasNone(text,spec.ban))return -9999;
   if(spec.prefer && !hasAny(text,spec.prefer)) return -9999;
   if(spec.acceptAny&&!hasAny(text,spec.acceptAny))return -9999;
+  if(spec.brandAny&&!hasAny(text,spec.brandAny))return -9999;
   if(!sizeMatches(product,spec))return -9999;
   const cat=categoryScore(product,spec); if(cat<0)return -9999;
   let score=cat;
@@ -114,7 +118,7 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/22.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/23.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
 async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}); const list=Array.isArray(depots)?depots:[]; const marketNames=[...new Set(list.map(d=>d.marketName||d.sellerName||d.name||d.depotName).filter(Boolean))]; return {depots:list,marketNames};}
 async function searchProduct(spec,depotIds){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
