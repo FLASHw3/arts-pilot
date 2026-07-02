@@ -368,6 +368,80 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebarFooter{position:relative;left:auto;right:auto;bottom:auto;margin-top:18px}.topbar{justify-content:flex-start;gap:20px;flex-wrap:wrap;height:auto;padding:18px}.topRight{display:block}.topMeta{margin:8px 0}.cards{grid-template-columns:1fr}.marketList{grid-template-columns:1fr}.content{padding:20px}.hero .secondary{position:relative;z-index:5}
 .hero{display:block}}
+
+/* v52 Soft Cream Theme */
+:root{
+  --bg:#f3f0e7;
+  --panel:#fffaf0;
+  --panel2:#f8f4ea;
+  --line:#ded7c7;
+  --soft:#e7f3e9;
+  --text:#12242c;
+  --muted:#667983;
+  --g:#147533;
+  --g2:#0f6428;
+}
+body{
+  background:
+    radial-gradient(circle at top left, rgba(20,117,51,.08), transparent 35%),
+    linear-gradient(180deg,#f6f2e8 0%, #efeade 100%) !important;
+  color:var(--text);
+}
+.content{
+  background:transparent;
+}
+.card,.execPanel,.v50Panel,.flyerHero,.footerBox,.reportCover,.pdfCover,
+.groupBlock,table,.marketCard,.threatCard,.v50Item,.alertItem,.flyerStat{
+  background:var(--panel) !important;
+  border-color:var(--line) !important;
+}
+.groupBlock tbody tr,
+tbody tr{
+  background:#fffdf7 !important;
+}
+.groupBlock tbody tr:hover,
+tbody tr:hover{
+  background:#f4f0e5 !important;
+}
+.marketChip,
+details,
+.confDetails,
+.historyPoint{
+  background:#fbf7ed !important;
+  border-color:#e2dac8 !important;
+}
+.sidebar{
+  background:#f7f2e7 !important;
+  border-right:1px solid var(--line) !important;
+}
+.sidebar a{
+  color:#172f37 !important;
+}
+.sidebar a:hover,
+.sidebar a.active{
+  background:#e7f3e9 !important;
+}
+.hero,.aiHero{
+  background:linear-gradient(135deg,#11662d,#19823c) !important;
+}
+input,select,textarea,.searchBox{
+  background:#fffaf0 !important;
+  border-color:#d9d0bf !important;
+  color:var(--text) !important;
+}
+button.secondary,.pdfCoverMeta,.reportMeta{
+  background:#fffaf0 !important;
+}
+.badge,.statPill,.reportBadge,.aiPill{
+  border-color:rgba(20,117,51,.18) !important;
+}
+th{
+  background:#126d31 !important;
+}
+hr{
+  border-color:var(--line) !important;
+}
+
 </style>
 </head>
 <body>
@@ -557,7 +631,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v51</b><br>
+          <b>ARTS Executive Edition v52</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -584,7 +658,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v51";
+const HISTORY_KEY="arts_history_v52";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
