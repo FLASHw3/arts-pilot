@@ -950,43 +950,48 @@ function isFlyerItem(x){
   const g=(x.group||"").toLowerCase();
   return g.includes("haftalık afiş");
 }
-function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":"Kontrol gerekli"}
+function flyerKey(s){return String(s||"").toLowerCase().replaceAll("ı","i").replaceAll("İ","i").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ş","s").replaceAll("ö","o").replaceAll("ç","c").replace(/[^a-z0-9]+/g," ").trim()}
+function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":c==="only_tarim"?"Sadece bizde fiyat var":c==="no_tarim"?"Rakip fiyatı bulundu":"Kontrol gerekli"}
 function renderFlyerPanel(data){
  const results=data.results||[];
  const flyer=results.filter(isFlyerItem);
  const total=WEEKLY_FLYER_PRODUCTS.length || flyer.length;
  const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
  const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
- const missing=Math.max(0,total-flyer.filter(x=>x.tarim||x.rival||x.best).length);
  const equal=flyer.filter(x=>x.comparison==="equal").length;
- const byTarget=Object.fromEntries(flyer.map(x=>[x.target,x]));
+ const foundCount=flyer.filter(x=>x.tarim||x.rival||x.best).length;
+ const missing=Math.max(0,total-foundCount);
+ const byTarget={};
+ flyer.forEach(x=>{byTarget[x.target]=x; byTarget[flyerKey(x.target)]=x});
+ function getFlyerItem(name){return byTarget[name]||byTarget[flyerKey(name)]||null}
  const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
  const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
  set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
  const comment=document.getElementById("flyerComment");
  if(comment){
-   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
+   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Eşleşen ürün: <b>${foundCount}</b>. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
  }
  const list=document.getElementById("flyerProductList");
  if(list){
    list.innerHTML=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>{
-     const item=byTarget[name];
-     const status=item?(item.tarim&&item.rival?statusText(item.comparison):"Bulundu / kontrol gerekli"):"Henüz sonuç yok";
+     const item=getFlyerItem(name);
+     const status=item?statusText(item.comparison):"Henüz sonuç yok";
      const price=item?`TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)}`:"Canlı aramada ürün sonucu bekleniyor";
      return `<div class="flyerMiniItem"><div class="flyerMiniTitle">${esc(name)}</div><div class="flyerMiniMeta">${price}</div><span class="flyerMiniStatus ${item?'flyerFound':'flyerMissing'}">${esc(status)}</span></div>`;
    }).join("");
  }
  const tbody=document.getElementById("flyerCompareBody");
  if(tbody){
-   tbody.innerHTML=flyer.length?flyer.map(item=>`
+   const rows=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>getFlyerItem(name)||{target:name,tarim:null,rival:null,difference:null,comparison:"unknown",alternatives:[]});
+   tbody.innerHTML=rows.map(item=>`
     <tr>
-      <td>${esc(item.target)}<div class="changeNote">${confidenceBadge(item)}</div></td>
+      <td>${esc(item.target)}<div class="changeNote">${item.tarim||item.rival?confidenceBadge(item):"Eşleşme bekleniyor"}</div></td>
       <td>${tl(item.tarim?.price)}<br><span class="muted">${esc(item.tarim?.title||"-")}</span></td>
       <td>${tl(item.rival?.price)}<br><span class="muted">${esc(item.rival?.market||"-")} • ${esc(item.rival?.title||"-")}</span></td>
       <td>${item.difference!=null?tl(item.difference):"-"}</td>
       <td>${statusBadge(item)}</td>
-    </tr>`).join(""):`<tr><td colspan="5">Afiş ürünleri canlı aramada henüz eşleşmedi.</td></tr>`;
+    </tr>`).join("");
  }
 }
 
