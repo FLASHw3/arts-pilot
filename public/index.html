@@ -1089,8 +1089,17 @@ function render(data){
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
  document.getElementById("needCheckCount").textContent=needCheck;
  const byGroup={};
- for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
- document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
+ for(const item of data.results){
+  const snap=snapshot(item);
+  const previousSnap = previousRunFor(item.target)?.snap || previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target);
+  const changeText=compareSnap(previousSnap,snap);
+  if(changeText)changes.push({item,old:previousSnap||{},snap,changeText});
+  newHistory[today][item.target]=snap;
+  const g=item.group||"Diğer";
+  if(!byGroup[g])byGroup[g]=[];
+  byGroup[g].push({...item,changeText});
+ }
+ document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old?.tarim)}<br>Rakip: ${tl(c.old?.rival)}</td><td>TK: ${tl(c.snap?.tarim)}<br>Rakip: ${tl(c.snap?.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
  for(const [group,items] of Object.entries(byGroup)){
