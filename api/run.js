@@ -38,7 +38,7 @@ const PRODUCTS = [
   {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["file","suyu","sos","aroma","kolonya","çay","cay"]},
   {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
 
-  {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["karpuz çekirdeksiz 1 kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz","çekirdeksiz karpuz"], category:"produce", must:["karpuz"], prefer:["çekirdeksiz","cekirdeksiz"], acceptAny:["çekirdeksiz","cekirdeksiz"], ban:["mini","normal karpuz"], manualTarimPrice:17.50, manualNote:"Afiş fiyatı"},
+  {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["karpuz çekirdeksiz 1 kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz","çekirdeksiz karpuz"], category:"produce", must:["karpuz"], prefer:["çekirdeksiz","cekirdeksiz"], acceptAny:["çekirdeksiz","cekirdeksiz"], ban:["mini","normal karpuz"]},
 
   {group:"Temizlik", label:"Bambu 3 Katlı Tuvalet Kağıdı 40 Adet", keywords:["Aqua Bambulu 3 Katlı Tuvalet Kağıdı 40 Adet","Softy Bambu 3 Katlı Tuvalet Kağıdı 40 Adet"], category:"toilet40_bamboo", must:["tuvalet","kağıdı"], acceptAny:["40 adet","40'lı","40 lı"], brandAny:["aqua","softy"], requireAny:["3 kat","3 katlı","3 katli"], ban:["solo","blume","elit","confort","beyaz güvercin","geri dönüşüm","geri donusum","2 kat","çift kat","cift kat","havlu","peçete","mendil"]},
   {group:"Temizlik", label:"2 Katlı Tuvalet Kağıdı 16 Adet", keywords:["Blume Çift Katlı Tuvalet Kağıdı 16 Adet","Elit 2 Katlı Tuvalet Kağıdı 16 Adet","Confort Tuvalet Kağıdı 16 Adet","Beyaz Güvercin Tuvalet Kağıdı 16 Adet"], category:"toilet16", must:["tuvalet","kağıdı"], acceptAny:["16 adet","16'lı","16 lı"], brandAny:["blume","elit","confort","beyaz güvercin"], requireAny:["2 kat","2 katlı","2 katli","çift kat","cift kat","tuvalet kağıdı 16"], ban:["solo","aqua","softy","bambu","geri dönüşüm","geri donusum","havlu","peçete","mendil","40 adet","40'lı"]},
@@ -60,27 +60,8 @@ const PRODUCTS = [
   {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 1.5 L", keywords:["pepsi kola 1.5 l","pepsi kola 1,5 l","pepsi 1.5 l","pepsi 1,5 l","pepsi 1500 ml"], category:"beverage_exact", must:["pepsi"], size:{value:1.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 2.5 L", keywords:["pepsi kola 2.5 l","pepsi 2.5 l","pepsi 2,5 l"], category:"beverage_exact", must:["pepsi"], size:{value:2.5, unit:"l"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su"]},
-    {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}];
-
-const WEEKLY_FLYER_PRODUCTS = ["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
-function flyerMustWords(label){
-  const stop=new Set(["kg","g","gr","l","lt","ml","li","lı","lu","lü","adet","tekli","çeşitleri","cesitleri","tam","yağlı","yagli","sade","aromalı","aromali","meyveli","doğal","dogal","birinci","serisi"]);
-  return label.toLowerCase().replace(/[0-9.,x'’&/]+/g," ").split(/\s+/).map(x=>x.trim()).filter(x=>x.length>2&&!stop.has(x)).slice(0,3);
-}
-function flyerKeywords(label){
-  const base=label;
-  return [...new Set([base, base.replace(/2\.5/g,"2,5").replace(/1 L/g,"1 lt"), base.replace(/ g/g," gr").replace(/ L/g," lt"), base.replace(/Çeşitleri/g,"").replace(/çeşitleri/g,"").trim()])].filter(Boolean);
-}
-for (const name of WEEKLY_FLYER_PRODUCTS){
-  PRODUCTS.push({
-    group:"Haftalık Afiş",
-    label:name,
-    keywords:flyerKeywords(name),
-    category:"flyer",
-    must:flyerMustWords(name),
-    ban:["oyuncak","hediye","poşet","poset"]
-  });
-}
+    {group:"Gazlı İçecek", label:"Yedigün Portakal 2.5 L", keywords:["yedigün portakal 2.5 l","yedigun portakal 2.5 l","yedigün gazlı içecek 2.5 l","yedigün 2,5 l","yedigün portakal 2,5 lt"], category:"beverage_exact", must:["yedigün"], prefer:["portakal","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]}
+];
 
 function ntr(s){return String(s||"").replaceAll("I","ı").replaceAll("İ","i").toLowerCase().replaceAll("â","a").replaceAll("î","i").replaceAll("û","u").replaceAll("ş","s").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ö","o").replaceAll("ç","c").replaceAll("ı","i");}
 function marketType(name){const m=ntr(name); if(TARIM_KREDI_KEYS.some(k=>m.includes(ntr(k)))) return "tarim"; if(RIVAL_MARKETS.some(k=>m.includes(ntr(k)))) return "rival"; return "other";}
@@ -246,12 +227,6 @@ export default async function handler(req,res){
         }
 
         item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
-        if(!item.tarim && spec.manualTarimPrice){
-          item.tarim={
-            group:spec.group,target:spec.label,title:spec.manualNote||"Tarım Kredi afiş fiyatı",brand:"Tarım Kredi",quantity:"",imageUrl:"",productId:"manual-"+spec.label,market:"Tarım Kredi / Afiş",depot:"Manuel afiş",marketType:"tarim",price:Number(spec.manualTarimPrice),unitPrice:"",indexTime:"",score:999,keyword:"manual"
-          };
-          item.alternatives=[item.tarim,...item.alternatives];
-        }
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
         item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
