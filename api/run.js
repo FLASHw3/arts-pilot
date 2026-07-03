@@ -126,7 +126,17 @@ function scoreProduct(product,spec){
   for(const w of ntr(spec.label).split(/\s+/).filter(w=>w.length>2)) if(text.includes(w))score+=2;
   return score;
 }
-async function apiPost(path,payload){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/54.0"},body:JSON.stringify(payload)}); if(!res.ok) throw new Error(`Market Fiyatı API hata: ${res.status}`); return await res.json();}
+async function apiPost(path,payload){
+  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/57.0"},body:JSON.stringify(payload)});
+  const text=await res.text();
+  let data=null;
+  try{data=text?JSON.parse(text):null;}catch(e){
+    const short=text?text.slice(0,240):"Boş cevap";
+    throw new Error(`Market Fiyatı API JSON dönmedi (${res.status}): ${short}`);
+  }
+  if(!res.ok) throw new Error(data?.error||data?.message||`Market Fiyatı API hata: ${res.status}`);
+  return data;
+}
 async function getNearestDepotsAt(latitude,longitude,distance){
   const depots=await apiPost("/api/v2/nearest",{latitude,longitude,distance});
   const list=Array.isArray(depots)?depots:[];
@@ -170,12 +180,73 @@ async function searchProduct(spec,depotIds,opts={}){
 }
 function bestOf(arr){return(!arr||arr.length===0)?null:[...arr].sort((a,b)=>a.price-b.price||b.score-a.score)[0];}
 function makeGroupSummary(results){const map={}; for(const x of results){const g=x.group||"Diğer"; if(!map[g])map[g]={group:g,total:0,tarimExpensive:0,tarimCheaper:0,equal:0,noTarim:0,incomplete:0}; map[g].total++; if(x.comparison==="tarim_expensive")map[g].tarimExpensive++; else if(x.comparison==="tarim_cheaper")map[g].tarimCheaper++; else if(x.comparison==="equal")map[g].equal++; else if(x.comparison==="no_tarim")map[g].noTarim++; else map[g].incomplete++;} return Object.values(map);}
+const WEEKLY_FLYER_NAMES=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
+function flyerSpec(name){
+  const lower=ntr(name);
+  const ban=["oyuncak","hediyeli"];
+  const spec={group:"Haftalık Afiş",label:name,keywords:[name,name.replace(/Çeşitleri/gi,"").trim()],category:"flyer",must:[],ban};
+  const add=(arr)=>{spec.must=[...new Set([...spec.must,...arr])]};
+  const any=(arr)=>{spec.acceptAny=[...new Set([...(spec.acceptAny||[]),...arr])]};
+  if(lower.includes("fistik"))add(["fistik"]), spec.size={value:1,unit:"kg"};
+  else if(lower.includes("kola"))add(["sariyer","kola"]), spec.size={value:2.5,unit:"l"};
+  else if(lower.includes("gazoz"))add(["sariyer","gazoz"]), spec.size={value:2.5,unit:"l"};
+  else if(lower.includes("solo")&&lower.includes("tuvalet"))add(["solo","tuvalet"]), any(["32li","32'li","32 li","32 adet"]);
+  else if(lower.includes("crax")&&lower.includes("sade"))add(["eti","crax"]), any(["sade","85 g","85 gr"]);
+  else if(lower.includes("crax"))add(["eti","crax"]), any(["80 g","80 gr","peynir","baharat"]);
+  else if(lower.includes("puff"))add(["eti","puff"]);
+  else if(lower.includes("topkek"))add(["eti","topkek"]);
+  else if(lower.includes("mentos"))add(["mentos"]), any(["37.5","37,5","37 g","37 gr"]);
+  else if(lower.includes("haribo")&&lower.includes("ayicik"))add(["haribo","ayicik"]), spec.size={value:130,unit:"g"};
+  else if(lower.includes("chamallow"))add(["haribo","chamallow"]), spec.size={value:130,unit:"g"};
+  else if(lower.includes("bergamot"))add(["bergamot","cay"]), spec.size={value:500,unit:"g"};
+  else if(lower.includes("leblebi"))add(["leblebi"]), spec.size={value:500,unit:"g"};
+  else if(lower.includes("obsesso"))add(["obsesso"]), spec.size={value:250,unit:"ml"};
+  else if(lower.includes("zen"))add(["zen"]), any(["250 ml","250ml","karpuz","cilek","blue berry"]);
+  else if(lower.includes("juss"))add(["juss"]), spec.size={value:1,unit:"l"};
+  else if(lower.includes("pin"))add(["pin"]), spec.size={value:1,unit:"l"};
+  else if(lower.includes("kizilay"))add(["kizilay"]), any(["6x200","6 x 200","6'li","6 li"]);
+  else if(lower.includes("cerezos"))add(["cerezos"]), spec.size={value:170,unit:"g"};
+  else if(lower.includes("zeytinyagi"))add(["zeytinyagi"]), spec.size={value:1,unit:"l"};
+  else if(lower.includes("sucuk"))add(["sucuk"]), any(["400 g","400 gr"]), spec.ban.push("parmak");
+  else if(lower.includes("tulum"))add(["tulum","peynir"]), spec.size={value:400,unit:"g"};
+  else if(lower.includes("suzme"))add(["suzme","peynir"]), spec.size={value:850,unit:"g"};
+  else if(lower.includes("kasar"))add(["kasar","peynir"]), spec.size={value:400,unit:"g"};
+  else if(lower.includes("manti"))add(["manti"]), spec.size={value:400,unit:"g"};
+  else if(lower.includes("kunefe"))add(["kunefe"]), spec.size={value:195,unit:"g"};
+  else if(lower.includes("pide"))add(["pide"]), any(["3x125","3 x 125","375 g","375 gr"]);
+  else if(lower.includes("salam"))add(["salam"]), spec.size={value:250,unit:"g"};
+  else if(lower.includes("sosis"))add(["sosis"]), spec.size={value:330,unit:"g"};
+  else if(lower==="kaymak 200 g")add(["kaymak"]), spec.size={value:200,unit:"g"};
+  else if(lower.includes("krema 200"))add(["krema"]), spec.size={value:200,unit:"ml"};
+  else if(lower.includes("krem peynir"))add(["krem","peynir"]), spec.size={value:300,unit:"g"};
+  else if(lower.includes("basmati"))add(["basmati","pirinc"]), spec.size={value:1,unit:"kg"};
+  else if(lower.includes("garnitur"))add(["garnitur"]), spec.size={value:560,unit:"g"};
+  else if(lower.includes("marmarabirlik"))add(["marmarabirlik"]), spec.size={value:800,unit:"g"};
+  else if(lower.includes("siyah zeytin"))add(["siyah","zeytin"]), spec.size={value:130,unit:"g"};
+  else if(lower.includes("yesil zeytin"))add(["yesil","zeytin"]), spec.size={value:130,unit:"g"};
+  else if(lower.includes("kakaolu krema"))add(["kakaolu","krema"]), spec.size={value:400,unit:"g"};
+  else if(lower.includes("pecete"))add(["pecete"]), any(["200'lu","200 lu","200 adet"]);
+  else if(lower.includes("sivi sabun"))add(["sivi","sabun"]), spec.size={value:4,unit:"l"};
+  else if(lower.includes("deterjan"))add(["toz","deterjan"]), spec.size={value:5,unit:"kg"};
+  else if(lower.includes("molped"))add(["molped"]);
+  else if(lower.includes("yumusatici"))add(["bingo","yumusatici"]), spec.size={value:1440,unit:"ml"};
+  else if(lower.includes("joker"))add(["joker"]), spec.size={value:1000,unit:"ml"};
+  else if(lower.includes("cif"))add(["cif","krem"]), spec.size={value:750,unit:"ml"};
+  else if(lower.includes("cam sil"))add(["cam","sil"]), spec.size={value:1000,unit:"ml"};
+  else if(lower.includes("cam bezi"))add(["cam","bezi"]), any(["2'li","2 li","2 adet"]);
+  else if(lower.includes("sunger"))add(["sunger"]);
+  if(!spec.must.length) spec.must=lower.split(/\s+/).filter(w=>w.length>3&&!['cesitleri','dondurulmus','tam','yagli'].includes(w)).slice(0,2);
+  spec.keywords=[...new Set(spec.keywords.filter(Boolean))];
+  return spec;
+}
+const ALL_PRODUCTS=[...PRODUCTS,...WEEKLY_FLYER_NAMES.map(flyerSpec)];
+
 export default async function handler(req,res){
   res.setHeader("Access-Control-Allow-Origin","*"); res.setHeader("Access-Control-Allow-Methods","GET,OPTIONS"); res.setHeader("Access-Control-Allow-Headers","Content-Type");
   if(req.method==="OPTIONS")return res.status(200).end();
   try{
     const depotResult=await getNearestDepots(); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
-    for(const spec of PRODUCTS){
+    for(const spec of ALL_PRODUCTS){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
         let found=await searchProduct(spec,depotIds);
@@ -226,6 +297,16 @@ export default async function handler(req,res){
           found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
         }
 
+        // v57: Çekirdeksiz karpuz için Tarım Kredi fiyatı gelmezse API
+        // bazen ürünü sadece "karpuz" adıyla döndürdüğü için kontrollü ek arama yapılır.
+        if(spec.label==="1 kg Çekirdeksiz Karpuz" && !found.some(x=>x.marketType==="tarim")){
+          const watermelonFallback={...spec,keywords:["karpuz kg","karpuz 1 kg","karpuz"],must:["karpuz"],prefer:null,acceptAny:null,ban:["mini","baby","sakiz","aroma","aromali","seker","meyve suyu","ice tea","cikolata","biskuvi","dondurma"]};
+          try{
+            const more=await searchProduct(watermelonFallback,depotIds);
+            found=[...more.filter(x=>x.marketType==="tarim"),...found];
+          }catch(e){}
+        }
+
         item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
@@ -235,6 +316,6 @@ export default async function handler(req,res){
       results.push(item);
     }
     const disadvantageCount=results.filter(x=>x.comparison==="tarim_expensive").length; const advantageCount=results.filter(x=>["tarim_cheaper","equal","only_tarim"].includes(x.comparison)).length;
-    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:PRODUCTS.length,disadvantageCount,advantageCount,changedCount:0}});
+    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:ALL_PRODUCTS.length,disadvantageCount,advantageCount,changedCount:0}});
   }catch(e){return res.status(500).json({error:e.message});}
 }
