@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ARTS - Tarım Kredi Tarım Kredi Görsel Rekabet Takip Sistemi</title>
+<title>KOOP ARTS - Fiyat Takip Sistemi</title>
 <style>
 :root{
   --g:#167a35;--g2:#0f6428;--g3:#0b4f20;--koop:#0d8f3d;--soft:#e8f7ed;--red:#c62828;--redbg:#fde8ea;
@@ -489,6 +489,21 @@ hr{
 .compareLine{display:block;margin-top:7px;font-weight:950}.compareGood{color:#0f6428}.compareBad{color:#c62828}.compareEqual{color:#1565c0}
 .matchBtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.matchBtns button{font-size:11px;padding:6px 8px;border-radius:8px}
 .historyDetail{margin-top:8px;background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:10px}
+
+/* v72 Admin gate */
+.adminOnly{display:none!important}
+body.admin-mode .adminOnly{display:revert!important}
+body.admin-mode section.adminOnly{display:block!important}
+body.admin-mode .adminOnly.inline{display:inline-flex!important}
+.adminLoginBox{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.adminLoginBox input{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:white;color:var(--text);font-weight:800;max-width:160px}
+.logList{display:grid;gap:8px;max-height:260px;overflow:auto;margin-top:12px}
+.logItem{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.logItem b{color:var(--text)}
+.logTime{font-size:11px;color:var(--muted);font-weight:800;white-space:nowrap}
+.adminUserPill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:8px 10px;background:#fff;font-size:12px;font-weight:900}
+.adminStatus{font-size:12px;font-weight:900;color:var(--muted)}
+body.admin-mode .adminStatus{color:var(--g)}
 </style>
 </head>
 <body>
@@ -513,7 +528,8 @@ hr{
       <a href="#priceAlarms">🚨 Fiyat Alarmları</a>
       <a href="#smartAlerts">🚨 Akıllı Uyarılar</a>
       <a href="#marketAnalysis">🏪 Rakip Analizi</a>
-      <a href="#productManager">🧩 Ürün Yönetimi</a>
+      <a class="adminOnly" href="#productManager">🧩 Ürün Yönetimi</a>
+      <a class="adminOnly" href="#adminActivityLog">📜 İşlem Geçmişi</a>
       <a href="#favoriteProducts">⭐ Favoriler</a>
       <a href="#pdfReport">📑 PDF Özeti</a>
       <a href="#footer">📄 Rapor Bilgisi</a>
@@ -534,6 +550,13 @@ hr{
         <div class="topMeta"><b>Proje Sahibi</b>Ayberk Özdeniz</div>
         <div class="topMeta"><b>Bölge Müdürü</b>Suat Temizkan</div>
         <div class="topMeta"><b>Bölge</b>📍 Türkiye Geneli</div>
+        <div class="adminLoginBox">
+          <span id="adminStatus" class="adminStatus">Sadece görüntüleme</span>
+          <input id="adminUsername" placeholder="Kullanıcı adı" autocomplete="username" onkeydown="if(event.key==='Enter') adminLogin()">
+          <input id="adminPassword" type="password" placeholder="Şifre" autocomplete="current-password" onkeydown="if(event.key==='Enter') adminLogin()">
+          <button class="miniBtn" id="adminLoginBtn" onclick="adminLogin()">Yönetici Girişi</button>
+          <button class="miniBtn ghostBtn adminOnly inline" onclick="adminLogout()">Çıkış</button>
+        </div>
       </div>
     </div>
 
@@ -559,9 +582,9 @@ hr{
       </div>
 
       
-      <section class="execPanel" id="productManager">
+      <section class="execPanel adminOnly" id="productManager">
         <h2>Ürün Yönetimi</h2>
-        <div class="muted">Buradan takip edilecek ürün ekleyebilir, kaldırabilir ve kritik ürünleri favoriye alabilirsin. Eklediğin/sildiğin ürünler bu tarayıcıda saklanır.</div>
+        <div class="muted">Buradan takip edilecek ürün ekleyebilir, kaldırabilir ve kritik ürünleri favoriye alabilirsin. Eklediğin/sildiğin ürünler bu tarayıcıda saklanır. Bu işlemler yalnızca yönetici girişinden sonra yapılabilir.</div>
         <div class="adminGrid">
           <div class="adminBox">
             <b>➕ Ürün Ekle</b>
@@ -580,6 +603,16 @@ hr{
         </div>
       </section>
 
+      <section class="execPanel adminOnly" id="adminActivityLog">
+        <h2>İşlem Geçmişi</h2>
+        <div class="muted">Yönetici modunda yapılan ürün ekleme, silme, manuel eşleştirme ve ayar değişiklikleri burada tutulur. Kayıtlar bu tarayıcıda saklanır.</div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="miniBtn ghostBtn" onclick="renderActivityLog()">Yenile</button>
+          <button class="miniBtn dangerBtn" onclick="clearActivityLog()">Geçmişi Temizle</button>
+        </div>
+        <div id="activityLogBody" class="logList"><div class="muted">Henüz işlem kaydı yok.</div></div>
+      </section>
+
       <div class="execGrid">
         <section class="execPanel" id="smartAlerts">
           <h2>Akıllı Uyarı Sistemi</h2>
@@ -594,7 +627,7 @@ hr{
       <section class="execPanel"><h2>Yönetici Grafikleri</h2><div id="chartBody"></div></section>
       <section class="execPanel" id="favoriteProducts"><h2>Favori / Kritik Ürünler</h2><div class="muted">Ürün satırındaki ⭐ ile kritik ürünleri işaretleyebilirsin.</div><div id="favoriteProductsBody" class="alertList" style="margin-top:12px"></div></section>
       <section class="execPanel" id="pdfReport"><h2>PDF Rapor Özeti</h2>
-        <div class="pdfCover"><div><div class="pdfCoverTitle">ARTS<br>Rekabet Analizi</div><div class="muted" style="margin-top:10px">Tarım Kredi / KOOP Yönetici Karar Destek Raporu</div><div style="margin-top:14px"><span class="reportBadge">Türkiye Geneli</span><span class="reportBadge">Canlı Fiyat Takibi</span><span class="reportBadge">v64</span></div></div>
+        <div class="pdfCover"><div><div class="pdfCoverTitle">ARTS<br>Rekabet Analizi</div><div class="muted" style="margin-top:10px">Tarım Kredi / KOOP Yönetici Karar Destek Raporu</div><div style="margin-top:14px"><span class="reportBadge">Türkiye Geneli</span><span class="reportBadge">Canlı Fiyat Takibi</span><span class="reportBadge">v72</span></div></div>
         <div class="pdfCoverMeta"><b>Hazırlayan:</b> Ayberk Özdeniz<br><b>Proje Sponsoru:</b> Suat Temizkan<br><b>Son Kontrol:</b> <span id="pdfCheckedAt">Henüz çalıştırılmadı</span><br><b>Özet:</b> <span id="pdfSummary">Veri bekleniyor.</span></div></div>
       </section>
 
@@ -639,7 +672,7 @@ hr{
             <div class="muted" style="margin-top:12px">Tarım Kredi Kooperatifleri • Yönetici Karar Destek Raporu</div>
             <div style="margin-top:14px">
               <span class="reportBadge">Executive Edition</span>
-              <span class="reportBadge">v64</span>
+              <span class="reportBadge">v72</span>
               <span class="reportBadge">Türkiye Geneli</span>
             </div>
           </div>
@@ -842,9 +875,63 @@ function marketDetails(item){
  const alts=(item.alternatives||[]).slice(0,12);
  if(!alts.length)return '<span class="small">Alternatif market fiyatı bulunamadı.</span>';
  return `<details class="marketDetails"><summary>Tüm Marketler (${alts.length})</summary><div class="marketList">`+
- alts.map(x=>`<div class="marketChip"><b>${tl(x.price)}</b><br>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span><div class="matchBtns"><button class="ghostBtn" onclick="setManualMatch(\`${esc(item.target)}\`,\`${x.marketType==='tarim'?'tarim':'rival'}\`,\`${esc(itemKey(x))}\`)">Bunu seç</button></div></div>`).join("") +
+ alts.map(x=>`<div class="marketChip"><b>${tl(x.price)}</b><br>${marketLogo(x.market)}<span class="small">${esc(x.market)}</span><br><span class="small">${esc(x.title)}</span><div class="matchBtns adminOnly"><button class="ghostBtn" onclick="setManualMatch(\`${esc(item.target)}\`,\`${x.marketType==='tarim'?'tarim':'rival'}\`,\`${esc(itemKey(x))}\`)">Bunu seç</button></div></div>`).join("") +
  `</div></details>`;
 }
+
+
+const ADMIN_SESSION_KEY="arts_admin_session_v72";
+const ADMIN_PROFILE_KEY="arts_admin_profile_v72";
+const ADMIN_LOG_KEY="arts_admin_activity_log_v72";
+function getAdminProfile(){try{return JSON.parse(localStorage.getItem(ADMIN_PROFILE_KEY)||"null")}catch(e){return null}}
+function isAdmin(){return localStorage.getItem(ADMIN_SESSION_KEY)==="1"}
+function adminName(){const p=getAdminProfile(); return p?.name||p?.username||"Yönetici"}
+function applyAdminMode(){
+  const on=isAdmin();
+  document.body.classList.toggle("admin-mode",on);
+  const st=document.getElementById("adminStatus");
+  if(st){
+    const p=getAdminProfile();
+    st.innerHTML=on?`<span class="adminUserPill">👤 ${esc(p?.name||p?.username||"Yönetici")} • ${esc(p?.role||"admin")}</span>`:"Sadece görüntüleme";
+  }
+  for(const id of ["adminUsername","adminPassword"]){const input=document.getElementById(id); if(input)input.style.display=on?"none":"inline-block";}
+  const btn=document.getElementById("adminLoginBtn"); if(btn)btn.style.display=on?"none":"inline-flex";
+  renderActivityLog();
+}
+async function adminLogin(){
+  const username=(document.getElementById("adminUsername")?.value||"").trim();
+  const password=(document.getElementById("adminPassword")?.value||"").trim();
+  if(!username)return alert("Kullanıcı adını yaz.");
+  if(!password)return alert("Şifreyi yaz.");
+  try{
+    const res=await fetch("/api/admin-login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
+    const data=await res.json().catch(()=>({success:false,error:"Sunucu cevabı okunamadı"}));
+    if(!res.ok||!data.success) throw new Error(data.error||"Giriş bilgileri hatalı");
+    localStorage.setItem(ADMIN_SESSION_KEY,"1");
+    localStorage.setItem(ADMIN_PROFILE_KEY,JSON.stringify({username:data.username||username,name:data.name||username,role:data.role||"admin"}));
+    document.getElementById("adminUsername").value="";
+    document.getElementById("adminPassword").value="";
+    addActivityLog("Giriş yapıldı", "Yönetici oturumu açıldı.", false);
+    applyAdminMode();
+    alert("Yönetici girişi başarılı.");
+  }catch(e){alert(e.message||"Yönetici girişi yapılamadı.")}
+}
+function adminLogout(){addActivityLog("Çıkış yapıldı", "Yönetici oturumu kapatıldı.", false); localStorage.removeItem(ADMIN_SESSION_KEY); localStorage.removeItem(ADMIN_PROFILE_KEY); applyAdminMode();}
+function requireAdmin(){if(isAdmin())return true; alert("Bu işlem için yönetici girişi gerekli."); return false;}
+function getActivityLog(){try{return JSON.parse(localStorage.getItem(ADMIN_LOG_KEY)||"[]")}catch(e){return []}}
+function saveActivityLog(list){localStorage.setItem(ADMIN_LOG_KEY,JSON.stringify(list.slice(0,80)))}
+function addActivityLog(action,detail,rerender=true){
+  const list=getActivityLog();
+  list.unshift({time:new Date().toLocaleString("tr-TR"),user:adminName(),action,detail});
+  saveActivityLog(list);
+  if(rerender)renderActivityLog();
+}
+function renderActivityLog(){
+  const box=document.getElementById("activityLogBody"); if(!box)return;
+  const list=getActivityLog();
+  box.innerHTML=list.length?list.map(x=>`<div class="logItem"><div><b>${esc(x.action)}</b><br><span class="small">${esc(x.detail||"")}</span><br><span class="small">👤 ${esc(x.user||"Yönetici")}</span></div><span class="logTime">${esc(x.time||"")}</span></div>`).join(""):'<div class="muted">Henüz işlem kaydı yok.</div>';
+}
+function clearActivityLog(){if(!requireAdmin())return; if(confirm("İşlem geçmişi temizlensin mi?")){localStorage.removeItem(ADMIN_LOG_KEY); renderActivityLog();}}
 
 function getFavorites(){try{return JSON.parse(localStorage.getItem("arts_favorites_v50")||"[]")}catch(e){return []}}
 function saveFavorites(list){localStorage.setItem("arts_favorites_v50",JSON.stringify([...new Set(list)]))}
@@ -863,14 +950,14 @@ function saveManualMatches(obj){localStorage.setItem(MANUAL_MATCH_KEY,JSON.strin
 function itemKey(x){return [x?.productId||"",x?.market||"",x?.title||"",x?.price||""].join("|")}
 function recalcItem(item){if(item.tarim||item.rival){item.status="ok"; if(item.tarim&&item.rival){item.difference=Math.round((item.tarim.price-item.rival.price)*100)/100; item.comparison=item.difference>0?"tarim_expensive":item.difference<0?"tarim_cheaper":"equal";}else if(item.tarim&&!item.rival)item.comparison="only_tarim"; else if(!item.tarim&&item.rival)item.comparison="no_tarim";} return item}
 function applyManualOverrides(data){const map=getManualMatches(); for(const item of data.results||[]){const m=map[item.target]; if(!m)continue; const alts=item.alternatives||[]; if(m.tarimKey){const hit=alts.find(x=>itemKey(x)===m.tarimKey); if(hit)item.tarim=hit} if(m.rivalKey){const hit=alts.find(x=>itemKey(x)===m.rivalKey); if(hit)item.rival=hit} recalcItem(item)} return data}
-function addManagedProduct(){const label=document.getElementById("newProductName").value.trim(); if(!label)return alert("Ürün adı yaz."); const group=document.getElementById("newProductGroup").value; const keywords=splitCsv(document.getElementById("newProductKeywords").value); const ban=splitCsv(document.getElementById("newProductBan").value); const list=getCustomProducts(); list.push({group,label,keywords:keywords.length?keywords:[label],ban}); saveCustomProducts(list); document.getElementById("newProductName").value="";document.getElementById("newProductKeywords").value="";document.getElementById("newProductBan").value="";}
-function removeCustomProduct(i){const list=getCustomProducts(); list.splice(i,1); saveCustomProducts(list)}
-function excludeProduct(name){const list=getExcludedProducts(); list.push(name); saveExcludedProducts(list)}
-function includeProduct(name){saveExcludedProducts(getExcludedProducts().filter(x=>x!==name))}
-function resetManagedProducts(){if(confirm("Eklenen ve silinen ürün ayarları sıfırlansın mı?")){localStorage.removeItem(CUSTOM_PRODUCTS_KEY);localStorage.removeItem(EXCLUDED_PRODUCTS_KEY);renderManagedProducts()}}
+function addManagedProduct(){if(!requireAdmin())return;const label=document.getElementById("newProductName").value.trim(); if(!label)return alert("Ürün adı yaz."); const group=document.getElementById("newProductGroup").value; const keywords=splitCsv(document.getElementById("newProductKeywords").value); const ban=splitCsv(document.getElementById("newProductBan").value); const list=getCustomProducts(); list.push({group,label,keywords:keywords.length?keywords:[label],ban}); saveCustomProducts(list); addActivityLog("Ürün eklendi", `${label} • ${group}`); document.getElementById("newProductName").value="";document.getElementById("newProductKeywords").value="";document.getElementById("newProductBan").value="";}
+function removeCustomProduct(i){if(!requireAdmin())return;const list=getCustomProducts(); const removed=list[i]; list.splice(i,1); saveCustomProducts(list); addActivityLog("Ürün silindi", removed?.label||"Ek ürün")}
+function excludeProduct(name){if(!requireAdmin())return;const list=getExcludedProducts(); list.push(name); saveExcludedProducts(list); addActivityLog("Ürün takip dışı bırakıldı", name)}
+function includeProduct(name){if(!requireAdmin())return;saveExcludedProducts(getExcludedProducts().filter(x=>x!==name)); addActivityLog("Ürün geri alındı", name)}
+function resetManagedProducts(){if(!requireAdmin())return;if(confirm("Eklenen ve silinen ürün ayarları sıfırlansın mı?")){localStorage.removeItem(CUSTOM_PRODUCTS_KEY);localStorage.removeItem(EXCLUDED_PRODUCTS_KEY);renderManagedProducts(); addActivityLog("Ürün ayarları sıfırlandı", "Eklenen ve takip dışı bırakılan ürünler temizlendi.")}}
 function renderManagedProducts(){const box=document.getElementById("managedProductsBody"); if(!box)return; const custom=getCustomProducts(); const excluded=getExcludedProducts(); const customHtml=custom.map((p,i)=>`<div class="adminItem"><span><b>${esc(p.label)}</b><br><span class="small">${esc(p.group)} • ${esc((p.keywords||[]).join(", "))}</span></span><button class="miniBtn dangerBtn" onclick="removeCustomProduct(${i})">Sil</button></div>`).join(""); const excludedHtml=excluded.map(n=>`<div class="adminItem"><span><b>${esc(n)}</b><br><span class="small">Takip dışı</span></span><button class="miniBtn ghostBtn" onclick="includeProduct('${esc(n)}')">Geri Al</button></div>`).join(""); box.innerHTML=(customHtml||'<div class="muted">Henüz ek ürün yok.</div>')+(excludedHtml?'<hr>'+excludedHtml:'');}
-function setManualMatch(target,kind,key){const map=getManualMatches(); if(!map[target])map[target]={}; map[target][kind+"Key"]=key; saveManualMatches(map); alert("Manuel eşleşme kaydedildi. Sonraki kontrolde bu seçim öncelikli kullanılacak."); if(lastRenderData){applyManualOverrides(lastRenderData); render(lastRenderData)}}
-function clearManualMatch(target){const map=getManualMatches(); delete map[target]; saveManualMatches(map); if(lastRenderData)render(lastRenderData)}
+function setManualMatch(target,kind,key){if(!requireAdmin())return;const map=getManualMatches(); if(!map[target])map[target]={}; map[target][kind+"Key"]=key; saveManualMatches(map); addActivityLog("Manuel eşleşme kaydedildi", `${target} • ${kind}`); alert("Manuel eşleşme kaydedildi. Sonraki kontrolde bu seçim öncelikli kullanılacak."); if(lastRenderData){applyManualOverrides(lastRenderData); render(lastRenderData)}}
+function clearManualMatch(target){if(!requireAdmin())return;const map=getManualMatches(); delete map[target]; saveManualMatches(map); addActivityLog("Manuel eşleşme sıfırlandı", target); if(lastRenderData)render(lastRenderData)}
 function comparisonText(item){const p=percentDiff(item); if(p===null)return '<span class="small">Yüzde hesaplanamadı</span>'; const abs=Math.abs(p).toFixed(1).replace('.',','); const diff=tl(Math.abs(item.difference||0)); if(p>0)return `<span class="compareLine compareBad">Biz %${abs} daha pahalıyız (+${diff})</span>`; if(p<0)return `<span class="compareLine compareGood">Biz %${abs} daha ucuzuz (-${diff})</span>`; return '<span class="compareLine compareEqual">Fiyat eşit</span>'}
 function historyForTarget(target){const h=loadHistory(); return Object.keys(h).sort((a,b)=>parseTRDate(a)-parseTRDate(b)).map(d=>({d,s:h[d]?.[target]})).filter(x=>x.s)}
 function showHistory(target){const rows=historyForTarget(target); const msg=rows.length?rows.map(x=>`${x.d} | TK: ${tl(x.s.tarim)} | Rakip: ${tl(x.s.rival)} | ${statusText(x.s.comparison)}`).join("\n"):"Bu ürün için geçmiş veri yok."; alert(msg)}
@@ -1105,7 +1192,7 @@ function render(data){
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
  for(const [group,items] of Object.entries(byGroup)){
   let rows="";
-  for(const item of items)rows+=`<tr data-group="${esc(group)}" data-market="${esc((item.alternatives||[]).map(a=>a.market).join(" | "))}"><td><div class="productWrap">${productImage(item)}<div class="productInfo"><div class="productName"><button class="starBtn ${getFavorites().includes(item.target)?'active':''}" data-fav="${esc(item.target)}" onclick="toggleFavorite(\'${esc(item.target)}\')">⭐</button>${esc(item.target)}</div><span class="small">${esc(item.keyword)}</span><br><button class="miniBtn ghostBtn" onclick="run(\`${esc(item.target)}\`)">🔄 Tek Yenile</button> <button class="miniBtn dangerBtn" onclick="excludeProduct(\`${esc(item.target)}\`)">Sil</button> <button class="miniBtn ghostBtn" onclick="clearManualMatch(\`${esc(item.target)}\`)">Eşleşmeyi Sıfırla</button>${koopBadge(item)}${marketDetails(item)}</div></div></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td>${foundMarkets(item)}</td></tr>`;
+  for(const item of items)rows+=`<tr data-group="${esc(group)}" data-market="${esc((item.alternatives||[]).map(a=>a.market).join(" | "))}"><td><div class="productWrap">${productImage(item)}<div class="productInfo"><div class="productName"><button class="starBtn ${getFavorites().includes(item.target)?'active':''}" data-fav="${esc(item.target)}" onclick="toggleFavorite(\'${esc(item.target)}\')">⭐</button>${esc(item.target)}</div><span class="small">${esc(item.keyword)}</span><br><button class="miniBtn ghostBtn" onclick="run(\`${esc(item.target)}\`)">🔄 Tek Yenile</button> <button class="miniBtn dangerBtn adminOnly inline" onclick="excludeProduct(\`${esc(item.target)}\`)">Sil</button> <button class="miniBtn ghostBtn adminOnly inline" onclick="clearManualMatch(\`${esc(item.target)}\`)">Eşleşmeyi Sıfırla</button>${koopBadge(item)}${marketDetails(item)}</div></div></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td>${foundMarkets(item)}</td></tr>`;
   wrap.innerHTML+=`<section class="groupBlock" id="${slug(esc(group))}"><h2>${esc(group)}</h2><table><thead><tr><th>Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Bulunan Marketler</th></tr></thead><tbody>${rows}</tbody></table></section>`
  }
  renderExecutivePanels(data,changes,byGroup);
@@ -1116,6 +1203,6 @@ function render(data){
  saveHistory(newHistory);
  saveRunHistory([...loadRunHistory(), currentRunSnapshot(data)]);
 }
-document.addEventListener("DOMContentLoaded",renderManagedProducts);
+document.addEventListener("DOMContentLoaded",()=>{applyAdminMode();renderManagedProducts();renderActivityLog();});
 </script>
 </body></html>
