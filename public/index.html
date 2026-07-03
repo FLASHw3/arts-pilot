@@ -753,7 +753,7 @@ function compareSnap(prev,newSnap){
 async function run(){
  const btn=document.getElementById("btn"),status=document.getElementById("status");
  btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir.";
- try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
+ try{const res=await fetch("/api/run"); const raw=await res.text(); let data; try{data=JSON.parse(raw);}catch{throw new Error(raw||"Sunucu beklenmeyen bir cevap döndürdü");} if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
  catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'}
  finally{btn.disabled=false}
 }
