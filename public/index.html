@@ -459,6 +459,22 @@ hr{
 .flyerFound{background:#e7f3e9;color:#0f6428}.flyerMissing{background:#fff6d8;color:#8a6d00}
 @media(max-width:1100px){.flyerMiniGrid{grid-template-columns:1fr}}
 
+
+/* v54 readability + explanation */
+.hero,.aiHero{background:#fffaf0!important;color:#12242c!important;border:1px solid var(--line)!important}
+.hero h1,.hero h2,.aiHero h2,.hero .title{color:#0f2a32!important}
+.hero .muted,.hero p,.aiText{color:#334b55!important;font-weight:650!important}
+.aiPill{background:#e7f3e9!important;color:#0f6428!important;border-color:#cfe4d3!important}
+.hero .watermark,.hero::after{opacity:.05!important;pointer-events:none!important}
+.threatExplain,.historyExplain,.flyerCompareExplain{margin-top:10px;background:#fbf7ed;border:1px solid #e2dac8;border-radius:14px;padding:12px;color:#3c5058;font-size:13px;line-height:1.45}
+.flyerCompareBox{margin-top:18px;background:#fffdf7;border:1px solid var(--line);border-radius:18px;padding:16px}
+.flyerCompareTable{width:100%;border-collapse:separate;border-spacing:0 8px}
+.flyerCompareTable th{font-size:12px}
+.flyerCompareTable td{background:#fffaf0;border-top:1px solid #e2dac8;border-bottom:1px solid #e2dac8;padding:10px;font-size:13px}
+.flyerCompareTable td:first-child{border-left:1px solid #e2dac8;border-radius:12px 0 0 12px;font-weight:900}
+.flyerCompareTable td:last-child{border-right:1px solid #e2dac8;border-radius:0 12px 12px 0}
+.changeNote{font-size:12px;color:#667983;margin-top:6px}
+
 </style>
 </head>
 <body>
@@ -574,6 +590,18 @@ hr{
           </div>
           <div id="flyerProductList" class="flyerMiniGrid"></div>
         </div>
+        <div class="flyerCompareBox">
+          <div class="flyerListHeader">
+            <b>Afiş Fiyat Karşılaştırması</b>
+            <span class="muted">Afiş ürünlerinde Tarım Kredi fiyatı, en ucuz rakip ve fark burada görünür.</span>
+          </div>
+          <div class="flyerCompareExplain">Not: Afiş ürünlerinde birebir aynı ürün bulunamazsa sistem en yakın eşleşmeyi gösterir. Güven skoru düşükse manuel kontrol önerilir.</div>
+          <table class="flyerCompareTable">
+            <thead><tr><th>Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th></tr></thead>
+            <tbody id="flyerCompareBody"></tbody>
+          </table>
+        </div>
+
 
       </section>
 
@@ -596,7 +624,7 @@ hr{
           <div id="dailySummaryBody" class="v50List"></div>
         </section>
         <section class="v50Panel" id="threatAnalysis">
-          <h2>Rakip Tehdit Analizi</h2>
+          <h2>Rakip Tehdit Analizi</h2><div id="threatExplain" class="threatExplain"><b>Tehdit skoru nasıl hesaplanır?</b><br>Rakibin bizden ucuz olduğu ürün sayısı ve toplam görüldüğü ürün sayısı dikkate alınır. 100/100 skoru, o rakibin çok sayıda üründe görünür olduğu ve sık sık bizden ucuz kaldığı anlamına gelir.</div>
           <div id="threatAnalysisBody" class="threatGrid"></div>
         </section>
       </div>
@@ -613,7 +641,7 @@ hr{
       </div>
 
       <section class="v50Panel" id="productHistory">
-        <h2>Ürün Fiyat Geçmişi</h2>
+        <h2>Ürün Fiyat Geçmişi</h2><div id="historyExplain" class="historyExplain"><b>Fiyat geçmişi ne işe yarar?</b><br>Bu bölüm, aynı tarayıcıda yapılan önceki kontrollerdeki Tarım Kredi fiyatını saklar. İlk kullanımda tek tarih görünmesi normaldir; birkaç kontrol/gün sonrası ürünün fiyat hareketi anlamlı hale gelir.</div>
         <div id="productHistoryBody" class="v50List"></div>
       </section>
 
@@ -663,7 +691,7 @@ hr{
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v53</b><br>
+          <b>ARTS Executive Edition v54</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -690,7 +718,7 @@ hr{
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v53";
+const HISTORY_KEY="arts_history_v54";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -917,37 +945,51 @@ function recommendationPrice(item){
 
 
 const WEEKLY_FLYER_PRODUCTS=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
+
 function isFlyerItem(x){
   const g=(x.group||"").toLowerCase();
   return g.includes("haftalık afiş");
 }
+function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":"Kontrol gerekli"}
 function renderFlyerPanel(data){
  const results=data.results||[];
  const flyer=results.filter(isFlyerItem);
- const total=WEEKLY_FLYER_PRODUCTS.length;
+ const total=WEEKLY_FLYER_PRODUCTS.length || flyer.length;
  const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
  const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
- const missing=total-flyer.filter(x=>x.tarim||x.rival||x.best).length;
+ const missing=Math.max(0,total-flyer.filter(x=>x.tarim||x.rival||x.best).length);
  const equal=flyer.filter(x=>x.comparison==="equal").length;
  const byTarget=Object.fromEntries(flyer.map(x=>[x.target,x]));
  const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
  const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
- set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",Math.max(0,missing));
+ set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
  const comment=document.getElementById("flyerComment");
  if(comment){
    comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
  }
  const list=document.getElementById("flyerProductList");
  if(list){
-   list.innerHTML=WEEKLY_FLYER_PRODUCTS.map(name=>{
+   list.innerHTML=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>{
      const item=byTarget[name];
      const status=item?(item.tarim&&item.rival?statusText(item.comparison):"Bulundu / kontrol gerekli"):"Henüz sonuç yok";
      const price=item?`TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)}`:"Canlı aramada ürün sonucu bekleniyor";
      return `<div class="flyerMiniItem"><div class="flyerMiniTitle">${esc(name)}</div><div class="flyerMiniMeta">${price}</div><span class="flyerMiniStatus ${item?'flyerFound':'flyerMissing'}">${esc(status)}</span></div>`;
    }).join("");
  }
+ const tbody=document.getElementById("flyerCompareBody");
+ if(tbody){
+   tbody.innerHTML=flyer.length?flyer.map(item=>`
+    <tr>
+      <td>${esc(item.target)}<div class="changeNote">${confidenceBadge(item)}</div></td>
+      <td>${tl(item.tarim?.price)}<br><span class="muted">${esc(item.tarim?.title||"-")}</span></td>
+      <td>${tl(item.rival?.price)}<br><span class="muted">${esc(item.rival?.market||"-")} • ${esc(item.rival?.title||"-")}</span></td>
+      <td>${item.difference!=null?tl(item.difference):"-"}</td>
+      <td>${statusBadge(item)}</td>
+    </tr>`).join(""):`<tr><td colspan="5">Afiş ürünleri canlı aramada henüz eşleşmedi.</td></tr>`;
+ }
 }
+
 
 
 
@@ -1013,6 +1055,23 @@ function filterProductRows(){
  document.querySelectorAll(".groupBlock tbody tr").forEach(tr=>{tr.style.display=tr.innerText.toLowerCase().includes(q)?"":"none"});
 }
 
+
+function historyKeyNow(){return new Date().toLocaleDateString("tr-TR")+" "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}
+function loadRunHistory(){try{return JSON.parse(localStorage.getItem("arts_run_history_v54")||"[]")}catch(e){return []}}
+function saveRunHistory(list){localStorage.setItem("arts_run_history_v54",JSON.stringify(list.slice(-20)))}
+function currentRunSnapshot(data){
+ const obj={time:historyKeyNow(), items:{}};
+ for(const item of data.results||[]) obj.items[item.target]=snapshot(item);
+ return obj;
+}
+function previousRunFor(target){
+ const runs=loadRunHistory();
+ for(let i=runs.length-1;i>=0;i--){
+   if(runs[i].items&&runs[i].items[target]) return {date:runs[i].time,snap:runs[i].items[target]};
+ }
+ return null;
+}
+
 function render(data){
  lastRenderData=data;
  const history=loadHistory(), today=todayKey(), newHistory={...history,[today]:{...(history[today]||{})}}, changes=[];
@@ -1025,7 +1084,7 @@ function render(data){
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
  document.getElementById("needCheckCount").textContent=needCheck;
  const byGroup={};
- for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
+ for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
  document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
@@ -1038,6 +1097,7 @@ function render(data){
  renderV50Panels(data,changes,byGroup);
  renderFlyerPanel(data);
  saveHistory(newHistory);
+ saveRunHistory([...loadRunHistory(), currentRunSnapshot(data)]);
 }
 </script>
 </body></html>
