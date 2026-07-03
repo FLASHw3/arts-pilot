@@ -753,7 +753,7 @@ function compareSnap(prev,newSnap){
 async function run(){
  const btn=document.getElementById("btn"),status=document.getElementById("status");
  btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir.";
- try{const res=await fetch("/api/run"); const raw=await res.text(); let data; try{data=JSON.parse(raw);}catch{throw new Error(raw||"Sunucu beklenmeyen bir cevap döndürdü");} if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
+ try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
  catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'}
  finally{btn.disabled=false}
 }
@@ -950,48 +950,43 @@ function isFlyerItem(x){
   const g=(x.group||"").toLowerCase();
   return g.includes("haftalık afiş");
 }
-function flyerKey(s){return String(s||"").toLowerCase().replaceAll("ı","i").replaceAll("İ","i").replaceAll("ğ","g").replaceAll("ü","u").replaceAll("ş","s").replaceAll("ö","o").replaceAll("ç","c").replace(/[^a-z0-9]+/g," ").trim()}
-function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":c==="only_tarim"?"Sadece bizde fiyat var":c==="no_tarim"?"Rakip fiyatı bulundu":"Kontrol gerekli"}
+function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":"Kontrol gerekli"}
 function renderFlyerPanel(data){
  const results=data.results||[];
  const flyer=results.filter(isFlyerItem);
  const total=WEEKLY_FLYER_PRODUCTS.length || flyer.length;
  const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
  const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
+ const missing=Math.max(0,total-flyer.filter(x=>x.tarim||x.rival||x.best).length);
  const equal=flyer.filter(x=>x.comparison==="equal").length;
- const foundCount=flyer.filter(x=>x.tarim||x.rival||x.best).length;
- const missing=Math.max(0,total-foundCount);
- const byTarget={};
- flyer.forEach(x=>{byTarget[x.target]=x; byTarget[flyerKey(x.target)]=x});
- function getFlyerItem(name){return byTarget[name]||byTarget[flyerKey(name)]||null}
+ const byTarget=Object.fromEntries(flyer.map(x=>[x.target,x]));
  const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
  const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
  set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
  const comment=document.getElementById("flyerComment");
  if(comment){
-   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Eşleşen ürün: <b>${foundCount}</b>. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
+   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
  }
  const list=document.getElementById("flyerProductList");
  if(list){
    list.innerHTML=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>{
-     const item=getFlyerItem(name);
-     const status=item?statusText(item.comparison):"Henüz sonuç yok";
+     const item=byTarget[name];
+     const status=item?(item.tarim&&item.rival?statusText(item.comparison):"Bulundu / kontrol gerekli"):"Henüz sonuç yok";
      const price=item?`TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)}`:"Canlı aramada ürün sonucu bekleniyor";
      return `<div class="flyerMiniItem"><div class="flyerMiniTitle">${esc(name)}</div><div class="flyerMiniMeta">${price}</div><span class="flyerMiniStatus ${item?'flyerFound':'flyerMissing'}">${esc(status)}</span></div>`;
    }).join("");
  }
  const tbody=document.getElementById("flyerCompareBody");
  if(tbody){
-   const rows=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>getFlyerItem(name)||{target:name,tarim:null,rival:null,difference:null,comparison:"unknown",alternatives:[]});
-   tbody.innerHTML=rows.map(item=>`
+   tbody.innerHTML=flyer.length?flyer.map(item=>`
     <tr>
-      <td>${esc(item.target)}<div class="changeNote">${item.tarim||item.rival?confidenceBadge(item):"Eşleşme bekleniyor"}</div></td>
+      <td>${esc(item.target)}<div class="changeNote">${confidenceBadge(item)}</div></td>
       <td>${tl(item.tarim?.price)}<br><span class="muted">${esc(item.tarim?.title||"-")}</span></td>
       <td>${tl(item.rival?.price)}<br><span class="muted">${esc(item.rival?.market||"-")} • ${esc(item.rival?.title||"-")}</span></td>
       <td>${item.difference!=null?tl(item.difference):"-"}</td>
       <td>${statusBadge(item)}</td>
-    </tr>`).join("");
+    </tr>`).join(""):`<tr><td colspan="5">Afiş ürünleri canlı aramada henüz eşleşmedi.</td></tr>`;
  }
 }
 
@@ -1089,17 +1084,8 @@ function render(data){
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
  document.getElementById("needCheckCount").textContent=needCheck;
  const byGroup={};
- for(const item of data.results){
-  const snap=snapshot(item);
-  const previousSnap = previousRunFor(item.target)?.snap || previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target);
-  const changeText=compareSnap(previousSnap,snap);
-  if(changeText)changes.push({item,old:previousSnap||{},snap,changeText});
-  newHistory[today][item.target]=snap;
-  const g=item.group||"Diğer";
-  if(!byGroup[g])byGroup[g]=[];
-  byGroup[g].push({...item,changeText});
- }
- document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old?.tarim)}<br>Rakip: ${tl(c.old?.rival)}</td><td>TK: ${tl(c.snap?.tarim)}<br>Rakip: ${tl(c.snap?.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
+ for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
+ document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
  for(const [group,items] of Object.entries(byGroup)){
