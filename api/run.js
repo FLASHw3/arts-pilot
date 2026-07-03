@@ -38,7 +38,7 @@ const PRODUCTS = [
   {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["file","suyu","sos","aroma","kolonya","çay","cay"]},
   {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
 
-  {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["karpuz çekirdeksiz 1 kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz","çekirdeksiz karpuz"], category:"produce", must:["karpuz"], prefer:["çekirdeksiz","cekirdeksiz"], acceptAny:["çekirdeksiz","cekirdeksiz"], ban:["mini","normal karpuz"]},
+  {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["çekirdeksiz karpuz kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz kg","karpuz çekirdeksiz"], category:"produce", must:["karpuz"], requireAny:["çekirdeksiz","cekirdeksiz"], prefer:["çekirdeksiz","cekirdeksiz"], acceptAny:["çekirdeksiz","cekirdeksiz"], unitOnly:true, ban:["mini","baby","normal karpuz","düz karpuz","duz karpuz","sakız","sakiz","aroma","aromalı","aromali","şeker","seker","meyve suyu","ice tea","çikolata","cikolata","bisküvi","biskuvi","dondurma"]},
 
   {group:"Temizlik", label:"Bambu 3 Katlı Tuvalet Kağıdı 40 Adet", keywords:["Aqua Bambulu 3 Katlı Tuvalet Kağıdı 40 Adet","Softy Bambu 3 Katlı Tuvalet Kağıdı 40 Adet"], category:"toilet40_bamboo", must:["tuvalet","kağıdı"], acceptAny:["40 adet","40'lı","40 lı"], brandAny:["aqua","softy"], requireAny:["3 kat","3 katlı","3 katli"], ban:["solo","blume","elit","confort","beyaz güvercin","geri dönüşüm","geri donusum","2 kat","çift kat","cift kat","havlu","peçete","mendil"]},
   {group:"Temizlik", label:"2 Katlı Tuvalet Kağıdı 16 Adet", keywords:["Blume Çift Katlı Tuvalet Kağıdı 16 Adet","Elit 2 Katlı Tuvalet Kağıdı 16 Adet","Confort Tuvalet Kağıdı 16 Adet","Beyaz Güvercin Tuvalet Kağıdı 16 Adet"], category:"toilet16", must:["tuvalet","kağıdı"], acceptAny:["16 adet","16'lı","16 lı"], brandAny:["blume","elit","confort","beyaz güvercin"], requireAny:["2 kat","2 katlı","2 katli","çift kat","cift kat","tuvalet kağıdı 16"], ban:["solo","aqua","softy","bambu","geri dönüşüm","geri donusum","havlu","peçete","mendil","40 adet","40'lı"]},
@@ -239,7 +239,7 @@ function flyerSpec(name){
   spec.keywords=[...new Set(spec.keywords.filter(Boolean))];
   return spec;
 }
-const ALL_PRODUCTS=[...PRODUCTS,...WEEKLY_FLYER_NAMES.map(flyerSpec)];
+const ALL_PRODUCTS=[...PRODUCTS]; // Haftalık afiş sistemi geçici olarak kapalı. Afiş ürünleri canlı kontrole dahil edilmez.
 
 export default async function handler(req,res){
   res.setHeader("Access-Control-Allow-Origin","*"); res.setHeader("Access-Control-Allow-Methods","GET,OPTIONS"); res.setHeader("Access-Control-Allow-Headers","Content-Type");
@@ -297,15 +297,8 @@ export default async function handler(req,res){
           found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
         }
 
-        // v57: Çekirdeksiz karpuz için Tarım Kredi fiyatı gelmezse API
-        // bazen ürünü sadece "karpuz" adıyla döndürdüğü için kontrollü ek arama yapılır.
-        if(spec.label==="1 kg Çekirdeksiz Karpuz" && !found.some(x=>x.marketType==="tarim")){
-          const watermelonFallback={...spec,keywords:["karpuz kg","karpuz 1 kg","karpuz"],must:["karpuz"],prefer:null,acceptAny:null,ban:["mini","baby","sakiz","aroma","aromali","seker","meyve suyu","ice tea","cikolata","biskuvi","dondurma"]};
-          try{
-            const more=await searchProduct(watermelonFallback,depotIds);
-            found=[...more.filter(x=>x.marketType==="tarim"),...found];
-          }catch(e){}
-        }
+        // Çekirdeksiz karpuz düzeltmesi: normal karpuz fiyatı asla yedek olarak kullanılmaz.
+        // Sadece ürün adında gerçekten çekirdeksiz/cekirdeksiz geçen sonuçlar eşleşebilir.
 
         item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
