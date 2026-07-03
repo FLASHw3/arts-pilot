@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ARTS - Tarım Kredi Tarım Kredi Görsel Rekabet Takip Sistemi</title>
+<title>ARTS v63 - Tarım Kredi Rekabet Takip Sistemi</title>
 <style>
 :root{
   --g:#167a35;--g2:#0f6428;--g3:#0b4f20;--koop:#0d8f3d;--soft:#e8f7ed;--red:#c62828;--redbg:#fde8ea;
@@ -37,9 +37,9 @@ h1{font-size:29px;margin:0 0 6px;color:#15252e} h2{font-size:22px;margin:26px 0 
 .muted{color:var(--muted)}
 button{background:var(--g);color:white;border:0;border-radius:11px;padding:13px 18px;font-weight:900;cursor:pointer;font-size:15px}
 button.secondary{background:white;color:#263238;border:1px solid #d9e1dd}
-button:disabled{opacity:.6;cursor:wait}.searchBox{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:white;color:var(--text);min-width:220px}.excelBtn{background:var(--g2)}
+button:disabled{opacity:.6;cursor:wait}
 .topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:22px 0}.dashboardCards{grid-template-columns:repeat(6,1fr)}@media(max-width:1300px){.dashboardCards{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.dashboardCards{grid-template-columns:1fr}}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:22px 0}
 .card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 26px #00000008;display:flex;align-items:center;gap:16px}
 .cardIcon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--soft);font-size:28px;color:var(--g)}
 .card.red .cardIcon{background:var(--redbg);color:var(--red)}.card.amber .cardIcon{background:var(--amberbg);color:#d59200}
@@ -184,7 +184,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 }
 
 
-/* v50 Executive Edition */
+/* v63 Executive Edition */
 .aiHero{
   background:linear-gradient(135deg,#0f6428,#167a35);
   color:white;border-radius:22px;padding:22px;margin:22px 0;
@@ -194,15 +194,15 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .aiText{font-size:15px;line-height:1.55;opacity:.96}
 .aiPills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .aiPill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);padding:8px 12px;border-radius:999px;font-weight:900;font-size:12px}
-.v50Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
-.v50Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
-.v50Panel h2{margin-top:0}
-.v50List{display:grid;gap:10px}
-.v50Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
-.v50Item.danger{border-left-color:#c62828;background:#fff8f8}
-.v50Item.warn{border-left-color:#d59200;background:#fffdf4}
-.v50Title{font-weight:950;font-size:15px}
-.v50Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
+.v63Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
+.v63Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
+.v63Panel h2{margin-top:0}
+.v63List{display:grid;gap:10px}
+.v63Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
+.v63Item.danger{border-left-color:#c62828;background:#fff8f8}
+.v63Item.warn{border-left-color:#d59200;background:#fffdf4}
+.v63Title{font-weight:950;font-size:15px}
+.v63Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
 .threatGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}
 .threatCard{background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:14px}
 .threatScore{font-size:28px;font-weight:950;color:var(--g2);margin-top:8px}
@@ -235,11 +235,11 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
 @media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
 
-@media(max-width:1100px){.v50Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
+@media(max-width:1100px){.v63Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
 @media print{
   .sidebar,.topbar,.topline,.tabs,.searchBox,.excelBtn,button.refreshSmall,button.secondary{display:none!important}
   .layout{display:block}.content{max-width:none;padding:0}body{background:white}
-  .v50Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
+  .v63Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
   .aiHero{color:#14252e;background:#eef8f1}
 }
 
@@ -296,7 +296,7 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 }
 
 
-/* v50 Executive Edition */
+/* v63 Executive Edition */
 .aiHero{
   background:linear-gradient(135deg,#0f6428,#167a35);
   color:white;border-radius:22px;padding:22px;margin:22px 0;
@@ -306,15 +306,15 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .aiText{font-size:15px;line-height:1.55;opacity:.96}
 .aiPills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .aiPill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);padding:8px 12px;border-radius:999px;font-weight:900;font-size:12px}
-.v50Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
-.v50Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
-.v50Panel h2{margin-top:0}
-.v50List{display:grid;gap:10px}
-.v50Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
-.v50Item.danger{border-left-color:#c62828;background:#fff8f8}
-.v50Item.warn{border-left-color:#d59200;background:#fffdf4}
-.v50Title{font-weight:950;font-size:15px}
-.v50Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
+.v63Grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
+.v63Panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 26px #00000008;margin:18px 0}
+.v63Panel h2{margin-top:0}
+.v63List{display:grid;gap:10px}
+.v63Item{border:1px solid var(--line);border-left:6px solid var(--g);border-radius:14px;padding:12px 14px;background:#fbfdfc}
+.v63Item.danger{border-left-color:#c62828;background:#fff8f8}
+.v63Item.warn{border-left-color:#d59200;background:#fffdf4}
+.v63Title{font-weight:950;font-size:15px}
+.v63Text{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
 .threatGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}
 .threatCard{background:#fbfdfc;border:1px solid var(--line);border-radius:16px;padding:14px}
 .threatScore{font-size:28px;font-weight:950;color:var(--g2);margin-top:8px}
@@ -347,11 +347,11 @@ details.marketDetails summary{cursor:pointer;font-weight:900;color:#4a5d66}
 .flyerNote{margin-top:12px;color:var(--muted);line-height:1.45}
 @media(max-width:1100px){.flyerStats{grid-template-columns:1fr 1fr}}
 
-@media(max-width:1100px){.v50Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
+@media(max-width:1100px){.v63Grid,.reportCover{grid-template-columns:1fr}.threatGrid{grid-template-columns:1fr}}
 @media print{
   .sidebar,.topbar,.topline,.tabs,.searchBox,.excelBtn,button.refreshSmall,button.secondary{display:none!important}
   .layout{display:block}.content{max-width:none;padding:0}body{background:white}
-  .v50Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
+  .v63Panel,.aiHero,.reportCover,table,.footerBox{box-shadow:none;break-inside:avoid}
   .aiHero{color:#14252e;background:#eef8f1}
 }
 
@@ -390,8 +390,8 @@ body{
 .content{
   background:transparent;
 }
-.card,.execPanel,.v50Panel,.flyerHero,.footerBox,.reportCover,.pdfCover,
-.groupBlock,table,.marketCard,.threatCard,.v50Item,.alertItem,.flyerStat{
+.card,.execPanel,.v63Panel,.flyerHero,.footerBox,.reportCover,.pdfCover,
+.groupBlock,table,.marketCard,.threatCard,.v63Item,.alertItem,.flyerStat{
   background:var(--panel) !important;
   border-color:var(--line) !important;
 }
@@ -475,6 +475,8 @@ hr{
 .flyerCompareTable td:last-child{border-right:1px solid #e2dac8;border-radius:0 12px 12px 0}
 .changeNote{font-size:12px;color:#667983;margin-top:6px}
 
+
+/* ARTS v63 tek parça yama: afiş kapalı, güven skoru kapalı, çekirdeksiz karpuz sıkı eşleşme */
 </style>
 </head>
 <body>
@@ -529,7 +531,7 @@ hr{
       <div class="hero">
         <div>
           <h1>Özet Dashboard</h1>
-          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, güvenli görseller, kalıcı fiyat geçmişi, arama/filtreleme ve market detayları içeren pilot karar destek ekranı.</div>
+          <div class="muted">Tarım Kredi / KOOP fiyatlarını rakip marketlerle karşılaştıran, Resmî pilot ürün listesi, kalıcı fiyat geçmişi, arama/filtreleme, favori ürün takibi ve market detayları içeren pilot karar destek ekranı.</div>
         </div>
         <button class="secondary" onclick="window.print()">📄 PDF Raporu İndir</button>
       </div>
@@ -539,13 +541,11 @@ hr{
         <span id="status" class="muted"></span>
       </div>
 
-      <div class="cards dashboardCards">
+      <div class="cards">
         <div class="card"><div class="cardIcon">🏷️</div><div><div class="label">Toplam Ürün</div><div class="num" id="productCount">-</div><div class="subnum">ürün takip ediliyor</div></div></div>
-        <div class="card"><div class="cardIcon">✅</div><div><div class="label">Bulunan Ürün</div><div class="num" id="foundCount">0</div><div class="subnum">TK veya rakip fiyatı var</div></div></div>
-        <div class="card amber"><div class="cardIcon">?</div><div><div class="label">Bulunamayan</div><div class="num" id="missingCount">0</div><div class="subnum">fiyat sonucu yok</div></div></div>
-        <div class="card red"><div class="cardIcon">↗</div><div><div class="label">Rakip Daha Ucuz</div><div class="num" id="disadvantageCount">0</div><div class="subnum">ürün</div></div></div>
-        <div class="card"><div class="cardIcon">↘</div><div><div class="label">Biz Ucuz / Eşit</div><div class="num" id="advantageCount">0</div><div class="subnum">ürün</div></div></div>
-        <div class="card amber"><div class="cardIcon">🕘</div><div><div class="label">Fiyatı Değişen</div><div class="num" id="changedCount">0</div><div class="subnum">önceki kayda göre</div></div></div>
+        <div class="card red"><div class="cardIcon">↗</div><div><div class="label">Bizde Daha Pahalı</div><div class="num" id="disadvantageCount">0</div><div class="subnum">ürün</div></div></div>
+        <div class="card"><div class="cardIcon">↘</div><div><div class="label">Bizde Ucuz / Eşit</div><div class="num" id="advantageCount">0</div><div class="subnum">ürün</div></div></div>
+        <div class="card amber"><div class="cardIcon">?</div><div><div class="label">Bulunamayan / Eksik</div><div class="num" id="needCheckCount">0</div><div class="subnum">ürün</div></div></div>
       </div>
 
       
@@ -559,56 +559,56 @@ hr{
           <div id="criticalProductsBody" class="alertList"><div class="muted">Fiyat farkı en yüksek ürünler burada gösterilecek.</div></div>
         </section>
       </div>
-      <div class="execGrid">
-        <section class="execPanel" id="bestOpportunities"><h2>En Büyük Fırsatlar</h2><div id="bestOpportunitiesBody" class="alertList"><div class="muted">Canlı kontrol sonrası bizde en avantajlı ürünler burada listelenecek.</div></div></section>
-        <section class="execPanel" id="biggestThreats"><h2>En Büyük Tehditler</h2><div id="biggestThreatsBody" class="alertList"><div class="muted">Canlı kontrol sonrası rakibin daha ucuz olduğu ürünler burada listelenecek.</div></div></section>
-      </div>
       <section class="execPanel" id="marketAnalysis"><h2>Market Bazlı Rakip Analizi</h2><div id="marketAnalysisBody" class="marketAnalysisGrid"></div></section>
       <section class="execPanel"><h2>Yönetici Grafikleri</h2><div id="chartBody"></div></section>
       <section class="execPanel" id="favoriteProducts"><h2>Favori / Kritik Ürünler</h2><div class="muted">Ürün satırındaki ⭐ ile kritik ürünleri işaretleyebilirsin.</div><div id="favoriteProductsBody" class="alertList" style="margin-top:12px"></div></section>
       <section class="execPanel" id="pdfReport"><h2>PDF Rapor Özeti</h2>
-        <div class="pdfCover"><div><div class="pdfCoverTitle">ARTS<br>Rekabet Analizi</div><div class="muted" style="margin-top:10px">Tarım Kredi / KOOP Yönetici Karar Destek Raporu</div><div style="margin-top:14px"><span class="reportBadge">Türkiye Geneli</span><span class="reportBadge">Canlı Fiyat Takibi</span><span class="reportBadge">v60</span></div></div>
+        <div class="pdfCover"><div><div class="pdfCoverTitle">ARTS<br>Rekabet Analizi</div><div class="muted" style="margin-top:10px">Tarım Kredi / KOOP Yönetici Karar Destek Raporu</div><div style="margin-top:14px"><span class="reportBadge">Türkiye Geneli</span><span class="reportBadge">Canlı Fiyat Takibi</span><span class="reportBadge">v63</span></div></div>
         <div class="pdfCoverMeta"><b>Hazırlayan:</b> Ayberk Özdeniz<br><b>Proje Sponsoru:</b> Suat Temizkan<br><b>Son Kontrol:</b> <span id="pdfCheckedAt">Henüz çalıştırılmadı</span><br><b>Özet:</b> <span id="pdfSummary">Veri bekleniyor.</span></div></div>
       </section>
-
-      
-      
-      <!-- Haftalık afiş sistemi geçici olarak kapatıldı. -->
+      <!-- Haftalık afiş sistemi v63 ile geçici olarak kapatıldı. -->
 
       <section class="aiHero" id="aiExecutive">
         <h2>ARTS AI Yönetici Yorumu</h2>
         <div id="aiExecutiveText" class="aiText">Canlı kontrol sonrası sistem genel durumu yorumlayacak.</div>
         <div id="aiExecutivePills" class="aiPills"></div>
+        <div id="scoreExplain" class="scoreExplain">
+          <b>Genel rekabet skoru nasıl hesaplanır?</b><br>
+          Skor; Tarım Kredi'nin rakiplere göre ucuz olduğu ürün oranı, pahalı kaldığı ürün sayısı,
+          fiyatı eşit olan ürünler ve karşılaştırması eksik ürünlerin etkisiyle hesaplanır.
+          100'e yakın skor güçlü rekabet avantajını, düşük skor ise fiyat revizyonu ihtiyacını gösterir.
+        </div>
+
       </section>
 
-      <div class="v50Grid">
-        <section class="v50Panel" id="dailySummary">
+      <div class="v63Grid">
+        <section class="v63Panel" id="dailySummary">
           <h2>Günün Özeti</h2>
-          <div id="dailySummaryBody" class="v50List"></div>
+          <div id="dailySummaryBody" class="v63List"></div>
         </section>
-        <section class="v50Panel" id="threatAnalysis">
+        <section class="v63Panel" id="threatAnalysis">
           <h2>Rakip Tehdit Analizi</h2><div id="threatExplain" class="threatExplain"><b>Tehdit skoru nasıl hesaplanır?</b><br>Rakibin bizden ucuz olduğu ürün sayısı ve toplam görüldüğü ürün sayısı dikkate alınır. 100/100 skoru, o rakibin çok sayıda üründe görünür olduğu ve sık sık bizden ucuz kaldığı anlamına gelir.</div>
           <div id="threatAnalysisBody" class="threatGrid"></div>
         </section>
       </div>
 
-      <div class="v50Grid">
-        <section class="v50Panel" id="priceAlarms">
+      <div class="v63Grid">
+        <section class="v63Panel" id="priceAlarms">
           <h2>Fiyat Alarm Sistemi</h2>
-          <div id="priceAlarmBody" class="v50List"></div>
+          <div id="priceAlarmBody" class="v63List"></div>
         </section>
-        <section class="v50Panel" id="campaignSuggestions">
+        <section class="v63Panel" id="campaignSuggestions">
           <h2>Kampanya / Fiyat Önerileri</h2>
-          <div id="campaignSuggestionBody" class="v50List"></div>
+          <div id="campaignSuggestionBody" class="v63List"></div>
         </section>
       </div>
 
-      <section class="v50Panel" id="productHistory">
+      <section class="v63Panel" id="productHistory">
         <h2>Ürün Fiyat Geçmişi</h2><div id="historyExplain" class="historyExplain"><b>Fiyat geçmişi ne işe yarar?</b><br>Bu bölüm, aynı tarayıcıda yapılan önceki kontrollerdeki Tarım Kredi fiyatını saklar. İlk kullanımda tek tarih görünmesi normaldir; birkaç kontrol/gün sonrası ürünün fiyat hareketi anlamlı hale gelir.</div>
-        <div id="productHistoryBody" class="v50List"></div>
+        <div id="productHistoryBody" class="v63List"></div>
       </section>
 
-      <section class="v50Panel" id="proReport">
+      <section class="v63Panel" id="proReport">
         <h2>Profesyonel PDF / Sunum Raporu</h2>
         <div class="reportCover">
           <div>
@@ -616,7 +616,7 @@ hr{
             <div class="muted" style="margin-top:12px">Tarım Kredi Kooperatifleri • Yönetici Karar Destek Raporu</div>
             <div style="margin-top:14px">
               <span class="reportBadge">Executive Edition</span>
-              <span class="reportBadge">v60</span>
+              <span class="reportBadge">v63</span>
               <span class="reportBadge">Türkiye Geneli</span>
             </div>
           </div>
@@ -629,11 +629,9 @@ hr{
         </div>
       </section>
 
-      <div class="topline">
-        <input class="searchBox" id="productSearch" placeholder="Ürün ara / filtrele..." oninput="filterProductRows()">
-        <select class="searchBox" id="categoryFilter" onchange="filterProductRows()"><option value="">Tüm kategoriler</option></select>
-        <button class="excelBtn" onclick="exportCsv()">Excel/CSV Aktar</button>
-      </div>
+      <select class="searchBox" id="categoryFilter" onchange="filterProductRows()"><option value="">Tüm kategoriler</option></select>
+      <input class="searchBox" id="productSearch" placeholder="Ürün ara / filtrele..." oninput="filterProductRows()">
+      <button class="excelBtn" onclick="exportCsv()">Excel/CSV Aktar</button>
 
       <div class="tabs" id="tabs"></div>
 
@@ -684,7 +682,7 @@ hr{
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v60";
+const HISTORY_KEY="arts_history_v57";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -813,6 +811,19 @@ function marketLogo(name){
 function statusBadge(item){if(item.comparison==="tarim_expensive")return '<span class="badge redBadge">Bizde Daha Pahalı</span>'; if(item.comparison==="tarim_cheaper")return '<span class="badge green">Bizde Daha Ucuz</span>'; if(item.comparison==="equal")return '<span class="badge green">Fiyat Eşit</span>'; if(item.comparison==="only_tarim")return '<span class="badge green">Sadece Bizde Bulundu</span>'; if(item.comparison==="no_tarim")return '<span class="badge amber">Kontrol Gerekli</span>'; if(item.status==="error")return '<span class="badge redBadge">Hata</span>'; return '<span class="badge amber">Karşılaştırma Eksik</span>'}
 function diffCell(item){if(item.comparison==="tarim_expensive")return `<b style="color:#C62828">+${tl(item.difference)}</b>`; if(item.comparison==="tarim_cheaper")return `<b style="color:#1B5E20">${tl(item.difference)}</b>`; if(item.comparison==="equal")return `<b>${tl(0)}</b>`; return "-"}
 function foundMarkets(item){const names=[...new Set((item.alternatives||[]).map(x=>x.market).filter(Boolean))]; return names.length?`<div class="small"><b>Bulunan Marketler:</b> ${names.map(esc).join(" • ")}</div>`:""}
+function matchReason(item){
+ const reasons=[];
+ const src=item.tarim||item.rival||item.best;
+ const title=(src?.title||"").toLowerCase();
+ const target=(item.target||"").toLowerCase();
+ if(!src) return '<span class="badge amber">Ürün bulunamadı</span>';
+ const targetWords=target.split(/\s+/).filter(w=>w.length>2);
+ const matched=targetWords.filter(w=>title.includes(w)).slice(0,3);
+ if(matched.length) reasons.push('İsim eşleşti: '+matched.join(', '));
+ if(src.quantity) reasons.push('Gramaj: '+src.quantity);
+ if(src.market) reasons.push('Market: '+src.market);
+ return `<span class="badge blue">${esc(reasons.slice(0,2).join(' • ')||'Eşleşme bulundu')}</span>`;
+}
 function marketDetails(item){
  const alts=(item.alternatives||[]).slice(0,12);
  if(!alts.length)return '<span class="small">Alternatif market fiyatı bulunamadı.</span>';
@@ -821,15 +832,50 @@ function marketDetails(item){
  `</div></details>`;
 }
 
-function getFavorites(){try{return JSON.parse(localStorage.getItem("arts_favorites_v50")||"[]")}catch(e){return []}}
-function saveFavorites(list){localStorage.setItem("arts_favorites_v50",JSON.stringify([...new Set(list)]))}
+function getFavorites(){try{return JSON.parse(localStorage.getItem("arts_favorites_v63")||"[]")}catch(e){return []}}
+function saveFavorites(list){localStorage.setItem("arts_favorites_v63",JSON.stringify([...new Set(list)]))}
 function toggleFavorite(name){const list=getFavorites();const i=list.indexOf(name);if(i>=0)list.splice(i,1);else list.push(name);saveFavorites(list);document.querySelectorAll(`[data-fav="${CSS.escape(name)}"]`).forEach(btn=>btn.classList.toggle("active",list.includes(name)));updateFavoritesFromLastRender();}
 let lastRenderData=null;
 function pctDiff(item){if(!item.tarim||!item.rival||!item.rival.price)return null;return ((item.tarim.price-item.rival.price)/item.rival.price)*100}
-function confidenceBadge(item){return "";}
-function confidenceDetails(item){return "";}
+function confidenceParts(item){
+ const altCount=(item.alternatives||[]).length;
+ const title=((item.tarim?.title||item.rival?.title||item.best?.title||"")+"").toLowerCase();
+ const target=(item.target||"").toLowerCase();
+ const hasBoth=!!(item.tarim&&item.rival);
+ const hasTarim=!!item.tarim;
+ const hasRival=!!item.rival;
 
-function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":c==="only_tarim"?"Sadece bizde bulundu":"Kontrol gerekli"}
+ const sizeWords=["kg","gr","g ","lt"," l","ml","adet","6x200","2.5","2,5","1.5","1,5","40","30","16","6"];
+ const sizeMatch=sizeWords.some(w=>target.includes(w.trim()) && title.includes(w.trim()));
+
+ const targetTokens=target.split(/\s+/).filter(x=>x.length>2);
+ const matchedTokens=targetTokens.filter(t=>title.includes(t)).length;
+ const nameRatio=targetTokens.length?matchedTokens/targetTokens.length:0;
+
+ const brandHints=["türem","tmo","elit","billmatik","blume","mistral","confort","softy","aqua","bingo","asperox","kızılay","sarıyer","pepsi","yedigün","turem"];
+ const brandMatch=brandHints.some(b=>target.includes(b)&&title.includes(b)) || nameRatio>=0.55;
+
+ const categoryMatch= nameRatio>=0.35 || title.includes(targetTokens[0]||"");
+ const noBadStatus=item.status!=="error" && item.comparison!=="unknown";
+ const enoughMarket=altCount>=3;
+
+ return [
+  {label:"Tarım Kredi fiyatı bulundu", ok:hasTarim, points:hasTarim?20:0, max:20},
+  {label:"Rakip fiyatı bulundu", ok:hasRival, points:hasRival?15:0, max:15},
+  {label:"Ürün adı benzerliği", ok:nameRatio>=0.55, warn:nameRatio>=0.35, points:nameRatio>=0.55?20:nameRatio>=0.35?12:4, max:20},
+  {label:"Marka / ürün ailesi uyumu", ok:brandMatch, points:brandMatch?15:5, max:15},
+  {label:"Gramaj / adet uyumu", ok:sizeMatch, warn:!sizeMatch, points:sizeMatch?15:7, max:15},
+  {label:"Yeterli market verisi", ok:enoughMarket, warn:altCount>0, points:enoughMarket?10:altCount>0?5:0, max:10},
+  {label:"Sistem durumu", ok:noBadStatus, points:noBadStatus?5:0, max:5}
+ ];
+}
+function confidenceScore(item){
+ const parts=confidenceParts(item);
+ return Math.max(10,Math.min(100,Math.round(parts.reduce((a,b)=>a+b.points,0))));
+}
+function confidenceBadge(item){return ""}
+function confidenceDetails(item){return ""}
+
 function smartAdvice(item){const p=pctDiff(item);if(p===null)return {level:"mid",title:item.target,text:"Karşılaştırma eksik. Ürün eşleşmesi veya Tarım Kredi fiyatı kontrol edilmeli."};if(p>15)return {level:"high",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} pahalı. Fiyat güncellemesi için kritik aday.`};if(p>5)return {level:"mid",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} pahalı. Takip listesine alınabilir.`};if(p<-10)return {level:"ok",title:item.target,text:`Rakibe göre %${Math.abs(p).toFixed(1)} ucuz. Güçlü fiyat avantajı var.`};return {level:"ok",title:item.target,text:"Fiyat farkı düşük. Mevcut fiyat korunabilir."}}
 function renderExecutivePanels(data,changes,byGroup){
  const results=data.results||[];
@@ -837,13 +883,9 @@ function renderExecutivePanels(data,changes,byGroup){
  const advantage=results.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0));
  const incomplete=results.filter(x=>!x.tarim||!x.rival).slice(0,5);
  const alerts=[...disadvantage.slice(0,5),...incomplete.slice(0,3)];
- document.getElementById("smartAlertBody").innerHTML=alerts.length?alerts.map(item=>{const a=smartAdvice(item);return `<div class="alertItem ${a.level==='high'?'high':a.level==='mid'?'mid':''}"><div class="alertTitle">${esc(a.title)}</div><div class="alertText">${esc(a.text)}</div>TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)} | ${statusText(item.comparison)}</div>`}).join(""):'<div class="alertItem"><div class="alertTitle">Kritik uyarı yok</div><div class="alertText">Acil müdahale gerektiren durum görünmüyor.</div></div>';
+ document.getElementById("smartAlertBody").innerHTML=alerts.length?alerts.map(item=>{const a=smartAdvice(item);return `<div class="alertItem ${a.level==='high'?'high':a.level==='mid'?'mid':''}"><div class="alertTitle">${esc(a.title)}</div><div class="alertText">${esc(a.text)}</div>${confidenceBadge(item)}</div>`}).join(""):'<div class="alertItem"><div class="alertTitle">Kritik uyarı yok</div><div class="alertText">Acil müdahale gerektiren durum görünmüyor.</div></div>';
  const critical=[...disadvantage.slice(0,4),...advantage.slice(0,2)].slice(0,6);
- document.getElementById("criticalProductsBody").innerHTML=critical.length?critical.map(item=>`<div class="alertItem ${item.comparison==="tarim_expensive"?"high":""}"><div class="alertTitle">${esc(item.target)} — ${item.difference!=null?tl(item.difference):"-"}</div><div class="alertText">TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)} | ${statusText(item.comparison)}</div></div>`).join(""):'<div class="muted">Kritik ürün bulunamadı.</div>';
- const opp=results.filter(x=>x.comparison==="tarim_cheaper"&&x.difference!=null).sort((a,b)=>a.difference-b.difference).slice(0,10);
- const thr=results.filter(x=>x.comparison==="tarim_expensive"&&x.difference!=null).sort((a,b)=>b.difference-a.difference).slice(0,10);
- const oppBox=document.getElementById("bestOpportunitiesBody"); if(oppBox)oppBox.innerHTML=opp.length?opp.map(x=>`<div class="alertItem"><div class="alertTitle">✅ ${esc(x.target)} — ${tl(Math.abs(x.difference))} avantaj</div><div class="alertText">TK: ${tl(x.tarim?.price)} | Rakip: ${tl(x.rival?.price)} ${x.rival?.market?"("+esc(x.rival.market)+")":""}</div></div>`).join(""):'<div class="muted">Fırsat ürünü bulunamadı.</div>';
- const thrBox=document.getElementById("biggestThreatsBody"); if(thrBox)thrBox.innerHTML=thr.length?thr.map(x=>`<div class="alertItem high"><div class="alertTitle">⚠️ ${esc(x.target)} — ${tl(x.difference)} dezavantaj</div><div class="alertText">TK: ${tl(x.tarim?.price)} | Rakip: ${tl(x.rival?.price)} ${x.rival?.market?"("+esc(x.rival.market)+")":""}</div></div>`).join(""):'<div class="muted">Tehdit ürünü bulunamadı.</div>';
+ document.getElementById("criticalProductsBody").innerHTML=critical.length?critical.map(item=>`<div class="alertItem ${item.comparison==="tarim_expensive"?"high":""}"><div class="alertTitle">${esc(item.target)} — ${item.difference!=null?tl(item.difference):"-"}</div><div class="alertText">${confidenceBadge(item)}</div></div>`).join(""):'<div class="muted">Kritik ürün bulunamadı.</div>';
  const marketStats={};
  for(const item of results){for(const x of (item.alternatives||[])){const m=x.market||"Diğer";if(!marketStats[m])marketStats[m]={market:m,count:0,totalPrice:0,cheaper:0};marketStats[m].count++;marketStats[m].totalPrice+=x.price||0;if(item.tarim&&x.marketType==="rival"&&x.price<item.tarim.price)marketStats[m].cheaper++;}}
  const rows=Object.values(marketStats).sort((a,b)=>b.count-a.count).slice(0,8);
@@ -869,9 +911,56 @@ function recommendationPrice(item){
 
 
 
-function renderFlyerPanel(data){return;}
+const WEEKLY_FLYER_PRODUCTS=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
 
-function renderV50Panels(data,changes,byGroup){
+function isFlyerItem(x){
+  const g=(x.group||"").toLowerCase();
+  return g.includes("haftalık afiş");
+}
+function statusText(c){return c==="tarim_cheaper"?"Bizde daha ucuz":c==="tarim_expensive"?"Rakip daha ucuz":c==="equal"?"Fiyat eşit":"Kontrol gerekli"}
+function renderFlyerPanel(data){
+ const results=data.results||[];
+ const flyer=results.filter(isFlyerItem);
+ const total=WEEKLY_FLYER_PRODUCTS.length || flyer.length;
+ const cheap=flyer.filter(x=>x.comparison==="tarim_cheaper").length;
+ const expensive=flyer.filter(x=>x.comparison==="tarim_expensive").length;
+ const missing=Math.max(0,total-flyer.filter(x=>x.tarim||x.rival||x.best).length);
+ const equal=flyer.filter(x=>x.comparison==="equal").length;
+ const byTarget=Object.fromEntries(flyer.map(x=>[x.target,x]));
+ const strongest=flyer.filter(x=>x.comparison==="tarim_cheaper").sort((a,b)=>(a.difference||0)-(b.difference||0)).slice(0,3).map(x=>x.target);
+ const risky=flyer.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,3).map(x=>x.target);
+ const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v}
+ set("flyerTotal",total);set("flyerCheap",cheap);set("flyerExpensive",expensive);set("flyerMissing",missing);
+ const comment=document.getElementById("flyerComment");
+ if(comment){
+   comment.innerHTML=`Bu hafta afişte <b>${total}</b> ürün takip ediliyor. Tarım Kredi <b>${cheap}</b> üründe avantajlı, <b>${expensive}</b> üründe rakipler daha avantajlı, <b>${equal}</b> üründe fiyat eşit. ${strongest.length?`En güçlü afiş ürünleri: <b>${strongest.map(esc).join(", ")}</b>. `:""}${risky.length?`Fiyat kontrolü önerilen ürünler: <b>${risky.map(esc).join(", ")}</b>.`:""}`;
+ }
+ const list=document.getElementById("flyerProductList");
+ if(list){
+   list.innerHTML=(WEEKLY_FLYER_PRODUCTS.length?WEEKLY_FLYER_PRODUCTS:flyer.map(x=>x.target)).map(name=>{
+     const item=byTarget[name];
+     const status=item?(item.tarim&&item.rival?statusText(item.comparison):"Bulundu / kontrol gerekli"):"Henüz sonuç yok";
+     const price=item?`TK: ${tl(item.tarim?.price)} | Rakip: ${tl(item.rival?.price)}`:"Canlı aramada ürün sonucu bekleniyor";
+     return `<div class="flyerMiniItem"><div class="flyerMiniTitle">${esc(name)}</div><div class="flyerMiniMeta">${price}</div><span class="flyerMiniStatus ${item?'flyerFound':'flyerMissing'}">${esc(status)}</span></div>`;
+   }).join("");
+ }
+ const tbody=document.getElementById("flyerCompareBody");
+ if(tbody){
+   tbody.innerHTML=flyer.length?flyer.map(item=>`
+    <tr>
+      <td>${esc(item.target)}<div class="changeNote">${confidenceBadge(item)}</div></td>
+      <td>${tl(item.tarim?.price)}<br><span class="muted">${esc(item.tarim?.title||"-")}</span></td>
+      <td>${tl(item.rival?.price)}<br><span class="muted">${esc(item.rival?.market||"-")} • ${esc(item.rival?.title||"-")}</span></td>
+      <td>${item.difference!=null?tl(item.difference):"-"}</td>
+      <td>${statusBadge(item)}</td>
+    </tr>`).join(""):`<tr><td colspan="5">Afiş ürünleri canlı aramada henüz eşleşmedi.</td></tr>`;
+ }
+}
+
+
+
+
+function renderV63Panels(data,changes,byGroup){
  const results=data.results||[];
  const total=results.length;
  const cheap=results.filter(x=>x.comparison==="tarim_cheaper").length;
@@ -881,12 +970,13 @@ function renderV50Panels(data,changes,byGroup){
  const critical=results.filter(x=>x.comparison==="tarim_expensive").sort((a,b)=>(b.difference||0)-(a.difference||0)).slice(0,5);
  const groups=[...new Set(critical.map(x=>x.group).filter(Boolean))].slice(0,3);
 
- document.getElementById("aiExecutiveText").innerHTML=`Bugünkü analizde <b>${total}</b> ürün incelendi. Tarım Kredi <b>${cheap}</b> üründe fiyat avantajı sağlıyor, <b>${expensive}</b> üründe rakipler daha avantajlı görünüyor. ${groups.length?`Öncelikli takip edilmesi gereken gruplar: <b>${groups.map(esc).join(", ")}</b>.`:"Genel fiyat dengesi olumlu görünüyor."}`;
- document.getElementById("aiExecutivePills").innerHTML=`<span class="aiPill">Avantajlı: ${cheap}</span><span class="aiPill">Riskli: ${expensive}</span><span class="aiPill">Eşit: ${equal}</span><span class="aiPill">Değişen: ${changes.length}</span>`;
+ const overall=Math.round(((cheap+equal*0.7)/Math.max(1,total-missing))*100);
+ document.getElementById("aiExecutiveText").innerHTML=`Bugünkü analizde <b>${total}</b> ürün incelendi. Tarım Kredi <b>${cheap}</b> üründe fiyat avantajı sağlıyor, <b>${expensive}</b> üründe rakipler daha avantajlı görünüyor. ${groups.length?`Öncelikli takip edilmesi gereken gruplar: <b>${groups.map(esc).join(", ")}</b>.`:"Genel fiyat dengesi olumlu görünüyor."} Genel rekabet skoru: <b>${overall}/100</b>.`;
+ document.getElementById("aiExecutivePills").innerHTML=`<span class="aiPill">Genel Skor: ${overall}/100</span><span class="aiPill">Avantajlı: ${cheap}</span><span class="aiPill">Riskli: ${expensive}</span><span class="aiPill">Değişen: ${changes.length}</span>`;
 
  document.getElementById("dailySummaryBody").innerHTML=[
   ["Toplam ürün",total],["Biz daha ucuz",cheap],["Biz daha pahalı",expensive],["Eşit",equal],["Karşılaştırılamayan",missing],["Bugün değişen",changes.length]
- ].map(x=>`<div class="v50Item"><div class="v50Title">${x[0]}</div><div class="v50Text"><b>${x[1]}</b></div></div>`).join("");
+ ].map(x=>`<div class="v63Item"><div class="v63Title">${x[0]}</div><div class="v63Text"><b>${x[1]}</b></div></div>`).join("");
 
  const threat={};
  for(const item of results){
@@ -899,13 +989,13 @@ function renderV50Panels(data,changes,byGroup){
    }
  }
  const threats=Object.values(threat).map(t=>({...t,score:Math.min(100,Math.round((t.cheaper*8)+(t.total*1.5)))})).sort((a,b)=>b.score-a.score).slice(0,4);
- document.getElementById("threatAnalysisBody").innerHTML=threats.length?threats.map((t,i)=>`<div class="threatCard">${marketLogo(t.market)} <b>${esc(t.market)}</b><div class="threatScore">${t.score}/100</div><div class="v50Text">Bizden ucuz olduğu ürün: <b>${t.cheaper}</b><br>Görülen ürün: <b>${t.total}</b></div></div>`).join(""):'<div class="muted">Tehdit analizi için veri yok.</div>';
+ document.getElementById("threatAnalysisBody").innerHTML=threats.length?threats.map((t,i)=>`<div class="threatCard">${marketLogo(t.market)} <b>${esc(t.market)}</b><div class="threatScore">${t.score}/100</div><div class="v63Text">Bizden ucuz olduğu ürün: <b>${t.cheaper}</b><br>Görülen ürün: <b>${t.total}</b></div></div>`).join(""):'<div class="muted">Tehdit analizi için veri yok.</div>';
 
  const alarms=results.map(item=>({item,p:percentDiff(item)})).filter(x=>x.p!==null&&x.p>10).sort((a,b)=>b.p-a.p).slice(0,8);
- document.getElementById("priceAlarmBody").innerHTML=alarms.length?alarms.map(x=>`<div class="v50Item ${x.p>20?'danger':'warn'}"><div class="v50Title">🚨 ${esc(x.item.target)}</div><div class="v50Text">Rakibe göre <b>%${x.p.toFixed(1)}</b> pahalı. TK: ${tl(x.item.tarim?.price)} | Rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v50Item"><div class="v50Title">Alarm yok</div><div class="v50Text">Şu an %10 üzeri fiyat dezavantajı görünmüyor.</div></div>';
+ document.getElementById("priceAlarmBody").innerHTML=alarms.length?alarms.map(x=>`<div class="v63Item ${x.p>20?'danger':'warn'}"><div class="v63Title">🚨 ${esc(x.item.target)}</div><div class="v63Text">Rakibe göre <b>%${x.p.toFixed(1)}</b> pahalı. TK: ${tl(x.item.tarim?.price)} | Rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v63Item"><div class="v63Title">Alarm yok</div><div class="v63Text">Şu an %10 üzeri fiyat dezavantajı görünmüyor.</div></div>';
 
  const suggestions=results.map(item=>({item,p:percentDiff(item)})).filter(x=>x.p!==null&&x.p>5).sort((a,b)=>b.p-a.p).slice(0,8);
- document.getElementById("campaignSuggestionBody").innerHTML=suggestions.length?suggestions.map(x=>`<div class="v50Item ${x.p>15?'danger':'warn'}"><div class="v50Title">💰 ${esc(x.item.target)}</div><div class="v50Text">Önerilen fiyat bandı: <b>${recommendationPrice(x.item)}</b><br>Mevcut TK: ${tl(x.item.tarim?.price)} | En ucuz rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v50Item"><div class="v50Title">Öneri yok</div><div class="v50Text">Öncelikli fiyat kampanyası gerektiren ürün görünmüyor.</div></div>';
+ document.getElementById("campaignSuggestionBody").innerHTML=suggestions.length?suggestions.map(x=>`<div class="v63Item ${x.p>15?'danger':'warn'}"><div class="v63Title">💰 ${esc(x.item.target)}</div><div class="v63Text">Önerilen fiyat bandı: <b>${recommendationPrice(x.item)}</b><br>Mevcut TK: ${tl(x.item.tarim?.price)} | En ucuz rakip: ${tl(x.item.rival?.price)}</div></div>`).join(""):'<div class="v63Item"><div class="v63Title">Öneri yok</div><div class="v63Text">Öncelikli fiyat kampanyası gerektiren ürün görünmüyor.</div></div>';
 
  const history=loadHistory();
  const dateKeys=Object.keys(history).slice(-7);
@@ -913,11 +1003,11 @@ function renderV50Panels(data,changes,byGroup){
  document.getElementById("productHistoryBody").innerHTML=histItems.map(item=>{
    const pts=dateKeys.map(d=>({d,v:history[d]?.[item.target]?.tarim})).filter(x=>x.v!=null);
    const bars=pts.length?`<div class="spark">${pts.map((p,i)=>`<span title="${p.d}: ${tl(p.v)}" style="height:${Math.max(6,Math.min(28,p.v/20))}px"></span>`).join("")}</div>`:"";
-   return `<div class="v50Item"><div class="v50Title">${esc(item.target)}</div><div class="historyLine">${pts.length?pts.map(p=>`<span class="historyPoint">${esc(p.d)}<br><b>${tl(p.v)}</b></span>`).join(""):'<span class="muted">Henüz geçmiş veri yok.</span>'}</div>${bars}</div>`;
+   return `<div class="v63Item"><div class="v63Title">${esc(item.target)}</div><div class="historyLine">${pts.length?pts.map(p=>`<span class="historyPoint">${esc(p.d)}<br><b>${tl(p.v)}</b></span>`).join(""):'<span class="muted">Henüz geçmiş veri yok.</span>'}</div>${bars}</div>`;
  }).join("");
 
  document.getElementById("reportCheckedAt").textContent=data.checkedAt||"-";
- document.getElementById("reportSummary").textContent=`${total} ürün incelendi. ${cheap} avantajlı, ${expensive} riskli, ${changes.length} değişen ürün.`;
+ document.getElementById("reportSummary").textContent=`${total} ürün incelendi. ${cheap} avantajlı, ${expensive} riskli, ${changes.length} değişen ürün. Genel skor ${overall}/100.`;
 }
 function exportCsv(){
  if(!lastRenderData)return alert("Önce canlı kontrolü çalıştır.");
@@ -930,24 +1020,22 @@ function exportCsv(){
 function filterProductRows(){
  const q=(document.getElementById("productSearch")?.value||"").toLowerCase();
  const cat=(document.getElementById("categoryFilter")?.value||"");
- document.querySelectorAll(".groupBlock").forEach(section=>{
-   const group=section.getAttribute("data-group")||"";
+ document.querySelectorAll(".groupBlock").forEach(block=>{
+   const categoryOk=!cat || block.querySelector("h2")?.innerText===cat;
    let visibleRows=0;
-   section.querySelectorAll("tbody tr").forEach(tr=>{
-     const matchText=tr.innerText.toLowerCase().includes(q);
-     const matchCat=!cat || group===cat;
-     const show=matchText && matchCat;
-     tr.style.display=show?"":"none";
-     if(show) visibleRows++;
+   block.querySelectorAll("tbody tr").forEach(tr=>{
+     const ok=categoryOk && tr.innerText.toLowerCase().includes(q);
+     tr.style.display=ok?"":"none";
+     if(ok) visibleRows++;
    });
-   section.style.display=visibleRows?"":"none";
+   block.style.display=visibleRows?"":"none";
  });
 }
 
 
 function historyKeyNow(){return new Date().toLocaleDateString("tr-TR")+" "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}
-function loadRunHistory(){try{return JSON.parse(localStorage.getItem("arts_run_history_v60")||"[]")}catch(e){return []}}
-function saveRunHistory(list){localStorage.setItem("arts_run_history_v60",JSON.stringify(list.slice(-20)))}
+function loadRunHistory(){try{return JSON.parse(localStorage.getItem("arts_run_history_v63")||"[]")}catch(e){return []}}
+function saveRunHistory(list){localStorage.setItem("arts_run_history_v63",JSON.stringify(list.slice(-20)))}
 function currentRunSnapshot(data){
  const obj={time:historyKeyNow(), items:{}};
  for(const item of data.results||[]) obj.items[item.target]=snapshot(item);
@@ -964,18 +1052,15 @@ function previousRunFor(target){
 function render(data){
  lastRenderData=data;
  const history=loadHistory(), today=todayKey(), newHistory={...history,[today]:{...(history[today]||{})}}, changes=[];
- document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
- document.getElementById("advantageCount").textContent=data.summary?.advantageCount||0;
- document.getElementById("productCount").textContent=data.summary?.productCount||data.results.length;
- const foundCount=(data.results||[]).filter(x=>x.tarim||x.rival||x.best).length;
- const noResultCount=(data.results||[]).filter(x=>!x.tarim&&!x.rival&&!x.best).length;
- document.getElementById("foundCount").textContent=foundCount;
- document.getElementById("missingCount").textContent=noResultCount;
- document.getElementById("markets").innerHTML=(data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
+ const setTxt=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v};
+ setTxt("disadvantageCount",data.summary?.disadvantageCount||0);
+ setTxt("advantageCount",data.summary?.advantageCount||0);
+ setTxt("productCount",data.summary?.productCount||data.results.length);
+ const marketsEl=document.getElementById("markets"); if(marketsEl) marketsEl.innerHTML=(data.marketNames||[]).map(x=>`• ${esc(x)}`).join("<br>");
  let needCheck=0;
  const gb=document.getElementById("groupBody"); gb.innerHTML="";
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
- document.getElementById("needCheckCount").textContent=needCheck;
+ setTxt("needCheckCount",needCheck);
  const byGroup={};
  for(const item of data.results){
   const prev=previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target);
@@ -984,20 +1069,18 @@ function render(data){
   newHistory[today][item.target]=snap;
   const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});
  }
- document.getElementById("changedCount").textContent=changes.length;
  document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
- const groupNames=Object.keys(byGroup);
- const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+groupNames.map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
- const catSel=document.getElementById("categoryFilter");
- if(catSel){const old=catSel.value;catSel.innerHTML='<option value="">Tüm kategoriler</option>'+groupNames.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");catSel.value=groupNames.includes(old)?old:"";}
+ const catFilter=document.getElementById("categoryFilter"); if(catFilter && catFilter.options.length<=1){ catFilter.innerHTML='<option value="">Tüm kategoriler</option>'+Object.keys(byGroup).map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join(""); }
+ const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
  for(const [group,items] of Object.entries(byGroup)){
   let rows="";
-  for(const item of items)rows+=`<tr><td><div class="productWrap">${productImage(item)}<div class="productInfo"><div class="productName"><button class="starBtn ${getFavorites().includes(item.target)?'active':''}" data-fav="${esc(item.target)}" onclick="toggleFavorite(\'${esc(item.target)}\')">⭐</button>${esc(item.target)}</div><span class="small">${esc(item.keyword)}</span><br>${koopBadge(item)}${marketDetails(item)}</div></div></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td>${foundMarkets(item)}</td></tr>`;
-  wrap.innerHTML+=`<section class="groupBlock" data-group="${esc(group)}" id="${slug(esc(group))}"><h2>${esc(group)}</h2><table><thead><tr><th>Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Bulunan Marketler</th></tr></thead><tbody>${rows}</tbody></table></section>`
+  for(const item of items)rows+=`<tr><td><div class="productWrap">${productImage(item)}<div class="productInfo"><div class="productName"><button class="starBtn ${getFavorites().includes(item.target)?'active':''}" data-fav="${esc(item.target)}" onclick="toggleFavorite(\'${esc(item.target)}\')">⭐</button>${esc(item.target)}</div><span class="small">${esc(item.keyword)}</span><br>${matchReason(item)}${koopBadge(item)}${marketDetails(item)}</div></div></td><td>${productCell(item.tarim)}</td><td>${productCell(item.rival)}</td><td>${diffCell(item)}</td><td>${statusBadge(item)}</td><td>${foundMarkets(item)}</td></tr>`;
+  wrap.innerHTML+=`<section class="groupBlock" id="${slug(esc(group))}"><h2>${esc(group)}</h2><table><thead><tr><th>Ürün</th><th>Tarım Kredi / KOOP</th><th>En Ucuz Rakip</th><th>Fark</th><th>Durum</th><th>Bulunan Marketler</th></tr></thead><tbody>${rows}</tbody></table></section>`
  }
  renderExecutivePanels(data,changes,byGroup);
- renderV50Panels(data,changes,byGroup);
+ renderV63Panels(data,changes,byGroup);
+
  saveHistory(newHistory);
  saveRunHistory([...loadRunHistory(), currentRunSnapshot(data)]);
 }
