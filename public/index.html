@@ -691,7 +691,7 @@ hr{
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v54</b><br>
+          <b>ARTS Executive Edition v57</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -718,7 +718,7 @@ hr{
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v54";
+const HISTORY_KEY="arts_history_v57";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -750,10 +750,19 @@ function compareSnap(prev,newSnap){
  if(oldSnap.comparison!==newSnap.comparison)changes.push("Durum değişti");
  return changes.length ? `${dateLabel}: ${changes.join(" | ")}` : null;
 }
+async function readJsonSafe(res){
+ const text=await res.text();
+ try{return text?JSON.parse(text):{};}catch(e){throw new Error(text?text.slice(0,260):`Sunucu boş cevap döndürdü (${res.status})`);}
+}
 async function run(){
  const btn=document.getElementById("btn"),status=document.getElementById("status");
  btn.disabled=true; status.textContent=" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir.";
- try{const res=await fetch("/api/run"); const data=await res.json(); if(!res.ok)throw new Error(data.error||"Bilinmeyen hata"); render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;}
+ try{
+  const res=await fetch("/api/run",{headers:{"Accept":"application/json"}});
+  const data=await readJsonSafe(res);
+  if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata");
+  render(data); status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt;
+ }
  catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'}
  finally{btn.disabled=false}
 }
@@ -1057,8 +1066,8 @@ function filterProductRows(){
 
 
 function historyKeyNow(){return new Date().toLocaleDateString("tr-TR")+" "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}
-function loadRunHistory(){try{return JSON.parse(localStorage.getItem("arts_run_history_v54")||"[]")}catch(e){return []}}
-function saveRunHistory(list){localStorage.setItem("arts_run_history_v54",JSON.stringify(list.slice(-20)))}
+function loadRunHistory(){try{return JSON.parse(localStorage.getItem("arts_run_history_v57")||"[]")}catch(e){return []}}
+function saveRunHistory(list){localStorage.setItem("arts_run_history_v57",JSON.stringify(list.slice(-20)))}
 function currentRunSnapshot(data){
  const obj={time:historyKeyNow(), items:{}};
  for(const item of data.results||[]) obj.items[item.target]=snapshot(item);
@@ -1084,7 +1093,13 @@ function render(data){
  for(const g of data.groupSummary||[]){const check=(g.noTarim||0)+(g.incomplete||0); needCheck+=check; gb.innerHTML+=`<tr><td><b>${esc(g.group)}</b></td><td>${g.total}</td><td><span class="badge redBadge">${g.tarimExpensive}</span></td><td><span class="badge green">${g.tarimCheaper}</span></td><td>${g.equal}</td><td><span class="badge amber">${check}</span></td></tr>`}
  document.getElementById("needCheckCount").textContent=needCheck;
  const byGroup={};
- for(const item of data.results){const snap=snapshot(item), changeText=compareSnap(previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target),snap); if(changeText)changes.push({item,old:history[item.target],snap,changeText}); newHistory[today][item.target]=snap; const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});}
+ for(const item of data.results){
+  const prev=previousRunFor(item.target)||previousSnapshot(Object.fromEntries(Object.entries(history).filter(([d])=>d!==today)), item.target);
+  const snap=snapshot(item), changeText=compareSnap(prev,snap);
+  if(changeText)changes.push({item,old:prev?.snap||{},snap,changeText});
+  newHistory[today][item.target]=snap;
+  const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});
+ }
  document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(c.changeText)}</span></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
