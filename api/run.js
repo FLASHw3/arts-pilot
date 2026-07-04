@@ -19,11 +19,13 @@ const REGIONS={
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım kredi kooperatifleri","tarim kredi kooperatifleri","tarım kredi market","tarim kredi market","tarım","tarim","koop","ko-op","koop market","koop çiftçi","koop ciftci","kooperatif","kooperatif market","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
+const PRODUCE_GLOBAL_BAN = ["kek","popkek","topkek","bisküvi","biskuvi","gofret","çikolata","cikolata","dondurma","meyveli","içecek","ice tea","limonata","soda","maden suyu","aroma","aromalı","aromali","şekerleme","sekerleme","sakız","sakiz","cips","kraker","puding","şampuan","sampuan","kolonya","sos","konserve","salça","salca"];
+
 const PRODUCTS = [
   {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], prefer:["türem","turem","m boy","53-62"], ban:["anadolu çiftliği","anadolu ciftligi","keskinoğlu","keskinoglu","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
   {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1","pınar","pinar","%0,5","%0.5","0,5 yağlı","0.5 yağlı","0,5 yagli","0.5 yagli"]},
-  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["taze","az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
   {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr","mengen","mengen çiftliği","mengen ciftligi"]},
 
   {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek","TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["safya","zeytin","mısır","fındık","tereyağ","margarin"]},
@@ -84,10 +86,7 @@ function sizeMatches(product,spec){
   if(!spec.size&&!spec.unitOnly) return true;
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
   if(spec.unitOnly){
-    // Marketfiyati API meyve/sebze ürünlerinde bazen başlıkta "kg" yazmıyor.
-    // Bu yüzden muz/salatalık gibi ürünler KOOP tarafında kaçıyordu.
-    // Produce ürünlerinde kg zorunluluğunu gevşetiyoruz; must/ban kuralları yanlış eşleşmeyi engelliyor.
-    if(spec.category==="produce") return true;
+    // Meyve-sebzede kg kontrolü şart. Gevşetilirse limonlu kek/içecek, kavunlu içecek gibi yanlış ürünler eşleşiyor.
     return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
   }
   const v=spec.size.value, unit=spec.size.unit;
@@ -127,6 +126,7 @@ if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavo
 }
 function scoreProduct(product,spec){
   const text=textOfProduct(product);
+  if(spec.category==="produce" && !hasNone(text, PRODUCE_GLOBAL_BAN)) return -9999;
   if(!hasAll(text,spec.must))return -9999;
   if(!hasNone(text,spec.ban))return -9999;
   if(spec.prefer && !hasAny(text,spec.prefer)) return -9999;
@@ -298,7 +298,7 @@ export default async function handler(req,res){
   try{
     const body=req.method==="POST"?(req.body||{}):{};
     const activeProducts=applyRequestProducts(body);
-    const region=REGIONS[String(body.region||"turkiye")]||REGIONS.turkiye;
+    const region=REGIONS.turkiye; // Bölge araması geçici olarak kapalı: Türkiye Geneli sabit
     const depotResult=await getNearestDepotsAt(region.latitude,region.longitude,region.distance); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
     for(const spec of activeProducts){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
