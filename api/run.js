@@ -211,16 +211,23 @@ function timeScore(x){
   const d=Date.parse(raw);
   return Number.isFinite(d)?d:0;
 }
-function bestOf(arr){return(!arr||arr.length===0)?null:[...arr].sort((a,b)=>a.price-b.price||b.score-a.score)[0];}
-function bestTarimOf(arr){
+function bestOf(arr){
   if(!arr||arr.length===0)return null;
-  // KOOP/Tarım Kredi için en ucuzu seçmek yanlış fiyata düşürebiliyor.
-  // Önce en iyi eşleşme, sonra en güncel kayıt, sonra yüksek fiyat tercih edilir.
+  // v84: Aynı ürün için API eski/yanlış fiyat da döndürebiliyor.
+  // Artık kör şekilde en ucuz fiyatı almıyoruz.
+  // Önce mevcut eşleşme skoruyla en alakalı kaydı, sonra en güncel indexTime kaydını seçiyoruz.
+  // Zaman bilgisi yoksa aynı/alakalı ürünlerde daha yüksek fiyatı tercih ederek eski dip kayıtların öne çıkmasını engelliyoruz.
   return [...arr].sort((a,b)=>
     (b.score-a.score)||
     (timeScore(b)-timeScore(a))||
     (b.price-a.price)
   )[0];
+}
+function bestTarimOf(arr,spec){
+  if(!arr||arr.length===0)return null;
+  // KOOP/Tarım Kredi için de aynı genel seçim mantığı kullanılır.
+  // Peynir gibi tek ürüne özel fiyat sabitleme kaldırıldı; tüm ürünlerde güncel/alakalı kayıt seçilir.
+  return bestOf(arr);
 }
 function makeGroupSummary(results){const map={}; for(const x of results){const g=x.group||"Diğer"; if(!map[g])map[g]={group:g,total:0,tarimExpensive:0,tarimCheaper:0,equal:0,noTarim:0,incomplete:0}; map[g].total++; if(x.comparison==="tarim_expensive")map[g].tarimExpensive++; else if(x.comparison==="tarim_cheaper")map[g].tarimCheaper++; else if(x.comparison==="equal")map[g].equal++; else if(x.comparison==="no_tarim")map[g].noTarim++; else map[g].incomplete++;} return Object.values(map);}
 const WEEKLY_FLYER_NAMES=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
@@ -411,7 +418,7 @@ export default async function handler(req,res){
           }catch(e){}
         }
 
-        item.alternatives=found.slice(0,20); item.tarim=bestTarimOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
+        item.alternatives=found.slice(0,20); item.tarim=bestTarimOf(found.filter(x=>x.marketType==="tarim"),spec); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
         item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
