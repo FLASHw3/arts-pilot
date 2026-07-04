@@ -946,6 +946,7 @@ async function adminLogin(){
 function adminLogout(){addActivityLog("Çıkış yapıldı", "Yönetici oturumu kapatıldı.", false); localStorage.removeItem(ADMIN_SESSION_KEY); localStorage.removeItem(ADMIN_PROFILE_KEY); applyAdminMode();}
 function requireAdmin(){if(isAdmin())return true; alert("Bu işlem için yönetici girişi gerekli."); return false;}
 function getActivityLog(){try{return JSON.parse(localStorage.getItem(ADMIN_LOG_KEY)||"[]")}catch(e){return []}}
+function loadActivityLog(){return getActivityLog()}
 function saveActivityLog(list){localStorage.setItem(ADMIN_LOG_KEY,JSON.stringify(list.slice(0,80)))}
 function addActivityLog(action,detail,rerender=true){
   const list=getActivityLog();
