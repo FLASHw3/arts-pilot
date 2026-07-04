@@ -5,6 +5,16 @@ const DISTANCE_KM = 1000;
 const SAKARYA_LATITUDE = 40.7731;
 const SAKARYA_LONGITUDE = 30.3948;
 const SAKARYA_DISTANCE_KM = 25;
+const REGIONS={
+  turkiye:{label:"Türkiye Geneli",latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM},
+  sakarya:{label:"Sakarya",latitude:SAKARYA_LATITUDE,longitude:SAKARYA_LONGITUDE,distance:35},
+  adapazari:{label:"Adapazarı",latitude:40.7731,longitude:30.3948,distance:12},
+  erenler:{label:"Erenler",latitude:40.7569,longitude:30.4143,distance:12},
+  serdivan:{label:"Serdivan",latitude:40.7739,longitude:30.3633,distance:12},
+  karasu:{label:"Karasu",latitude:41.1044,longitude:30.6967,distance:18},
+  hendek:{label:"Hendek",latitude:40.7994,longitude:30.7481,distance:18},
+  akyazi:{label:"Akyazı",latitude:40.6850,longitude:30.6222,distance:18}
+};
 
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","ko-op","kooperatif","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
@@ -270,11 +280,12 @@ export default async function handler(req,res){
   try{
     const body=req.method==="POST"?(req.body||{}):{};
     const activeProducts=applyRequestProducts(body);
-    const depotResult=await getNearestDepots(); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
+    const region=REGIONS[String(body.region||"turkiye")]||REGIONS.turkiye;
+    const depotResult=await getNearestDepotsAt(region.latitude,region.longitude,region.distance); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
     for(const spec of activeProducts){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
-        let found=await searchProduct(spec,depotIds);
+        let found=await searchProduct(spec,depotIds,{latitude:region.latitude,longitude:region.longitude,distance:region.distance,depots:depotIds});
 
         // v29 özel düzeltme:
         // Türkiye geneli aramada API bazen Tarım Kredi Türem yumurtayı döndürmüyor.
@@ -347,6 +358,6 @@ export default async function handler(req,res){
       results.push(item);
     }
     const disadvantageCount=results.filter(x=>x.comparison==="tarim_expensive").length; const advantageCount=results.filter(x=>["tarim_cheaper","equal","only_tarim"].includes(x.comparison)).length;
-    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:"Sakarya / Adapazarı",depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:activeProducts.length,disadvantageCount,advantageCount,changedCount:0}});
+    return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:region.label,depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:activeProducts.length,disadvantageCount,advantageCount,changedCount:0}});
   }catch(e){return res.status(500).json({error:e.message});}
 }
