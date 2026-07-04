@@ -17,15 +17,13 @@ const REGIONS={
 };
 
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım kredi kooperatifleri","tarim kredi kooperatifleri","tarım kredi market","tarim kredi market","tarım","tarim","koop","ko-op","koop market","koop çiftçi","koop ciftci","kooperatif","kooperatif market","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
-const RIVAL_MARKETS = ["bim","a101","a-101","a 101","a.101","yeni mağazacılık","yeni magazacilik","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
-
-const PRODUCE_GLOBAL_BAN = ["kek","popkek","topkek","bisküvi","biskuvi","gofret","çikolata","cikolata","dondurma","meyveli","içecek","ice tea","limonata","soda","maden suyu","aroma","aromalı","aromali","şekerleme","sekerleme","sakız","sakiz","cips","kraker","puding","şampuan","sampuan","kolonya","sos","konserve","salça","salca"];
+const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
 const PRODUCTS = [
   {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], prefer:["türem","turem","m boy","53-62"], ban:["anadolu çiftliği","anadolu ciftligi","keskinoğlu","keskinoglu","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
   {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1","pınar","pinar","%0,5","%0.5","0,5 yağlı","0.5 yağlı","0,5 yagli","0.5 yagli"]},
-  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["Tarım Kredi Tam Yağlı Taze Beyaz Peynir 1 Kg","1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
   {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr","mengen","mengen çiftliği","mengen ciftligi"]},
 
   {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek","TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["safya","zeytin","mısır","fındık","tereyağ","margarin"]},
@@ -66,7 +64,7 @@ const PRODUCTS = [
   {group:"İçecek", label:"Kızılay Limonlu Maden Suyu 6x200 ml", keywords:["Kızılay Limonlu Maden Suyu 6x200 Ml","kızılay limonlu maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","limon"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","mandalina","karpuz","çilek","cilek","tekli","1 adet","200 ml tek"]},
   {group:"İçecek", label:"Kızılay Mandalinalı Maden Suyu 6x200 ml", keywords:["Kızılay Maden Suyu Mandalina Aromalı 6x200 Ml","Kızılay Mandalinalı Maden Suyu 6x200 Ml","kızılay mandalina maden suyu 6x200 ml"], category:"mineral_water6_flavored", must:["kızılay","maden suyu","mandalina"], acceptAny:["6x200","6 x 200","6*200","1200 ml","1.2 l","1,2 l"], ban:["sade","doğal","dogal","limon","karpuz","çilek","cilek","tekli","1 adet","200 ml tek"]},
 
-  {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["Sarıyer Kola Gazlı İçecek 2.5 Lt","Sarıyer Kola Gazlı İçecek 2,5 Lt","Sarıyer Kola 2.5 Lt","Sarıyer Kola 2,5 Lt","Sarıyer Kola 2500 Ml","Sarıyer Kola Gazlı İçecek 2500 Ml","sarıyer kola 2.5 l","sarıyer kola 2,5 l","sarıyer kola 2.5 lt","sarıyer kola 2,5 lt","sarıyer kola gazlı içecek 2.5 l","sarıyer kola gazlı içecek 2.5 lt","sarıyer kola gazlı içecek 2,5 lt","sariyer kola 2.5 lt","sariyer kola 2500 ml"], category:"beverage_exact", must:["sarıyer","kola"], acceptAny:["2.5 l","2,5 l","2.5 lt","2,5 lt","2500 ml"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
+  {group:"Gazlı İçecek", label:"Sarıyer Kola 2.5 L", keywords:["sarıyer kola 2.5 l","sarıyer kola 2,5 l","sarıyer kola 2.5 lt","sarıyer kola 2,5 lt","sarıyer kola gazlı içecek 2.5 l","sarıyer kola gazlı içecek 2,5 lt","sariyer kola 2.5 lt"], category:"beverage_exact", must:["sarıyer","kola"], size:{value:2.5, unit:"l"}, ban:["limonata","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Portakallı Gazoz 2.5 L", keywords:["sarıyer portakallı gazoz 2.5 l","sarıyer portakallı gazlı içecek 2.5 l","sarıyer portakallı gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer","portakal"], size:{value:2.5, unit:"l"}, ban:["limonata","kola","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Sarıyer Gazoz 2.5 L", keywords:["sarıyer gazoz 2.5 l","sarıyer gazlı içecek 2.5 l","sarıyer gazoz 2,5 l"], category:"beverage_exact", must:["sarıyer"], prefer:["gazoz","gazli icecek"], size:{value:2.5, unit:"l"}, ban:["limonata","portakal","kola","enerji","maden suyu","soda","ayran","su"]},
   {group:"Gazlı İçecek", label:"Pepsi Kola 330 ml", keywords:["pepsi kola 330 ml","pepsi 330 ml","pepsi kutu 330 ml","pepsi 0.33 l","pepsi 33 cl"], category:"beverage_exact", must:["pepsi"], size:{value:330, unit:"ml"}, ban:["max","zero","limonata","enerji","maden suyu","soda","ayran","su","24x","koli"]},
@@ -86,7 +84,10 @@ function sizeMatches(product,spec){
   if(!spec.size&&!spec.unitOnly) return true;
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
   if(spec.unitOnly){
-    // Meyve-sebzede kg kontrolü şart. Gevşetilirse limonlu kek/içecek, kavunlu içecek gibi yanlış ürünler eşleşiyor.
+    // Marketfiyati API meyve/sebze ürünlerinde bazen başlıkta "kg" yazmıyor.
+    // Bu yüzden muz/salatalık gibi ürünler KOOP tarafında kaçıyordu.
+    // Produce ürünlerinde kg zorunluluğunu gevşetiyoruz; must/ban kuralları yanlış eşleşmeyi engelliyor.
+    if(spec.category==="produce") return true;
     return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
   }
   const v=spec.size.value, unit=spec.size.unit;
@@ -126,7 +127,6 @@ if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavo
 }
 function scoreProduct(product,spec){
   const text=textOfProduct(product);
-  if(spec.category==="produce" && !hasNone(text, PRODUCE_GLOBAL_BAN)) return -9999;
   if(!hasAll(text,spec.must))return -9999;
   if(!hasNone(text,spec.ban))return -9999;
   if(spec.prefer && !hasAny(text,spec.prefer)) return -9999;
@@ -206,43 +206,7 @@ async function searchProduct(spec,depotIds,opts={}){
   for(const c of all){const key=[c.title,c.market,c.price].join("|"); if(!seen.has(key)||seen.get(key).score<c.score)seen.set(key,c);}
   return [...seen.values()].sort((a,b)=>a.price-b.price||b.score-a.score);
 }
-function bestOf(arr){
-  if(!arr||arr.length===0)return null;
-  // Acil güvenli seçim: Eşleşme filtresinden geçen sonuçlarda en düşük fiyat alınır.
-  // Bu, v84'teki "en pahalı güncel kayıt" yan etkisini geri alır.
-  return [...arr].sort((a,b)=>a.price-b.price||b.score-a.score)[0];
-}
-
-function bestTarimOf(arr,spec){
-  if(!arr||arr.length===0)return null;
-
-  // Beyaz peynir özel düzeltmesi:
-  // MarketFiyati API aynı KOOP ürünü için eski 225 TL kaydını da döndürüyor.
-  // Doğru ürün "Tarım Kredi Tam Yağlı Taze Beyaz Peynir 1 Kg" olduğu için,
-  // önce bu tam ürünü yakalıyoruz; 250 TL altındaki eski kaydı almıyoruz.
-  if(spec?.label==="1 kg Tam Yağlı Beyaz Peynir"){
-    const exact = arr.filter(x=>{
-      const t=ntr([x.title,x.brand,x.quantity].join(" "));
-      return t.includes("tarim kredi") &&
-             t.includes("tam yagli") &&
-             t.includes("taze") &&
-             t.includes("beyaz") &&
-             t.includes("peynir") &&
-             (t.includes("1 kg") || t.includes("1000 gr") || t.includes("1000g")) &&
-             Number(x.price) >= 250;
-    });
-    if(exact.length){
-      return [...exact].sort((a,b)=>a.price-b.price||b.score-a.score)[0];
-    }
-
-    const fallback = arr.filter(x=>Number(x.price) >= 250);
-    if(fallback.length){
-      return [...fallback].sort((a,b)=>a.price-b.price||b.score-a.score)[0];
-    }
-  }
-
-  return bestOf(arr);
-}
+function bestOf(arr){return(!arr||arr.length===0)?null:[...arr].sort((a,b)=>a.price-b.price||b.score-a.score)[0];}
 function makeGroupSummary(results){const map={}; for(const x of results){const g=x.group||"Diğer"; if(!map[g])map[g]={group:g,total:0,tarimExpensive:0,tarimCheaper:0,equal:0,noTarim:0,incomplete:0}; map[g].total++; if(x.comparison==="tarim_expensive")map[g].tarimExpensive++; else if(x.comparison==="tarim_cheaper")map[g].tarimCheaper++; else if(x.comparison==="equal")map[g].equal++; else if(x.comparison==="no_tarim")map[g].noTarim++; else map[g].incomplete++;} return Object.values(map);}
 const WEEKLY_FLYER_NAMES=["Kabuklu Yer Fıstığı 1 kg","Sarıyer Kola 2.5 L","Sarıyer Gazoz 2.5 L","Solo Ultra Bambu Pamuk Tuvalet Kağıdı 32'li","Eti Crax Sade Çubuk Kraker 85 g","Eti Crax Baharatlı Peynirli 80 g","Eti Puff Çeşitleri","Eti Topkek Çeşitleri","Mentos Draje Şekerleme 37.5 g","Haribo Altın Ayıcık 130 g","Haribo Chamallow 130 g","Bergamot Aromalı Çay 500 g","Paketli Kumda Kavrulmuş Leblebi 500 g","Obsesso Creamy Latte 250 ml","Zen Blue Berry Karpuz Çilek 250 ml","Juss Meyveli İçecek 1 L","Pin Meyveli İçecek 1 L","Kızılay Meyveli Soda Çeşitleri 6x200 ml","Çerezos Mısır Çerezi 170 g","Naturel Birinci Zeytinyağı 1 L","Dana Kasap Sucuk 400 g","Tarsüt Bergama Tulum Peyniri 400 g","Tam Yağlı Süzme Peynir 850 g","Tarsüt Tam Yağlı Kaşar Peyniri 400 g","Dondurulmuş Bohça Mantı 400 g","Asi Künefe 195 g","Pidemiss Kıymalı Pide 3x125 g","Dana Macar Salam 250 g","Banvit Jumbo Sosis 330 g","Kaymak 200 g","Krema 200 ml","Tarsüt Krem Peynir 300 g","Tat Basmati Pirinç 1 kg","Tukaş Garnitür 560 g","Marmarabirlik Sepet Serisi 800 g","Ece Dilimli Siyah Zeytin 130 g","Ece Dilimli Yeşil Zeytin 130 g","Birlik Gurme Kakaolu Krema 400 g","Elit Peçete 200'lü","Elit Sıvı Sabun Çeşitleri 4 L","Elit Matik Toz Deterjan 5 kg","Molped Pure&Soft Hijyenik Ped","Bingo Soft Konsantre Yumuşatıcı 1440 ml","Joker MR Agent Genel Temizlik 1000 ml","Cif Krem Temizleyici 750 ml","Elit Cam Sil Sprey 1000 ml","Microll Cam Bezi 2'li","Parex Magic Sünger Tekli"];
 function flyerSpec(name){
@@ -334,7 +298,7 @@ export default async function handler(req,res){
   try{
     const body=req.method==="POST"?(req.body||{}):{};
     const activeProducts=applyRequestProducts(body);
-    const region=REGIONS.turkiye; // Bölge araması geçici olarak kapalı: Türkiye Geneli sabit
+    const region=REGIONS[String(body.region||"turkiye")]||REGIONS.turkiye;
     const depotResult=await getNearestDepotsAt(region.latitude,region.longitude,region.distance); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
     for(const spec of activeProducts){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
@@ -416,33 +380,6 @@ export default async function handler(req,res){
           }catch(e){}
         }
 
-        // Sarıyer Kola için rakip (özellikle A101) bazen genel keyword listesinden kaçıyor.
-        // Rakip bulunamazsa, tam A101 ürün adına göre ikinci arama yap.
-        if(spec.label==="Sarıyer Kola 2.5 L" && !found.some(x=>x.marketType==="rival")){
-          try{
-            const sariyerFallbackSpec={
-              ...spec,
-              keywords:[
-                "Sarıyer Kola Gazlı İçecek 2.5 Lt",
-                "Sarıyer Kola Gazlı İçecek 2,5 Lt",
-                "Sarıyer Kola 2.5 Lt",
-                "Sarıyer Kola 2500 Ml",
-                "Sariyer Kola 2500 Ml"
-              ],
-              must:["sarıyer","kola"],
-              acceptAny:["2.5 l","2,5 l","2.5 lt","2,5 lt","2500 ml"],
-              ban:["limonata","enerji","maden suyu","soda","ayran","su"]
-            };
-            const more=await searchProduct(sariyerFallbackSpec,depotIds,{
-              latitude:region.latitude,
-              longitude:region.longitude,
-              distance:region.distance,
-              depots:depotIds
-            });
-            found=[...found,...more];
-          }catch(e){}
-        }
-
         // v64: Çekirdeksiz karpuz normal karpuzla eşleşmez.
         // Türkiye genelinde bulunamazsa aynı sıkı kurallarla Sakarya içi tekrar aranır.
         if(spec.label==="1 kg Çekirdeksiz Karpuz" && !found.some(x=>x.marketType==="tarim")){
@@ -459,7 +396,7 @@ export default async function handler(req,res){
           }catch(e){}
         }
 
-        item.alternatives=found.slice(0,20); item.tarim=bestTarimOf(found.filter(x=>x.marketType==="tarim"),spec); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
+        item.alternatives=found.slice(0,20); item.tarim=bestOf(found.filter(x=>x.marketType==="tarim")); item.rival=bestOf(found.filter(x=>x.marketType==="rival")); item.best=bestOf(found);
         const imageCandidate = item.tarim || item.best || item.rival || found.find(x=>x.imageUrl);
         item.imageUrl = imageCandidate?.imageUrl || "";
         item.imageSource = item.tarim?.imageUrl ? "tarim" : (item.rival?.imageUrl ? "rival" : "fallback");
