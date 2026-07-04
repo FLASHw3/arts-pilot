@@ -768,53 +768,6 @@ body.admin-mode .adminStatus{color:var(--g)}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-
-function loadActivityLog(){
-  try{
-    return JSON.parse(localStorage.getItem("arts_activity_log_v1") || "[]");
-  }catch(e){
-    return [];
-  }
-}
-function saveActivityLog(list){
-  try{
-    localStorage.setItem("arts_activity_log_v1", JSON.stringify(Array.isArray(list)?list:[]));
-  }catch(e){}
-}
-function addActivityLog(action, detail){
-  const list = loadActivityLog();
-  list.unshift({
-    time: new Date().toLocaleString("tr-TR"),
-    action: action || "İşlem",
-    detail: detail || "",
-    user: (window.currentAdminUser && (window.currentAdminUser.name || window.currentAdminUser.username)) || "admin"
-  });
-  saveActivityLog(list.slice(0,200));
-  try{ renderActivityLog(); }catch(e){}
-  try{ renderArchiveActivity(); }catch(e){}
-}
-function renderActivityLog(){
-  const el = document.getElementById("activityLogBody");
-  if(!el) return;
-  const list = loadActivityLog();
-  if(!list.length){
-    el.innerHTML = '<div class="muted">Henüz işlem kaydı yok.</div>';
-    return;
-  }
-  el.innerHTML = list.map(x => `
-    <div class="logItem">
-      <div><b>${esc(x.action)}</b><br><span class="small">${esc(x.detail)}</span><br><span class="small">${esc(x.user||"admin")}</span></div>
-      <div class="logTime">${esc(x.time)}</div>
-    </div>
-  `).join("");
-}
-function clearActivityLog(){
-  if(!confirm("İşlem geçmişi temizlensin mi?")) return;
-  saveActivityLog([]);
-  renderActivityLog();
-  try{ renderArchiveActivity(); }catch(e){}
-}
-
 const HISTORY_KEY="arts_history_v64";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
@@ -993,6 +946,7 @@ async function adminLogin(){
 function adminLogout(){addActivityLog("Çıkış yapıldı", "Yönetici oturumu kapatıldı.", false); localStorage.removeItem(ADMIN_SESSION_KEY); localStorage.removeItem(ADMIN_PROFILE_KEY); applyAdminMode();}
 function requireAdmin(){if(isAdmin())return true; alert("Bu işlem için yönetici girişi gerekli."); return false;}
 function getActivityLog(){try{return JSON.parse(localStorage.getItem(ADMIN_LOG_KEY)||"[]")}catch(e){return []}}
+function loadActivityLog(){return getActivityLog()}
 function saveActivityLog(list){localStorage.setItem(ADMIN_LOG_KEY,JSON.stringify(list.slice(0,80)))}
 function addActivityLog(action,detail,rerender=true){
   const list=getActivityLog();
@@ -1283,13 +1237,10 @@ function render(data){
 
 /* ===== ARTS v80 client features ===== */
 const REGION_KEY="arts_region_v80";
-const WRONG_MATCH_KEY="arts_wrong_matches_v80";
-const IMAGE_OVERRIDE_KEY="arts_image_overrides_v80";
-let selectedImageTarget=null;
-function getRegion(){return localStorage.getItem(REGION_KEY)||"turkiye"}
-function setRegion(v){localStorage.setItem(REGION_KEY,v||"turkiye")}
-function regionLabel(v){return ({turkiye:"Türkiye Geneli",sakarya:"Sakarya",adapazari:"Adapazarı",erenler:"Erenler",serdivan:"Serdivan",karasu:"Karasu",hendek:"Hendek",akyazi:"Akyazı"})[v||getRegion()]||"Türkiye Geneli"}
-function onRegionChange(){setRegion(document.getElementById("regionSelect")?.value||"turkiye"); if(lastRenderData)document.querySelectorAll(".reportBadge").forEach(x=>{if(x.textContent.includes("Türkiye")||x.textContent.includes("Sakarya")||x.textContent.includes("Adapazarı"))x.textContent=regionLabel()});}
+function getRegion(){return "turkiye"}
+function setRegion(v){localStorage.setItem(REGION_KEY,"turkiye")}
+function regionLabel(v){return "Türkiye Geneli"}
+function onRegionChange(){setRegion("turkiye")}
 function loadWrongMatches(){try{return JSON.parse(localStorage.getItem(WRONG_MATCH_KEY)||"{}")}catch(e){return {}}}
 function saveWrongMatches(o){localStorage.setItem(WRONG_MATCH_KEY,JSON.stringify(o))}
 function reportWrongMatch(target,key){if(!requireAdmin())return; const o=loadWrongMatches(); if(!o[target])o[target]=[]; if(key&&!o[target].includes(key))o[target].push(key); saveWrongMatches(o); addActivityLog("Yanlış eşleşme bildirildi", `${target} • ${key||"seçili eşleşme"}`); if(lastRenderData){applyWrongMatchFilter(lastRenderData); render(lastRenderData)} alert("Yanlış eşleşme kaydedildi. Bu ürün bir sonraki kontrolde manuel eşleştirme için öncelikli incelenebilir.")}
@@ -1328,7 +1279,7 @@ function renderArchiveActivity(){const box=document.getElementById('archiveActiv
 const _renderActivityLog=renderActivityLog;
 renderActivityLog=function(){_renderActivityLog(); renderArchiveActivity(); renderArchiveProducts();}
 const _run=run;
-run=async function(targetLabel){const box=document.getElementById('runProgressBox'), fill=document.getElementById('runProgressFill'), txt=document.getElementById('runProgressText'), log=document.getElementById('runProgressLog'); if(box){box.classList.add('open'); fill.style.width='12%'; txt.textContent='Bölge: '+regionLabel()+' • Arama başlatıldı'; log.innerHTML='<div>⏳ API bağlantısı kuruluyor...</div><div>⏳ Ürün listesi hazırlanıyor...</div>';} const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=targetLabel?" Tek ürün güncelleniyor...":" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir."; try{const payload={customProducts:getCustomProducts(),excludedLabels:getExcludedProducts(),targetLabel:targetLabel||null,region:getRegion()}; const res=await fetch("/api/run",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(payload)}); if(fill)fill.style.width='65%'; if(log)log.innerHTML+='<div>⏳ Sonuçlar işleniyor...</div>'; const data=await readJsonSafe(res); if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); data.regionLabel=regionLabel(); if(targetLabel&&lastRenderData&&data.results&&data.results[0]){const idx=lastRenderData.results.findIndex(x=>x.target===targetLabel); if(idx>=0)lastRenderData.results[idx]=data.results[0]; else lastRenderData.results.push(data.results[0]); lastRenderData.checkedAt=data.checkedAt; render(applyManualOverrides(lastRenderData));}else{render(applyManualOverrides(data));} status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt; if(fill)fill.style.width='100%'; if(txt)txt.textContent='Tamamlandı • '+data.checkedAt; if(log)log.innerHTML+='<div>✅ Kontrol tamamlandı.</div>'; }catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'; if(log)log.innerHTML+='<div>❌ '+esc(e.message)+'</div>'}finally{btn.disabled=false}}
+run=async function(targetLabel){const box=document.getElementById('runProgressBox'), fill=document.getElementById('runProgressFill'), txt=document.getElementById('runProgressText'), log=document.getElementById('runProgressLog'); if(box){box.classList.add('open'); fill.style.width='12%'; txt.textContent='Bölge: '+regionLabel()+' • Arama başlatıldı'; log.innerHTML='<div>⏳ API bağlantısı kuruluyor...</div><div>⏳ Ürün listesi hazırlanıyor...</div>';} const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=targetLabel?" Tek ürün güncelleniyor...":" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir."; try{const payload={customProducts:getCustomProducts(),excludedLabels:getExcludedProducts(),targetLabel:targetLabel||null,region:"turkiye"}; const res=await fetch("/api/run",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(payload)}); if(fill)fill.style.width='65%'; if(log)log.innerHTML+='<div>⏳ Sonuçlar işleniyor...</div>'; const data=await readJsonSafe(res); if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); data.regionLabel=regionLabel(); if(targetLabel&&lastRenderData&&data.results&&data.results[0]){const idx=lastRenderData.results.findIndex(x=>x.target===targetLabel); if(idx>=0)lastRenderData.results[idx]=data.results[0]; else lastRenderData.results.push(data.results[0]); lastRenderData.checkedAt=data.checkedAt; render(applyManualOverrides(lastRenderData));}else{render(applyManualOverrides(data));} status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt; if(fill)fill.style.width='100%'; if(txt)txt.textContent='Tamamlandı • '+data.checkedAt; if(log)log.innerHTML+='<div>✅ Kontrol tamamlandı.</div>'; }catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'; if(log)log.innerHTML+='<div>❌ '+esc(e.message)+'</div>'}finally{btn.disabled=false}}
 const _filterProductRows=filterProductRows;
 filterProductRows=function(){const q=(document.getElementById("productSearch")?.value||"").toLowerCase(); const cat=(document.getElementById("categoryFilter")?.value||""); const status=(document.getElementById("statusFilter")?.value||""); const markets=selectedMarkets().map(x=>x.toLowerCase()); document.querySelectorAll(".groupBlock tbody tr").forEach(tr=>{const text=tr.innerText.toLowerCase(); const group=tr.dataset.group||""; const m=(tr.dataset.market||"").toLowerCase(); const comp=tr.dataset.comparison||""; const changed=tr.dataset.changed==="1"; const okText=!q||text.includes(q); const okCat=!cat||group===cat; const okMarket=!markets.length||markets.some(x=>m.includes(x)); let okStatus=true; if(status==="missing")okStatus=comp==="no_tarim"||comp==="unknown"||comp==="only_tarim"||comp===""; else if(status==="changed")okStatus=changed; else if(status)okStatus=comp===status; tr.style.display=(okText&&okCat&&okMarket&&okStatus)?"":"none";});}
 const _render=render;
