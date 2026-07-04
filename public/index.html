@@ -510,6 +510,10 @@ body.admin-mode .adminStatus{color:var(--g)}
 .quickFilters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.quickFilters button{padding:8px 10px;font-size:12px;border-radius:999px;background:white;color:#243238;border:1px solid var(--line)}.quickFilters button.active{background:var(--g);color:white}
 .drawer{position:fixed;inset:0;display:none;z-index:130;background:#0006}.drawer.open{display:block}.drawerPanel{position:absolute;right:0;top:0;height:100%;width:min(560px,94vw);background:white;padding:20px;overflow:auto;box-shadow:-18px 0 50px #0004}.drawerTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.drawerTitle{font-size:21px;font-weight:950;color:#15252e}.drawerClose{background:#f2f5f3;color:#243238;padding:8px 12px}.detailGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.detailCard{border:1px solid var(--line);border-radius:14px;background:#fbfdfc;padding:12px}.detailCard.full{grid-column:1/-1}.detailActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.miniBtn{padding:8px 10px;font-size:12px;border-radius:9px}.dangerBtn{background:#c62828;color:white}.ghostBtn{background:white;color:#263238;border:1px solid var(--line)}.successBtn{background:var(--g);color:white}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#0007;z-index:150;padding:20px}.modal.open{display:flex}.modalBox{background:white;border-radius:20px;max-width:720px;width:min(94vw,720px);max-height:86vh;overflow:auto;padding:20px;box-shadow:0 24px 70px #0005}.modalHead{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}.historyTimeline{display:grid;gap:10px}.historyEvent{border:1px solid var(--line);border-left:5px solid var(--g);background:#fbfdfc;border-radius:14px;padding:12px}.historyEvent.down{border-left-color:#167a35}.historyEvent.up{border-left-color:#c62828}.historyEvent.neutral{border-left-color:#1565c0}.archiveTabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.archiveTabs button{padding:9px 12px;font-size:13px}.archiveTabs button.active{background:var(--g);color:white}.marketIconLine{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.marketMini{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:26px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:950;font-size:11px}.missingGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.missingItem{border:1px solid var(--line);border-left:5px solid #c62828;border-radius:14px;background:#fffafa;padding:12px}.progressBox{display:none;border:1px solid var(--line);border-radius:14px;background:white;padding:12px;margin:10px 0}.progressBox.open{display:block}.progressTrack{height:12px;background:#edf3ef;border-radius:999px;overflow:hidden}.progressFill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g));width:0%;transition:.2s}.progressLog{max-height:140px;overflow:auto;margin-top:8px;font-size:12px;color:var(--muted);display:grid;gap:4px}.inspectBtn{margin-top:7px}.manualMatchList{display:grid;gap:8px}.manualMatchOption{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fbfdfc;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 
+
+.debugBox{margin-top:10px;border:1px dashed #9bb7a4;background:#f4fbf6;border-radius:12px;padding:10px;font-size:12px;white-space:pre-wrap;max-height:260px;overflow:auto;color:#1c3430}
+.debugToggle{margin-top:8px;background:#243238;color:white;border-radius:8px;padding:7px 9px;font-size:11px}
+
 </style>
 </head>
 <body>
@@ -555,7 +559,7 @@ body.admin-mode .adminStatus{color:var(--g)}
       <div class="topRight">
         <div class="topMeta"><b>Proje Sahibi</b>Ayberk Özdeniz</div>
         <div class="topMeta"><b>Bölge Müdürü</b>Suat Temizkan</div>
-        <div class="topMeta"><b>Bölge</b>📍 Türkiye Geneli</div>
+        <div class="topMeta"><b>Bölge</b><select id="regionSelect" class="regionSelect" onchange="onRegionChange()"><option value="turkiye">Türkiye Geneli</option><option value="sakarya">Sakarya</option><option value="adapazari">Adapazarı</option><option value="erenler">Erenler</option><option value="serdivan">Serdivan</option><option value="karasu">Karasu</option><option value="hendek">Hendek</option><option value="akyazi">Akyazı</option></select></div>
         <div class="adminLoginBox">
           <span id="adminStatus" class="adminStatus">Sadece görüntüleme</span>
           <input id="adminUsername" placeholder="Kullanıcı adı" autocomplete="username" onkeydown="if(event.key==='Enter') adminLogin()">
@@ -768,6 +772,31 @@ body.admin-mode .adminStatus{color:var(--g)}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
+
+function formatDebugInfo(d){
+  if(!d) return "";
+  const lines=[];
+  lines.push("DEBUG: "+(d.product||""));
+  lines.push("");
+  lines.push("SEÇİLEN KOOP:");
+  lines.push(d.selectedTarim ? `${d.selectedTarim.price} TL | ${d.selectedTarim.market} | ${d.selectedTarim.title} | indexTime: ${d.selectedTarim.indexTime||"-"} | id: ${d.selectedTarim.productId||"-"}` : "YOK");
+  lines.push("");
+  lines.push("SEÇİLEN RAKİP:");
+  lines.push(d.selectedRival ? `${d.selectedRival.price} TL | ${d.selectedRival.market} | ${d.selectedRival.title} | indexTime: ${d.selectedRival.indexTime||"-"} | id: ${d.selectedRival.productId||"-"}` : "YOK");
+  lines.push("");
+  lines.push("KOOP ADAYLARI:");
+  (d.tarimCandidates||[]).forEach((x,i)=>lines.push(`${i+1}) ${x.price} TL | ${x.market} | ${x.title} | ${x.indexTime||"-"} | id:${x.productId||"-"} | keyword:${x.keyword||"-"}`));
+  lines.push("");
+  lines.push("RAKİP ADAYLARI:");
+  (d.rivalCandidates||[]).forEach((x,i)=>lines.push(`${i+1}) ${x.price} TL | ${x.market} | ${x.title} | ${x.indexTime||"-"} | id:${x.productId||"-"} | keyword:${x.keyword||"-"}`));
+  return lines.join("\\n");
+}
+function debugBlockFor(x){
+  if(!x || !x.debugInfo) return "";
+  const text=esc(formatDebugInfo(x.debugInfo));
+  return `<details class="debugBox adminOnly"><summary><b>🔎 Debug: API adaylarını göster</b></summary>${text}</details>`;
+}
+
 const HISTORY_KEY="arts_history_v64";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
@@ -946,7 +975,6 @@ async function adminLogin(){
 function adminLogout(){addActivityLog("Çıkış yapıldı", "Yönetici oturumu kapatıldı.", false); localStorage.removeItem(ADMIN_SESSION_KEY); localStorage.removeItem(ADMIN_PROFILE_KEY); applyAdminMode();}
 function requireAdmin(){if(isAdmin())return true; alert("Bu işlem için yönetici girişi gerekli."); return false;}
 function getActivityLog(){try{return JSON.parse(localStorage.getItem(ADMIN_LOG_KEY)||"[]")}catch(e){return []}}
-function loadActivityLog(){return getActivityLog()}
 function saveActivityLog(list){localStorage.setItem(ADMIN_LOG_KEY,JSON.stringify(list.slice(0,80)))}
 function addActivityLog(action,detail,rerender=true){
   const list=getActivityLog();
@@ -1237,10 +1265,13 @@ function render(data){
 
 /* ===== ARTS v80 client features ===== */
 const REGION_KEY="arts_region_v80";
-function getRegion(){return "turkiye"}
-function setRegion(v){localStorage.setItem(REGION_KEY,"turkiye")}
-function regionLabel(v){return "Türkiye Geneli"}
-function onRegionChange(){setRegion("turkiye")}
+const WRONG_MATCH_KEY="arts_wrong_matches_v80";
+const IMAGE_OVERRIDE_KEY="arts_image_overrides_v80";
+let selectedImageTarget=null;
+function getRegion(){return localStorage.getItem(REGION_KEY)||"turkiye"}
+function setRegion(v){localStorage.setItem(REGION_KEY,v||"turkiye")}
+function regionLabel(v){return ({turkiye:"Türkiye Geneli",sakarya:"Sakarya",adapazari:"Adapazarı",erenler:"Erenler",serdivan:"Serdivan",karasu:"Karasu",hendek:"Hendek",akyazi:"Akyazı"})[v||getRegion()]||"Türkiye Geneli"}
+function onRegionChange(){setRegion(document.getElementById("regionSelect")?.value||"turkiye"); if(lastRenderData)document.querySelectorAll(".reportBadge").forEach(x=>{if(x.textContent.includes("Türkiye")||x.textContent.includes("Sakarya")||x.textContent.includes("Adapazarı"))x.textContent=regionLabel()});}
 function loadWrongMatches(){try{return JSON.parse(localStorage.getItem(WRONG_MATCH_KEY)||"{}")}catch(e){return {}}}
 function saveWrongMatches(o){localStorage.setItem(WRONG_MATCH_KEY,JSON.stringify(o))}
 function reportWrongMatch(target,key){if(!requireAdmin())return; const o=loadWrongMatches(); if(!o[target])o[target]=[]; if(key&&!o[target].includes(key))o[target].push(key); saveWrongMatches(o); addActivityLog("Yanlış eşleşme bildirildi", `${target} • ${key||"seçili eşleşme"}`); if(lastRenderData){applyWrongMatchFilter(lastRenderData); render(lastRenderData)} alert("Yanlış eşleşme kaydedildi. Bu ürün bir sonraki kontrolde manuel eşleştirme için öncelikli incelenebilir.")}
@@ -1279,7 +1310,7 @@ function renderArchiveActivity(){const box=document.getElementById('archiveActiv
 const _renderActivityLog=renderActivityLog;
 renderActivityLog=function(){_renderActivityLog(); renderArchiveActivity(); renderArchiveProducts();}
 const _run=run;
-run=async function(targetLabel){const box=document.getElementById('runProgressBox'), fill=document.getElementById('runProgressFill'), txt=document.getElementById('runProgressText'), log=document.getElementById('runProgressLog'); if(box){box.classList.add('open'); fill.style.width='12%'; txt.textContent='Bölge: '+regionLabel()+' • Arama başlatıldı'; log.innerHTML='<div>⏳ API bağlantısı kuruluyor...</div><div>⏳ Ürün listesi hazırlanıyor...</div>';} const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=targetLabel?" Tek ürün güncelleniyor...":" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir."; try{const payload={customProducts:getCustomProducts(),excludedLabels:getExcludedProducts(),targetLabel:targetLabel||null,region:"turkiye"}; const res=await fetch("/api/run",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(payload)}); if(fill)fill.style.width='65%'; if(log)log.innerHTML+='<div>⏳ Sonuçlar işleniyor...</div>'; const data=await readJsonSafe(res); if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); data.regionLabel=regionLabel(); if(targetLabel&&lastRenderData&&data.results&&data.results[0]){const idx=lastRenderData.results.findIndex(x=>x.target===targetLabel); if(idx>=0)lastRenderData.results[idx]=data.results[0]; else lastRenderData.results.push(data.results[0]); lastRenderData.checkedAt=data.checkedAt; render(applyManualOverrides(lastRenderData));}else{render(applyManualOverrides(data));} status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt; if(fill)fill.style.width='100%'; if(txt)txt.textContent='Tamamlandı • '+data.checkedAt; if(log)log.innerHTML+='<div>✅ Kontrol tamamlandı.</div>'; }catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'; if(log)log.innerHTML+='<div>❌ '+esc(e.message)+'</div>'}finally{btn.disabled=false}}
+run=async function(targetLabel){const box=document.getElementById('runProgressBox'), fill=document.getElementById('runProgressFill'), txt=document.getElementById('runProgressText'), log=document.getElementById('runProgressLog'); if(box){box.classList.add('open'); fill.style.width='12%'; txt.textContent='Bölge: '+regionLabel()+' • Arama başlatıldı'; log.innerHTML='<div>⏳ API bağlantısı kuruluyor...</div><div>⏳ Ürün listesi hazırlanıyor...</div>';} const btn=document.getElementById("btn"),status=document.getElementById("status"); btn.disabled=true; status.textContent=targetLabel?" Tek ürün güncelleniyor...":" Kontrol ediliyor... ürün sayısı fazla olduğu için birkaç dakika sürebilir."; try{const payload={customProducts:getCustomProducts(),excludedLabels:getExcludedProducts(),targetLabel:targetLabel||null,region:getRegion()}; const res=await fetch("/api/run",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(payload)}); if(fill)fill.style.width='65%'; if(log)log.innerHTML+='<div>⏳ Sonuçlar işleniyor...</div>'; const data=await readJsonSafe(res); if(!res.ok)throw new Error(data.error||data.message||"Bilinmeyen hata"); data.regionLabel=regionLabel(); if(targetLabel&&lastRenderData&&data.results&&data.results[0]){const idx=lastRenderData.results.findIndex(x=>x.target===targetLabel); if(idx>=0)lastRenderData.results[idx]=data.results[0]; else lastRenderData.results.push(data.results[0]); lastRenderData.checkedAt=data.checkedAt; render(applyManualOverrides(lastRenderData));}else{render(applyManualOverrides(data));} status.textContent=" Tamamlandı. Son kontrol: "+data.checkedAt; document.getElementById("sideTime").textContent=data.checkedAt; if(fill)fill.style.width='100%'; if(txt)txt.textContent='Tamamlandı • '+data.checkedAt; if(log)log.innerHTML+='<div>✅ Kontrol tamamlandı.</div>'; }catch(e){status.innerHTML='<span class="badge redBadge">Hata: '+esc(e.message)+'</span>'; if(log)log.innerHTML+='<div>❌ '+esc(e.message)+'</div>'}finally{btn.disabled=false}}
 const _filterProductRows=filterProductRows;
 filterProductRows=function(){const q=(document.getElementById("productSearch")?.value||"").toLowerCase(); const cat=(document.getElementById("categoryFilter")?.value||""); const status=(document.getElementById("statusFilter")?.value||""); const markets=selectedMarkets().map(x=>x.toLowerCase()); document.querySelectorAll(".groupBlock tbody tr").forEach(tr=>{const text=tr.innerText.toLowerCase(); const group=tr.dataset.group||""; const m=(tr.dataset.market||"").toLowerCase(); const comp=tr.dataset.comparison||""; const changed=tr.dataset.changed==="1"; const okText=!q||text.includes(q); const okCat=!cat||group===cat; const okMarket=!markets.length||markets.some(x=>m.includes(x)); let okStatus=true; if(status==="missing")okStatus=comp==="no_tarim"||comp==="unknown"||comp==="only_tarim"||comp===""; else if(status==="changed")okStatus=changed; else if(status)okStatus=comp===status; tr.style.display=(okText&&okCat&&okMarket&&okStatus)?"":"none";});}
 const _render=render;
