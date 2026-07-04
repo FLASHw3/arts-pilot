@@ -6,14 +6,7 @@ const SAKARYA_LATITUDE = 40.7731;
 const SAKARYA_LONGITUDE = 30.3948;
 const SAKARYA_DISTANCE_KM = 25;
 const REGIONS={
-  turkiye:{label:"Türkiye Geneli",latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM},
-  sakarya:{label:"Sakarya",latitude:SAKARYA_LATITUDE,longitude:SAKARYA_LONGITUDE,distance:35},
-  adapazari:{label:"Adapazarı",latitude:40.7731,longitude:30.3948,distance:12},
-  erenler:{label:"Erenler",latitude:40.7569,longitude:30.4143,distance:12},
-  serdivan:{label:"Serdivan",latitude:40.7739,longitude:30.3633,distance:12},
-  karasu:{label:"Karasu",latitude:41.1044,longitude:30.6967,distance:18},
-  hendek:{label:"Hendek",latitude:40.7994,longitude:30.7481,distance:18},
-  akyazi:{label:"Akyazı",latitude:40.6850,longitude:30.6222,distance:18}
+  turkiye:{label:"Türkiye Geneli",latitude:LATITUDE,longitude:LONGITUDE,distance:DISTANCE_KM}
 };
 
 const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım kredi kooperatifleri","tarim kredi kooperatifleri","tarım kredi market","tarim kredi market","tarım","tarim","koop","ko-op","koop market","koop çiftçi","koop ciftci","kooperatif","kooperatif market","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
@@ -148,7 +141,7 @@ async function apiPost(path,payload){
     try{
       const controller = new AbortController();
       const timeout = setTimeout(()=>controller.abort(), 20000);
-      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/80.1"},body:JSON.stringify(payload),signal:controller.signal});
+      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/55.0"},body:JSON.stringify(payload),signal:controller.signal});
       clearTimeout(timeout);
       const text=await res.text();
       let data=null;
