@@ -16,7 +16,7 @@ const PRODUCTS = [
   {group:"Yumurta", label:"30'lu M Boy Yumurta", keywords:["Türem Yumurta M Boy 30 Adet","Turem Yumurta M Boy 30 Adet","Türem Yumurta 53-62 Gr 30 Adet","yumurta m boy 30","Yumurta 53-62 Gr 30 Adet","53-62 gr 30 adet yumurta","30 adet yumurta","30 lu yumurta","m boy yumurta"], category:"egg", must:["yumurta"], prefer:["türem","turem","m boy","53-62"], ban:["anadolu çiftliği","anadolu ciftligi","keskinoğlu","keskinoglu","çikolata","sürpriz","kinder","oyuncak","sakız","bisküvi","gofret","çikolatalı","6 adet","10 adet","15 adet"]},
 
   {group:"Süt Ürünleri", label:"1 L Yarım Yağlı Süt", keywords:["yarım yağlı süt","1 lt yarım yağlı süt","süt 1 lt","uht süt 1 lt"], category:"milk_half", must:["süt"], size:{value:1, unit:"l"}, ban:["tam yağlı","tam yagli","laktozsuz","çikolata","yoğurt","kefir","ayran","devam sütü","bebek","enka","%0.15","0.15 yağlı","0.15 yagli","0.1 yağlı","0.1 yagli","carrefour 0.1","pınar","pinar","%0,5","%0.5","0,5 yağlı","0.5 yağlı","0,5 yagli","0.5 yagli"]},
-  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek"]},
+  {group:"Süt Ürünleri", label:"1 kg Tam Yağlı Beyaz Peynir", keywords:["1 kg tam yağlı beyaz peynir","tam yağlı beyaz peynir 1 kg","Tarım Kredi Tam Yağlı Taze Beyaz Peynir 1 Kg","1 kg beyaz peynir"], category:"cheese_full", must:["beyaz","peynir"], prefer:["taze","tam yağlı","tam yagli"], size:{value:1, unit:"kg"}, ban:["az yağlı","az yagli","yarım yağlı","yarim yagli","light","krem","labne","kaşar","süzme","lor","çökelek","lokum kıvamında","lokum kivaminda","aknaz","mis lokum","plastik","teneke","500 gr","400 gr","900 gr","225,00","225 tl"]},
   {group:"Süt Ürünleri", label:"1 kg Tereyağ", keywords:["1 kg tereyağ","1 kg tereyağı","tereyağ 1 kg","tereyağı 1 kg"], category:"generic", must:["tereyag"], size:{value:1, unit:"kg"}, ban:["margarin","kahvaltılık","250 gr","500 gr","750 gr","125 gr","mengen","mengen çiftliği","mengen ciftligi"]},
 
   {group:"Temel Gıda / Bakliyat", label:"5 L Ayçiçek Yağı", keywords:["5 lt ayçiçek yağı","ayçiçek yağı 5 lt","5 litre ayçiçek","TMO Ayçiçek Yağı 5 Lt","Tmo Ayçiçek Yağı 5 L"], category:"generic", must:["ayçiçek"], acceptAny:["5 l","5 lt","5 litre"], size:{value:5, unit:"l"}, ban:["safya","zeytin","mısır","fındık","tereyağ","margarin"]},
@@ -34,11 +34,11 @@ const PRODUCTS = [
 
   {group:"Meyve Sebze", label:"1 kg Karpuz", keywords:["karpuz kg","karpuz 1 kg","düz karpuz kg"], category:"produce", must:["karpuz"], unitOnly:true, ban:["çekirdeksiz","cekirdeksiz","mini","baby","sakız","aroma","aromalı","şeker","meyve suyu","ice tea","çikolata","bisküvi","dondurma"]},
   {group:"Meyve Sebze", label:"1 kg Soğan", keywords:["soğan kg","soğan 1 kg"], category:"produce", must:["soğan"], unitOnly:true, ban:["kremalı","cips","baharat","tozu","çorba","sos","sakız"]},
-  {group:"Meyve Sebze", label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker","kızartmalık","kizartmalik"]},
-  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates pembe 1 kg","pembe domates kg","domates kg","domates 1 kg"], category:"produce", must:["domates"], unitOnly:true, ban:["salkım","salkim","atıştırmalık","atistirmalik","cherry","kokteyl","salça","salca","sos","kurutulmuş","kurutulmus","çorba","corba","konserve","tagem","turuncu domates","turuncu","tagem","turuncu domates","turuncu"]},
+  {group:"Meyve Sebze", label:"1 kg Patates", keywords:["patates kg","patates 1 kg"], category:"produce", must:["patates"], unitOnly:true, ban:["cips","dondurulmuş","püre","baharat","çubuk","kraker","kızartmalık","kizartmalik","dondurulmuş patates","frozen"]},
+  {group:"Meyve Sebze", label:"1 kg Domates", keywords:["domates pembe 1 kg","pembe domates kg","domates kg","domates 1 kg"], category:"produce", must:["domates"], unitOnly:true, requireAny:["kg","1 kg"], ban:["salkım","salkim","atıştırmalık","atistirmalik","cherry","kokteyl","salça","salca","sos","kurutulmuş","kurutulmus","çorba","corba","konserve","tagem","turuncu domates","turuncu","rendelenmiş","rendelenmis","doğranmış","dogranmis","püre","pure","domates suyu","cam şişe","kavanoz","700 gr","500 gr","400 gr","200 gr"]},
   {group:"Meyve Sebze", label:"1 kg Muz", keywords:["muz kg","muz 1 kg"], category:"produce", must:["muz"], unitOnly:true, ban:["aroma","puding","bisküvi","çikolata","meyve suyu"]},
   {group:"Meyve Sebze", label:"1 kg Salatalık", keywords:["salatalık kg","salatalık 1 kg"], category:"produce", must:["salatalık"], unitOnly:true, ban:["turşu","tursu","cips","aroma","sos"]},
-  {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg"], category:"produce", must:["limon"], unitOnly:true, ban:["file","suyu","sos","aroma","kolonya","çay","cay"]},
+  {group:"Meyve Sebze", label:"1 kg Limon", keywords:["limon kg","limon 1 kg","dökme limon kg","limon tane kg"], category:"produce", must:["limon"], unitOnly:true, requireAny:["kg","1 kg"], ban:["file","suyu","sos","aroma","aromalı","aromali","kolonya","çay","cay","kek","popkek","eti","bisküvi","gofret","şeker","ice tea","meyveli","içecek","gazoz","maden suyu","soda","sakız","dondurma","temizleyici","deterjan"]},
   {group:"Meyve Sebze", label:"1 kg Kavun", keywords:["kavun kg","kavun 1 kg"], category:"produce", must:["kavun"], unitOnly:true, ban:["aroma","dondurma","sakız","meyve suyu"]},
 
   {group:"Meyve Sebze", label:"1 kg Çekirdeksiz Karpuz", keywords:["karpuz çekirdeksiz 1 kg","çekirdeksiz karpuz 1 kg","karpuz çekirdeksiz","çekirdeksiz karpuz"], category:"produce", must:["karpuz"], prefer:["çekirdeksiz","cekirdeksiz"], acceptAny:["çekirdeksiz","cekirdeksiz"], ban:["mini","normal karpuz"]},
@@ -116,6 +116,13 @@ function categoryScore(product,spec){
 if(spec.category==="mineral_water6_plain"||spec.category==="mineral_water6_flavored"){if(text.includes("kizilay"))score+=40; if(text.includes("6x200")||text.includes("6 x 200")||text.includes("1200 ml"))score+=35; score+=20;}
   if(spec.category==="tea"){if(text.includes("siyah"))score+=25; if(text.includes("rize"))score+=10;}
   if(spec.category==="produce"){if(text.includes("pembe"))score+=40; score+=20;}
+  
+  // v56 cheese/tk price preference
+  if((spec.label||"")==="1 kg Tam Yağlı Beyaz Peynir"){
+    if(text.includes("tarim kredi") && text.includes("tam yagli") && text.includes("taze") && text.includes("beyaz peynir")) score += 80;
+    if(product.price && Number(product.price)===225) score -= 80;
+    if(product.price && Number(product.price)===265) score += 60;
+  }
   return score;
 }
 function scoreProduct(product,spec){
@@ -141,7 +148,7 @@ async function apiPost(path,payload){
     try{
       const controller = new AbortController();
       const timeout = setTimeout(()=>controller.abort(), 20000);
-      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/55.0"},body:JSON.stringify(payload),signal:controller.signal});
+      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/56.0"},body:JSON.stringify(payload),signal:controller.signal});
       clearTimeout(timeout);
       const text=await res.text();
       let data=null;
