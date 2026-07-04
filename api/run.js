@@ -16,7 +16,7 @@ const REGIONS={
   akyazi:{label:"Akyazı",latitude:40.6850,longitude:30.6222,distance:18}
 };
 
-const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım","tarim","koop","ko-op","kooperatif","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
+const TARIM_KREDI_KEYS = ["tarım kredi","tarim kredi","tarım kredi kooperatifleri","tarim kredi kooperatifleri","tarım kredi market","tarim kredi market","tarım","tarim","koop","ko-op","koop market","koop çiftçi","koop ciftci","kooperatif","kooperatif market","çiftçi market","ciftci market","çiftçi marketi","ciftci marketi","tk koop","tk kooperatif"];
 const RIVAL_MARKETS = ["bim","a101","şok","sok","migros","carrefour","carrefoursa","anpa","ess","essen"];
 
 const PRODUCTS = [
@@ -83,7 +83,13 @@ function sizeMatches(product,spec){
   if(spec.category==="esk_minced") return true;
   if(!spec.size&&!spec.unitOnly) return true;
   const text=textOfProduct(product).replaceAll(",",".").replace(/\s+/g," ");
-  if(spec.unitOnly) return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
+  if(spec.unitOnly){
+    // Marketfiyati API meyve/sebze ürünlerinde bazen başlıkta "kg" yazmıyor.
+    // Bu yüzden muz/salatalık gibi ürünler KOOP tarafında kaçıyordu.
+    // Produce ürünlerinde kg zorunluluğunu gevşetiyoruz; must/ban kuralları yanlış eşleşmeyi engelliyor.
+    if(spec.category==="produce") return true;
+    return text.includes("kg")||text.includes("kilogram")||text.includes("1 kg");
+  }
   const v=spec.size.value, unit=spec.size.unit;
   if(unit==="ml"){
     const litre = v/1000;
@@ -137,15 +143,27 @@ function scoreProduct(product,spec){
   return score;
 }
 async function apiPost(path,payload){
-  const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/57.0"},body:JSON.stringify(payload)});
-  const text=await res.text();
-  let data=null;
-  try{data=text?JSON.parse(text):null;}catch(e){
-    const short=text?text.slice(0,240):"Boş cevap";
-    throw new Error(`Market Fiyatı API JSON dönmedi (${res.status}): ${short}`);
+  let lastErr=null;
+  for(let attempt=1; attempt<=3; attempt++){
+    try{
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 20000);
+      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/80.1"},body:JSON.stringify(payload),signal:controller.signal});
+      clearTimeout(timeout);
+      const text=await res.text();
+      let data=null;
+      try{data=text?JSON.parse(text):null;}catch(e){
+        const short=text?text.slice(0,240):"Boş cevap";
+        throw new Error(`Market Fiyatı API JSON dönmedi (${res.status}): ${short}`);
+      }
+      if(!res.ok) throw new Error(data?.error||data?.message||`Market Fiyatı API hata: ${res.status}`);
+      return data;
+    }catch(e){
+      lastErr=e;
+      if(attempt<3) await new Promise(r=>setTimeout(r, 600*attempt));
+    }
   }
-  if(!res.ok) throw new Error(data?.error||data?.message||`Market Fiyatı API hata: ${res.status}`);
-  return data;
+  throw lastErr || new Error("Market Fiyatı API bağlantı hatası");
 }
 async function getNearestDepotsAt(latitude,longitude,distance){
   const depots=await apiPost("/api/v2/nearest",{latitude,longitude,distance});
@@ -333,6 +351,35 @@ export default async function handler(req,res){
           found = [...fallbackFound.filter(x=>x.marketType==="tarim"), ...found];
         }
 
+
+        // v80.1: Meyve-sebze ürünlerinde KOOP/Tarım Kredi sonucu kaçarsa Sakarya odaklı ek arama yap.
+        // Muz, salatalık, limon gibi ürünlerde Türkiye geneli sonuç bazen rakipleri döndürüp KOOP fiyatını döndürmüyor.
+        if(spec.category==="produce" && spec.label!=="1 kg Çekirdeksiz Karpuz" && !found.some(x=>x.marketType==="tarim")){
+          try{
+            const sakaryaDepotResult = await getNearestDepotsAt(SAKARYA_LATITUDE,SAKARYA_LONGITUDE,SAKARYA_DISTANCE_KM);
+            const sakaryaDepotIds = sakaryaDepotResult.depots.map(d=>d.id).filter(Boolean);
+            const produceFallbackSpec = {
+              ...spec,
+              keywords:[...(spec.keywords||[]), spec.label.replace(/^1 kg\s+/i,""), spec.label],
+              // kg bilgisi eksik gelen meyve-sebze başlıklarında eşleşme kaçmasın.
+              unitOnly:true
+            };
+            const moreWithDepots=await searchProduct(produceFallbackSpec,sakaryaDepotIds,{
+              latitude:SAKARYA_LATITUDE,
+              longitude:SAKARYA_LONGITUDE,
+              distance:SAKARYA_DISTANCE_KM,
+              depots:sakaryaDepotIds
+            });
+            const moreWide=await searchProduct(produceFallbackSpec,[],{
+              latitude:SAKARYA_LATITUDE,
+              longitude:SAKARYA_LONGITUDE,
+              distance:SAKARYA_DISTANCE_KM,
+              depots:[]
+            });
+            found=[...moreWithDepots.filter(x=>x.marketType==="tarim"), ...moreWide.filter(x=>x.marketType==="tarim"), ...found];
+          }catch(e){}
+        }
+
         // v64: Çekirdeksiz karpuz normal karpuzla eşleşmez.
         // Türkiye genelinde bulunamazsa aynı sıkı kurallarla Sakarya içi tekrar aranır.
         if(spec.label==="1 kg Çekirdeksiz Karpuz" && !found.some(x=>x.marketType==="tarim")){
@@ -359,5 +406,5 @@ export default async function handler(req,res){
     }
     const disadvantageCount=results.filter(x=>x.comparison==="tarim_expensive").length; const advantageCount=results.filter(x=>["tarim_cheaper","equal","only_tarim"].includes(x.comparison)).length;
     return res.status(200).json({checkedAt:new Date().toLocaleString("tr-TR",{timeZone:"Europe/Istanbul"}),location:region.label,depotCount:depotIds.length,marketNames:depotResult.marketNames,results,groupSummary:makeGroupSummary(results),summary:{productCount:activeProducts.length,disadvantageCount,advantageCount,changedCount:0}});
-  }catch(e){return res.status(500).json({error:e.message});}
+  }catch(e){console.error("RUN API ERROR", e); return res.status(500).json({error:e.message, stack:e.stack});}
 }
