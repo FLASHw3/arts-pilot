@@ -540,8 +540,18 @@ body.admin-mode .adminStatus{color:var(--g)}
 #productHistory{display:none!important}
 
 
-/* v56 urgent wrong-match cleanup */
+/* v57 safe full patch */
+#regionSelect,.regionSelect{display:none!important}
+.regionFixed{
+  display:inline-flex;align-items:center;min-height:42px;padding:10px 16px;
+  border:1px solid var(--line);border-radius:14px;background:#fffaf0;
+  font-weight:950;color:#12242c;
+}
 #changed,#changedTable,#changedBody,section:has(#changedBody),section:has(#changedTable){display:none!important}
+.hero,.aiHero{background:#fffaf0!important;color:#12242c!important;border:1px solid var(--line)!important}
+.hero h1,.hero h2,.aiHero h2,.hero .title{color:#0f2a32!important}
+.hero .muted,.hero p,.aiText{color:#334b55!important;font-weight:650!important}
+.aiPill{background:#e7f3e9!important;color:#0f6428!important;border-color:#cfe4d3!important}
 
 </style>
 </head>
@@ -765,7 +775,7 @@ body.admin-mode .adminStatus{color:var(--g)}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v56</b><br>
+          <b>ARTS Executive Edition v57</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -798,7 +808,7 @@ body.admin-mode .adminStatus{color:var(--g)}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v56";
+const HISTORY_KEY="arts_history_v57";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
