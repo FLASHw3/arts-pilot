@@ -775,7 +775,7 @@ body.admin-mode .adminStatus{color:var(--g)}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v57</b><br>
+          <b>ARTS Executive Edition v58</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -808,7 +808,7 @@ body.admin-mode .adminStatus{color:var(--g)}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v57";
+const HISTORY_KEY="arts_history_v58";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -1252,6 +1252,7 @@ function rowHistorySummary(item){
 }
 
 function render(data){
+ if(data.apiWarning){const st=document.getElementById("statusText")||document.getElementById("status"); if(st) st.innerHTML = "⚠️ Market Fiyatı API geçici uyarı: "+esc(data.apiWarning);}
  lastRenderData=data;
  const history=loadHistory(), today=todayKey(), newHistory={...history,[today]:{...(history[today]||{})}}, changes=[];
  document.getElementById("disadvantageCount").textContent=data.summary?.disadvantageCount||0;
