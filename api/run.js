@@ -140,8 +140,8 @@ async function apiPost(path,payload){
   for(let attempt=1; attempt<=3; attempt++){
     try{
       const controller = new AbortController();
-      const timeout = setTimeout(()=>controller.abort(), 20000);
-      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/57.0"},body:JSON.stringify(payload),signal:controller.signal});
+      const timeout = setTimeout(()=>controller.abort(), 15000);
+      const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","User-Agent":"ARTS-Vercel-Pilot/58.0"},body:JSON.stringify(payload),signal:controller.signal});
       clearTimeout(timeout);
       const text=await res.text();
       let data=null;
@@ -168,31 +168,36 @@ async function getNearestDepots(){const depots=await apiPost("/api/v2/nearest",{
 async function searchProduct(spec,depotIds,opts={}){
   const all=[]; const keywords=spec.keywords||[spec.keyword];
   for(const keyword of keywords){
-    const data=await apiPost("/api/v2/search",{keywords:keyword,pages:0,size:150,latitude:opts.latitude??LATITUDE,longitude:opts.longitude??LONGITUDE,distance:opts.distance??DISTANCE_KM,depots:opts.depots??[]});
-    const products=Array.isArray(data?.content)?data.content:[];
-    for(const p of products){
-      const score=scoreProduct(p,spec); if(score<0)continue;
-      for(const info of (p.productDepotInfoList||[])){
-        const marketName=info.marketAdi||info.depotName||""; const type=marketType(marketName); if(type==="other")continue;
-        const price=Number(info.price); if(!Number.isFinite(price))continue; if(spec.minPrice&&price<spec.minPrice)continue;
-        all.push({
-          group:spec.group,
-          target:spec.label,
-          title:p.title||"",
-          brand:p.brand||"",
-          quantity:p.refinedVolumeOrWeight||p.refinedQuantityUnit||"",
-          imageUrl:p.imageUrl||p.image||p.imagePath||p.pictureUrl||p.productImageUrl||p.thumbnail||"",
-          productId:p.id||p.productId||p.gtin||"",
-          market:marketName,
-          depot:info.depotName||"",
-          marketType:type,
-          price,
-          unitPrice:info.unitPrice||"",
-          indexTime:info.indexTime||"",
-          score,
-          keyword
-        });
+    try{
+      const data=await apiPost("/api/v2/search",{keywords:keyword,pages:0,size:80,latitude:opts.latitude??LATITUDE,longitude:opts.longitude??LONGITUDE,distance:opts.distance??DISTANCE_KM,depots:opts.depots??[]});
+      const products=Array.isArray(data?.content)?data.content:[];
+      for(const p of products){
+        const score=scoreProduct(p,spec); if(score<0)continue;
+        for(const info of (p.productDepotInfoList||[])){
+          const marketName=info.marketAdi||info.depotName||""; const type=marketType(marketName); if(type==="other")continue;
+          const price=Number(info.price); if(!Number.isFinite(price))continue; if(spec.minPrice&&price<spec.minPrice)continue;
+          all.push({
+            group:spec.group,
+            target:spec.label,
+            title:p.title||"",
+            brand:p.brand||"",
+            quantity:p.refinedVolumeOrWeight||p.refinedQuantityUnit||"",
+            imageUrl:p.imageUrl||p.image||p.imagePath||p.pictureUrl||p.productImageUrl||p.thumbnail||"",
+            productId:p.id||p.productId||p.gtin||"",
+            market:marketName,
+            depot:info.depotName||"",
+            marketType:type,
+            price,
+            unitPrice:info.unitPrice||"",
+            indexTime:info.indexTime||"",
+            score,
+            keyword
+          });
+        }
       }
+    }catch(e){
+      console.warn("SEARCH_KEYWORD_FAILED", spec.label, keyword, e?.message||e);
+      continue;
     }
   }
   const seen=new Map();
@@ -292,7 +297,15 @@ export default async function handler(req,res){
     const body=req.method==="POST"?(req.body||{}):{};
     const activeProducts=applyRequestProducts(body);
     const region=REGIONS[String(body.region||"turkiye")]||REGIONS.turkiye;
-    const depotResult=await getNearestDepotsAt(region.latitude,region.longitude,region.distance); const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean); const results=[];
+    let depotResult={depots:[],marketNames:[]};
+    try{
+      depotResult=await getNearestDepotsAt(region.latitude,region.longitude,region.distance);
+    }catch(e){
+      console.warn("NEAREST_DEPOTS_FAILED_CONTINUING_WITH_WIDE_SEARCH", e?.message||e);
+      depotResult={depots:[],marketNames:[]};
+    }
+    const depotIds=depotResult.depots.map(d=>d.id).filter(Boolean);
+    const results=[];
     for(const spec of activeProducts){
       const item={group:spec.group,target:spec.label,keyword:(spec.keywords||[spec.keyword]).join(" / "),tarim:null,rival:null,best:null,alternatives:[],status:"not_found",comparison:"unknown",difference:null};
       try{
