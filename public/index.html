@@ -539,6 +539,10 @@ body.admin-mode .adminStatus{color:var(--g)}
 }
 #productHistory{display:none!important}
 
+
+/* v56 urgent wrong-match cleanup */
+#changed,#changedTable,#changedBody,section:has(#changedBody),section:has(#changedTable){display:none!important}
+
 </style>
 </head>
 <body>
@@ -746,8 +750,6 @@ body.admin-mode .adminStatus{color:var(--g)}
       <h2>Özet Tablo</h2>
       <table><thead><tr><th>Ürün Grubu</th><th>Toplam</th><th>Bizde Pahalı</th><th>Bizde Ucuz</th><th>Eşit</th><th>Kontrol Gerekli</th></tr></thead><tbody id="groupBody"></tbody></table>
 
-      <h2 id="changed">Dünden / Önceki Kontrolden Bugüne Değişen Ürünler</h2>
-      <table><thead><tr><th>Ürün</th><th>Önceki</th><th>Güncel</th><th>Değişim</th></tr></thead><tbody id="changedBody"></tbody></table>
 
       <div id="categoryTables"></div>
 
@@ -763,7 +765,7 @@ body.admin-mode .adminStatus{color:var(--g)}
       </div>
       <div class="footerBox" id="footer">
         <div>
-          <b>ARTS Executive Edition v55</b><br>
+          <b>ARTS Executive Edition v56</b><br>
           <span class="small">Tarım Kredi / KOOP Kurumsal Pilot Rekabet Analiz Sistemi</span><br>
           <span class="small">Veri Kaynağı: Marketfiyati.org.tr API</span>
         </div>
@@ -796,7 +798,7 @@ body.admin-mode .adminStatus{color:var(--g)}
 function tl(n){ if(n===null||n===undefined) return "-"; return Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" TL"; }
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function slug(s){return String(s||"").replaceAll(" ","_")}
-const HISTORY_KEY="arts_history_v55";
+const HISTORY_KEY="arts_history_v56";
 function todayKey(){return new Date().toLocaleDateString("tr-TR")}
 function parseTRDate(d){const p=d.split("."); return new Date(`${p[2]}-${p[1]}-${p[0]}`)}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}")}catch(e){return {}}}
@@ -1258,7 +1260,7 @@ function render(data){
   newHistory[today][item.target]=snap;
   const g=item.group||"Diğer"; if(!byGroup[g])byGroup[g]=[]; byGroup[g].push({...item,changeText});
  }
- document.getElementById("changedBody").innerHTML= changes.length? changes.map(c=>`<tr><td><b>${esc(c.item.target)}</b><br><span class="small">${esc(c.item.group||"")}</span></td><td>TK: ${tl(c.old.tarim)}<br>Rakip: ${tl(c.old.rival)}</td><td>TK: ${tl(c.snap.tarim)}<br>Rakip: ${tl(c.snap.rival)}</td><td><span class="badge blue">${esc(formatChangeHuman(c.old,c.snap))}</span><br><button class="miniBtn ghostBtn" onclick="showHistory(\`${esc(c.item.target)}\`)">Geçmişi Gör</button></td></tr>`).join("") : '<tr><td colspan="4"><span class="badge green">Önceki gün/kontrole göre değişen ürün yok.</span></td></tr>';
+ if(document.getElementById("changedBody")) document.getElementById("changedBody").innerHTML="";
  const wrap=document.getElementById("categoryTables"); wrap.innerHTML="";
  const tabs=document.getElementById("tabs"); tabs.innerHTML='<a class="tab active" href="#dashboard">Tümü</a>'+Object.keys(byGroup).map(g=>`<a class="tab" href="#${slug(esc(g))}">${esc(g)}</a>`).join("");
  for(const [group,items] of Object.entries(byGroup)){
